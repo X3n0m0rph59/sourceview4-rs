@@ -4,10 +4,11 @@ library = "GtkSource"
 version = "4"
 min_cfg_version = "4"
 external_libraries = [
+   "Cairo",
    "GLib",
    "GObject",
    "Gio",
    "Gtk",
    "Gdk",
-   "Pango"
+   "GdkPixbuf",
 ]
