@@ -1,0 +1,7 @@
+[package]
+name = "sourceview4"
+version = "0.1.0"
+authors = ["Christopher Davis <brainblasted@disroot.org>"]
+edition = "2018"
+
+[dependencies]

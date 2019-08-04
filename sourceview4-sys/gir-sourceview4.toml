@@ -1,0 +1,13 @@
+[options]
+work_mode = "sys"
+library = "GtkSource"
+version = "4"
+min_cfg_version = "4"
+external_libraries = [
+   "GLib",
+   "GObject",
+   "Gio",
+   "Gtk",
+   "Gdk",
+   "Pango"
+]
