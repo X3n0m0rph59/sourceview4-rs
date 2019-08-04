@@ -29,4 +29,4 @@ ${GIR} -c ${CONFIG_SYS} -d gir-files -o ${CRATE_SYS}
 rm -rf ${CRATE_API}/src/auto
 ${GIR} -c ${CONFIG_API} -d gir-files -o ${CRATE_API}
 
-rm gir-files/{${GIR_DEF}
+rm gir-files/${GIR_DEF}
