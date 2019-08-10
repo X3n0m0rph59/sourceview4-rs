@@ -14,10 +14,6 @@ extern crate gtk_sys as gtk;
 extern crate gdk_sys as gdk;
 extern crate gdk_pixbuf_sys as gdk_pixbuf;
 
-mod main;
-
-pub use main::*;
-
 #[allow(unused_imports)]
 use libc::{c_int, c_char, c_uchar, c_float, c_uint, c_double,
     c_short, c_ushort, c_long, c_ulong,

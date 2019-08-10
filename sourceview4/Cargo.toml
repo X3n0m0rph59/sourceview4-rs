@@ -2,6 +2,39 @@
 name = "sourceview4"
 version = "0.1.0"
 authors = ["Christopher Davis <brainblasted@disroot.org>"]
-edition = "2018"
+license = "LGPL-2.1-or-later"
+keywords = ["gtksourceview", "sourceview", "gtk-rs", "gnome"]
+repository = "https://gitlab.gnome.org/World/Rust/sourceview4-rs"
+exclude = [
+    "gir-files/*",
+    "gir/",
+]
+
 
 [dependencies]
+libc = "0.2.49"
+bitflags = "1.0.4"
+cairo-rs = "0.7.1"
+glib = "0.8.1"
+gio = "0.7.0"
+gdk = "0.11.0"
+gdk-pixbuf = "0.7.0"
+pango = "0.7.0"
+glib-sys = "0.9.0"
+gtk-sys = "0.9.0"
+gobject-sys = "0.9.0"
+gio-sys = "0.9.0"
+gdk-sys = "0.9.0"
+
+
+[dependencies.gtk]
+version = "0.7.0"
+features = [ "v3_22" ]
+
+[dependencies.sourceview4-sys]
+version = "0.1.0"
+path = "../sourceview4-sys"
+
+
+[features]
+dox = ["sourceview4-sys/dox"]

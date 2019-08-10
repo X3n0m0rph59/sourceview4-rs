@@ -1,0 +1,141 @@
+[options]
+girs_dir = "gir-files"
+library = "GtkSource"
+version = "4"
+min_cfg_version = "4"
+target_path = "."
+work_mode = "normal"
+generate_safety_asserts = true
+deprecate_by_min_version = true
+# with this option enabled, versions for gir and gir-files saved only to one file to minimize noise
+single_version_file = true
+
+external_libraries = [
+    "Cairo",
+    "GLib",
+    "GObject",
+    "Gio",
+    "Gtk",
+    "Gdk",
+    "GdkPixbuf",
+    "Pango",
+]
+
+generate = [
+    "GtkSource.Buffer",
+    "GtkSource.CompletionContext",
+    "GtkSource.StyleSchemeChooserButton",
+    "GtkSource.StyleSchemeChooserWidget",
+    "GtkSource.Map",
+    "GtkSource.GutterRendererPixbuf",
+    "GtkSource.GutterRendererText",
+    "GtkSource.CompletionItem",
+    "GtkSource.CompletionWords",
+    "GtkSource.File",
+    "GtkSource.FileSaver",
+    "GtkSource.Gutter",
+    "GtkSource.Language",
+    "GtkSource.LanguageManager",
+    "GtkSource.MarkAttributes",
+    "GtkSource.Mark",
+    "GtkSource.PrintCompositor",
+    "GtkSource.Region",
+    "GtkSource.SearchContext",
+    "GtkSource.SearchSettings",
+    "GtkSource.SpaceDrawer",
+    "GtkSource.Style",
+    "GtkSource.StyleScheme",
+    "GtkSource.StyleSchemeManager",
+    "GtkSource.Tag",
+    "GtkSource.ChangeCaseType",
+    "GtkSource.SortFlags",
+    "GtkSource.UndoManager",
+    "GtkSource.BracketMatchType",
+    "GtkSource.CompletionProvider",
+    "GtkSource.CompletionActivation",
+    "GtkSource.CompletionProposal",
+    "GtkSource.CompressionType",
+    "GtkSource.Encoding",
+    "GtkSource.NewlineType",
+    "GtkSource.FileSaverFlags",
+    "GtkSource.GutterRendererState",
+    "GtkSource.GutterRendererAlignmentMode",
+    "GtkSource.SpaceLocationFlags",
+    "GtkSource.SpaceTypeFlags",
+    "GtkSource.BackgroundPatternType",
+    "GtkSource.SmartHomeEndType",
+]
+
+manual = [
+    "cairo.Context",
+    "Gtk.TextBuffer",
+    "Gtk.Window",
+    "Gtk.Button",
+    "Gtk.Bin",
+    "Gtk.Container",
+    "Gtk.PrintContext",
+    "Gtk.TextView",
+    "Gtk.TextIter",
+    "Gtk.TextTag",
+    "Gtk.TextTagTable",
+    "Gtk.TextMark",
+    "Gtk.TextWindowType",
+    "Gtk.Tooltip",
+    "Gtk.Unit",
+    "Gtk.Widget",
+    "Gtk.WrapMode",
+    "GLib.Error",
+    "GdkPixbuf.Pixbuf",
+    "Gio.Icon",
+    "Gio.File",
+    "Gio.MountOperation",
+    "Gio.InputStream",
+    "GLib.Priority",
+    "Gio.Cancellable",
+    "Gdk.Event",
+    "Gdk.Rectangle",
+    "Gdk.RGBA",
+    "Pango.FontDescription",
+    "Pango.Underline",
+    "GLib.Variant",
+    "Gio.Settings",
+    "Gio.SettingsBindFlags",
+]
+
+[[object]]
+name = "GtkSource.View"
+status = "generate"
+    [[object.function]]
+    name = "get_mark_attributes"
+    ignore = true
+
+[[object]]
+name = "GtkSource.GutterRenderer"
+status = "generate"
+    [[object.function]]
+    name = "begin"
+    ignore = true
+    [[object.function]]
+    name = "draw"
+    ignore = true
+
+[[object]]
+name = "GtkSource.FileLoader"
+status = "generate"
+    [[object.function]]
+    name = "set_candidate_encodings"
+    ignore = true
+
+[[object]]
+name = "GtkSource.Completion"
+status = "generate"
+    [[object.function]]
+    name = "create_context"
+    ignore = true
+
+[[object]]
+name = "GtkSource.CompletionInfo"
+status = "generate"
+    [[object.function]]
+    name = "move_to_iter"
+    ignore = true
