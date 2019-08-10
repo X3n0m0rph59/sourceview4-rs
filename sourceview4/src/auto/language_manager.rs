@@ -24,6 +24,13 @@ glib_wrapper! {
 }
 
 impl LanguageManager {
+    /// Creates a new language manager. If you do not need more than one language
+    /// manager or a private language manager instance then use
+    /// `LanguageManager::get_default` instead.
+    ///
+    /// # Returns
+    ///
+    /// a new `LanguageManager`.
     pub fn new() -> LanguageManager {
         assert_initialized_main_thread!();
         unsafe {
@@ -31,6 +38,12 @@ impl LanguageManager {
         }
     }
 
+    /// Returns the default `LanguageManager` instance.
+    ///
+    /// # Returns
+    ///
+    /// a `LanguageManager`.
+    /// Return value is owned by `View` library and must not be unref'ed.
     pub fn get_default() -> Option<LanguageManager> {
         assert_initialized_main_thread!();
         unsafe {
@@ -47,15 +60,103 @@ impl Default for LanguageManager {
 
 pub const NONE_LANGUAGE_MANAGER: Option<&LanguageManager> = None;
 
+/// Trait containing all `LanguageManager` methods.
+///
+/// # Implementors
+///
+/// [`LanguageManager`](struct.LanguageManager.html)
 pub trait LanguageManagerExt: 'static {
+    /// Gets the `Language` identified by the given `id` in the language
+    /// manager.
+    /// ## `id`
+    /// a language id.
+    ///
+    /// # Returns
+    ///
+    /// a `Language`, or `None`
+    /// if there is no language identified by the given `id`. Return value is
+    /// owned by `self` and should not be freed.
     fn get_language(&self, id: &str) -> Option<Language>;
 
+    /// Returns the ids of the available languages.
+    ///
+    /// # Returns
+    ///
+    ///
+    /// a `None`-terminated array of strings containing the ids of the available
+    /// languages or `None` if no language is available.
+    /// The array is sorted alphabetically according to the language name.
+    /// The array is owned by `self` and must not be modified.
     fn get_language_ids(&self) -> Vec<GString>;
 
+    /// Gets the list directories where `self` looks for language files.
+    ///
+    /// # Returns
+    ///
+    /// `None`-terminated array
+    /// containg a list of language files directories.
+    /// The array is owned by `self` and must not be modified.
     fn get_search_path(&self) -> Vec<GString>;
 
+    /// Picks a `Language` for given file name and content type,
+    /// according to the information in lang files. Either `filename` or
+    /// `content_type` may be `None`. This function can be used as follows:
+    ///
+    /// `<informalexample>``<programlisting>`
+    ///  `Language` *lang;
+    ///  lang = gtk_source_language_manager_guess_language (filename, NULL);
+    ///  gtk_source_buffer_set_language (buffer, lang);
+    /// `</programlisting>``</informalexample>`
+    ///
+    /// or
+    ///
+    /// `<informalexample>``<programlisting>`
+    ///  `Language` *lang = NULL;
+    ///  gboolean result_uncertain;
+    ///  gchar *content_type;
+    ///
+    ///  content_type = g_content_type_guess (filename, NULL, 0, &result_uncertain);
+    ///  if (result_uncertain)
+    ///  {
+    ///  g_free (content_type);
+    ///  content_type = NULL;
+    ///  }
+    ///
+    ///  lang = gtk_source_language_manager_guess_language (manager, filename, content_type);
+    ///  gtk_source_buffer_set_language (buffer, lang);
+    ///
+    ///  g_free (content_type);
+    /// `</programlisting>``</informalexample>`
+    ///
+    /// etc. Use `LanguageExt::get_mime_types` and `LanguageExt::get_globs`
+    /// if you need full control over file -> language mapping.
+    /// ## `filename`
+    /// a filename in Glib filename encoding, or `None`.
+    /// ## `content_type`
+    /// a content type (as in GIO API), or `None`.
+    ///
+    /// # Returns
+    ///
+    /// a `Language`, or `None` if there
+    /// is no suitable language for given `filename` and/or `content_type`. Return
+    /// value is owned by `self` and should not be freed.
     fn guess_language(&self, filename: Option<&str>, content_type: Option<&str>) -> Option<Language>;
 
+    /// Sets the list of directories where the `self` looks for
+    /// language files.
+    /// If `dirs` is `None`, the search path is reset to default.
+    ///
+    /// `<note>`
+    ///  `<para>`
+    ///  At the moment this function can be called only before the
+    ///  language files are loaded for the first time. In practice
+    ///  to set a custom search path for a `LanguageManager`,
+    ///  you have to call this function right after creating it.
+    ///  `</para>`
+    /// `</note>`
+    /// ## `dirs`
+    ///
+    /// a `None`-terminated array of strings or `None`.
     fn set_search_path(&self, dirs: &[&str]);
 
     fn connect_property_language_ids_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;

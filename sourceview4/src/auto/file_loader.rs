@@ -22,6 +22,19 @@ glib_wrapper! {
 }
 
 impl FileLoader {
+    /// Creates a new `FileLoader` object. The contents is read from the
+    /// `File`'s location. If not already done, call
+    /// `FileExt::set_location` before calling this constructor. The previous
+    /// location is anyway not needed, because as soon as the file loading begins,
+    /// the `buffer` is emptied.
+    /// ## `buffer`
+    /// the `Buffer` to load the contents into.
+    /// ## `file`
+    /// the `File`.
+    ///
+    /// # Returns
+    ///
+    /// a new `FileLoader` object.
     pub fn new<P: IsA<Buffer>, Q: IsA<File>>(buffer: &P, file: &Q) -> FileLoader {
         skip_assert_initialized!();
         unsafe {
@@ -29,6 +42,17 @@ impl FileLoader {
         }
     }
 
+    /// Creates a new `FileLoader` object. The contents is read from `stream`.
+    /// ## `buffer`
+    /// the `Buffer` to load the contents into.
+    /// ## `file`
+    /// the `File`.
+    /// ## `stream`
+    /// the `gio::InputStream` to load, e.g. stdin.
+    ///
+    /// # Returns
+    ///
+    /// a new `FileLoader` object.
     pub fn new_from_stream<P: IsA<Buffer>, Q: IsA<File>, R: IsA<gio::InputStream>>(buffer: &P, file: &Q, stream: &R) -> FileLoader {
         skip_assert_initialized!();
         unsafe {
@@ -39,19 +63,54 @@ impl FileLoader {
 
 pub const NONE_FILE_LOADER: Option<&FileLoader> = None;
 
+/// Trait containing all `FileLoader` methods.
+///
+/// # Implementors
+///
+/// [`FileLoader`](struct.FileLoader.html)
 pub trait FileLoaderExt: 'static {
+    ///
+    /// # Returns
+    ///
+    /// the `Buffer` to load the contents into.
     fn get_buffer(&self) -> Option<Buffer>;
 
+    ///
+    /// # Returns
+    ///
+    /// the detected compression type.
     fn get_compression_type(&self) -> CompressionType;
 
+    ///
+    /// # Returns
+    ///
+    /// the detected file encoding.
     fn get_encoding(&self) -> Option<Encoding>;
 
+    ///
+    /// # Returns
+    ///
+    /// the `File`.
     fn get_file(&self) -> Option<File>;
 
+    ///
+    /// # Returns
+    ///
+    /// the `gio::InputStream` to load, or `None`
+    /// if a `gio::File` is used.
     fn get_input_stream(&self) -> Option<gio::InputStream>;
 
+    ///
+    /// # Returns
+    ///
+    /// the `gio::File` to load, or `None`
+    /// if an input stream is used.
     fn get_location(&self) -> Option<gio::File>;
 
+    ///
+    /// # Returns
+    ///
+    /// the detected newline type.
     fn get_newline_type(&self) -> NewlineType;
 
     //fn load_async<P: IsA<gio::Cancellable>, Q: FnOnce(Result<(), Error>) + Send + 'static, R: FnOnce(Result<(), Error>) + Send + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&P>, progress_callback: Q, progress_callback_notify: Fn() + 'static, callback: R);

@@ -28,6 +28,11 @@ glib_wrapper! {
 }
 
 impl Map {
+    /// Creates a new `Map`.
+    ///
+    /// # Returns
+    ///
+    /// a new `Map`.
     pub fn new() -> Map {
         assert_initialized_main_thread!();
         unsafe {
@@ -44,9 +49,22 @@ impl Default for Map {
 
 pub const NONE_MAP: Option<&Map> = None;
 
+/// Trait containing all `Map` methods.
+///
+/// # Implementors
+///
+/// [`Map`](struct.Map.html)
 pub trait MapExt: 'static {
+    /// Gets the `Map:view` property, which is the view this widget is mapping.
+    ///
+    /// # Returns
+    ///
+    /// a `View` or `None`.
     fn get_view(&self) -> Option<View>;
 
+    /// Sets the view that `self` will be doing the mapping to.
+    /// ## `view`
+    /// a `View`
     fn set_view<P: IsA<View>>(&self, view: &P);
 
     fn get_property_font_desc(&self) -> Option<pango::FontDescription>;

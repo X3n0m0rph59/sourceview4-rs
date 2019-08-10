@@ -18,6 +18,12 @@ glib_wrapper! {
 }
 
 impl Region {
+    /// ## `buffer`
+    /// a `gtk::TextBuffer`.
+    ///
+    /// # Returns
+    ///
+    /// a new `Region` object for `buffer`.
     pub fn new<P: IsA<gtk::TextBuffer>>(buffer: &P) -> Region {
         assert_initialized_main_thread!();
         unsafe {
@@ -28,27 +34,100 @@ impl Region {
 
 pub const NONE_REGION: Option<&Region> = None;
 
+/// Trait containing all `Region` methods.
+///
+/// # Implementors
+///
+/// [`Region`](struct.Region.html)
 pub trait RegionExt: 'static {
+    /// Adds `region_to_add` to `self`. `region_to_add` is not modified.
+    /// ## `region_to_add`
+    /// the `Region` to add to `self`, or `None`.
     fn add_region<P: IsA<Region>>(&self, region_to_add: Option<&P>);
 
+    /// Adds the subregion delimited by `_start` and `_end` to `self`.
+    /// ## `_start`
+    /// the start of the subregion.
+    /// ## `_end`
+    /// the end of the subregion.
     fn add_subregion(&self, _start: &gtk::TextIter, _end: &gtk::TextIter);
 
+    /// Gets the `start` and `end` bounds of the `self`.
+    /// ## `start`
+    /// iterator to initialize with the start of `self`,
+    ///  or `None`.
+    /// ## `end`
+    /// iterator to initialize with the end of `self`,
+    ///  or `None`.
+    ///
+    /// # Returns
+    ///
+    /// `true` if `start` and `end` have been set successfully (if non-`None`),
+    ///  or `false` if the `self` is empty.
     fn get_bounds(&self) -> Option<(gtk::TextIter, gtk::TextIter)>;
 
+    ///
+    /// # Returns
+    ///
+    /// the `gtk::TextBuffer`.
     fn get_buffer(&self) -> Option<gtk::TextBuffer>;
 
     //fn get_start_region_iter(&self, iter: /*Ignored*/RegionIter);
 
+    /// Returns the intersection between `self` and `region2`. `self` and
+    /// `region2` are not modified.
+    /// ## `region2`
+    /// a `Region`, or `None`.
+    ///
+    /// # Returns
+    ///
+    /// the intersection as a `Region`
+    ///  object.
     fn intersect_region<P: IsA<Region>>(&self, region2: Option<&P>) -> Option<Region>;
 
+    /// Returns the intersection between `self` and the subregion delimited by
+    /// `_start` and `_end`. `self` is not modified.
+    /// ## `_start`
+    /// the start of the subregion.
+    /// ## `_end`
+    /// the end of the subregion.
+    ///
+    /// # Returns
+    ///
+    /// the intersection as a new
+    ///  `Region`.
     fn intersect_subregion(&self, _start: &gtk::TextIter, _end: &gtk::TextIter) -> Option<Region>;
 
+    /// Returns whether the `self` is empty. A `None` `self` is considered empty.
+    ///
+    /// # Returns
+    ///
+    /// whether the `self` is empty.
     fn is_empty(&self) -> bool;
 
+    /// Subtracts `region_to_subtract` from `self`. `region_to_subtract` is not
+    /// modified.
+    /// ## `region_to_subtract`
+    /// the `Region` to subtract from
+    ///  `self`, or `None`.
     fn subtract_region<P: IsA<Region>>(&self, region_to_subtract: Option<&P>);
 
+    /// Subtracts the subregion delimited by `_start` and `_end` from `self`.
+    /// ## `_start`
+    /// the start of the subregion.
+    /// ## `_end`
+    /// the end of the subregion.
     fn subtract_subregion(&self, _start: &gtk::TextIter, _end: &gtk::TextIter);
 
+    /// Gets a string represention of `self`, for debugging purposes.
+    ///
+    /// The returned string contains the character offsets of the subregions. It
+    /// doesn't include a newline character at the end of the string.
+    ///
+    /// # Returns
+    ///
+    /// a string represention of `self`. Free
+    ///  with `g_free` when no longer needed.
     fn to_string(&self) -> GString;
 }
 

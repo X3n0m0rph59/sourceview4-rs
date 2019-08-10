@@ -29,6 +29,10 @@ glib_wrapper! {
 }
 
 impl File {
+    ///
+    /// # Returns
+    ///
+    /// a new `File` object.
     pub fn new() -> File {
         assert_initialized_main_thread!();
         unsafe {
@@ -45,29 +49,99 @@ impl Default for File {
 
 pub const NONE_FILE: Option<&File> = None;
 
+/// Trait containing all `File` methods.
+///
+/// # Implementors
+///
+/// [`File`](struct.File.html)
 pub trait FileExt: 'static {
+    /// Checks synchronously the file on disk, to know whether the file is externally
+    /// modified, or has been deleted, and whether the file is read-only.
+    ///
+    /// `File` doesn't create a `gio::FileMonitor` to track those properties, so
+    /// this function needs to be called instead. Creating lots of `gio::FileMonitor`'s
+    /// would take lots of resources.
+    ///
+    /// Since this function is synchronous, it is advised to call it only on local
+    /// files. See `FileExt::is_local`.
     fn check_file_on_disk(&self);
 
+    ///
+    /// # Returns
+    ///
+    /// the compression type.
     fn get_compression_type(&self) -> CompressionType;
 
+    /// The encoding is initially `None`. After a successful file loading or saving
+    /// operation, the encoding is non-`None`.
+    ///
+    /// # Returns
+    ///
+    /// the character encoding.
     fn get_encoding(&self) -> Option<Encoding>;
 
+    ///
+    /// # Returns
+    ///
+    /// the `gio::File`.
     fn get_location(&self) -> Option<gio::File>;
 
+    ///
+    /// # Returns
+    ///
+    /// the newline type.
     fn get_newline_type(&self) -> NewlineType;
 
+    /// Returns whether the file has been deleted. If the
+    /// `File:location` is `None`, returns `false`.
+    ///
+    /// To have an up-to-date value, you must first call
+    /// `FileExt::check_file_on_disk`.
+    ///
+    /// # Returns
+    ///
+    /// whether the file has been deleted.
     fn is_deleted(&self) -> bool;
 
+    /// Returns whether the file is externally modified. If the
+    /// `File:location` is `None`, returns `false`.
+    ///
+    /// To have an up-to-date value, you must first call
+    /// `FileExt::check_file_on_disk`.
+    ///
+    /// # Returns
+    ///
+    /// whether the file is externally modified.
     fn is_externally_modified(&self) -> bool;
 
+    /// Returns whether the file is local. If the `File:location` is `None`,
+    /// returns `false`.
+    ///
+    /// # Returns
+    ///
+    /// whether the file is local.
     fn is_local(&self) -> bool;
 
+    /// Returns whether the file is read-only. If the
+    /// `File:location` is `None`, returns `false`.
+    ///
+    /// To have an up-to-date value, you must first call
+    /// `FileExt::check_file_on_disk`.
+    ///
+    /// # Returns
+    ///
+    /// whether the file is read-only.
     fn is_readonly(&self) -> bool;
 
+    /// Sets the location.
+    /// ## `location`
+    /// the new `gio::File`, or `None`.
     fn set_location<P: IsA<gio::File>>(&self, location: Option<&P>);
 
     //fn set_mount_operation_factory(&self, callback: /*Unimplemented*/Fn(&File, /*Unimplemented*/Option<Fundamental: Pointer>) -> gio::MountOperation, user_data: /*Unimplemented*/Option<Fundamental: Pointer>);
 
+    /// Whether the file is read-only or not. The value of this property is
+    /// not updated automatically (there is no file monitors).
     fn get_property_read_only(&self) -> bool;
 
     fn connect_property_compression_type_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;

@@ -29,6 +29,11 @@ glib_wrapper! {
 }
 
 impl MarkAttributes {
+    /// Creates a new source mark attributes.
+    ///
+    /// # Returns
+    ///
+    /// a new source mark attributes.
     pub fn new() -> MarkAttributes {
         assert_initialized_main_thread!();
         unsafe {
@@ -45,31 +50,127 @@ impl Default for MarkAttributes {
 
 pub const NONE_MARK_ATTRIBUTES: Option<&MarkAttributes> = None;
 
+/// Trait containing all `MarkAttributes` methods.
+///
+/// # Implementors
+///
+/// [`MarkAttributes`](struct.MarkAttributes.html)
 pub trait MarkAttributesExt: 'static {
+    /// Stores background color in `background`.
+    /// ## `background`
+    /// a `gdk::RGBA`.
+    ///
+    /// # Returns
+    ///
+    /// whether background color for `self` was set.
     fn get_background(&self) -> Option<gdk::RGBA>;
 
+    /// Gets a `gio::Icon` to be used as a base for rendered icon. Note that the icon can
+    /// be `None` if it wasn't set earlier.
+    ///
+    /// # Returns
+    ///
+    /// An icon. The icon belongs to `self` and should
+    /// not be unreffed.
     fn get_gicon(&self) -> Option<gio::Icon>;
 
+    /// Gets a name of an icon to be used as a base for rendered icon. Note that the
+    /// icon name can be `None` if it wasn't set earlier.
+    ///
+    /// # Returns
+    ///
+    /// An icon name. The string belongs to `self` and
+    /// should not be freed.
     fn get_icon_name(&self) -> Option<GString>;
 
+    /// Gets a `gdk_pixbuf::Pixbuf` to be used as a base for rendered icon. Note that the
+    /// pixbuf can be `None` if it wasn't set earlier.
+    ///
+    /// # Returns
+    ///
+    /// A pixbuf. The pixbuf belongs to `self` and
+    /// should not be unreffed.
     fn get_pixbuf(&self) -> Option<gdk_pixbuf::Pixbuf>;
 
+    /// Queries for a tooltip by emitting
+    /// a `MarkAttributes::query-tooltip-markup` signal. The tooltip may contain
+    /// a markup.
+    /// ## `mark`
+    /// a `Mark`.
+    ///
+    /// # Returns
+    ///
+    /// A tooltip. The returned string should be freed by
+    /// using `g_free` when done with it.
     fn get_tooltip_markup<P: IsA<Mark>>(&self, mark: &P) -> Option<GString>;
 
+    /// Queries for a tooltip by emitting
+    /// a `MarkAttributes::query-tooltip-text` signal. The tooltip is a plain
+    /// text.
+    /// ## `mark`
+    /// a `Mark`.
+    ///
+    /// # Returns
+    ///
+    /// A tooltip. The returned string should be freed by
+    /// using `g_free` when done with it.
     fn get_tooltip_text<P: IsA<Mark>>(&self, mark: &P) -> Option<GString>;
 
+    /// Renders an icon of given size. The base of the icon is set by the last call
+    /// to one of: `MarkAttributesExt::set_pixbuf`,
+    /// `MarkAttributesExt::set_gicon` or
+    /// `MarkAttributesExt::set_icon_name`. `size` cannot be lower than 1.
+    /// ## `widget`
+    /// widget of which style settings may be used.
+    /// ## `size`
+    /// size of the rendered icon.
+    ///
+    /// # Returns
+    ///
+    /// A rendered pixbuf. The pixbuf belongs to `self`
+    /// and should not be unreffed.
     fn render_icon<P: IsA<gtk::Widget>>(&self, widget: &P, size: i32) -> Option<gdk_pixbuf::Pixbuf>;
 
+    /// Sets background color to the one given in `background`.
+    /// ## `background`
+    /// a `gdk::RGBA`.
     fn set_background(&self, background: &gdk::RGBA);
 
+    /// Sets an icon to be used as a base for rendered icon.
+    /// ## `gicon`
+    /// a `gio::Icon` to be used.
     fn set_gicon<P: IsA<gio::Icon>>(&self, gicon: &P);
 
+    /// Sets a name of an icon to be used as a base for rendered icon.
+    /// ## `icon_name`
+    /// name of an icon to be used.
     fn set_icon_name(&self, icon_name: &str);
 
+    /// Sets a pixbuf to be used as a base for rendered icon.
+    /// ## `pixbuf`
+    /// a `gdk_pixbuf::Pixbuf` to be used.
     fn set_pixbuf(&self, pixbuf: &gdk_pixbuf::Pixbuf);
 
+    /// The code should connect to this signal to provide a tooltip for given
+    /// `mark`. The tooltip can contain a markup.
+    /// ## `mark`
+    /// The `Mark`.
+    ///
+    /// # Returns
+    ///
+    /// A tooltip. The string should be freed with
+    /// `g_free` when done with it.
     fn connect_query_tooltip_markup<F: Fn(&Self, &Mark) -> String + 'static>(&self, f: F) -> SignalHandlerId;
 
+    /// The code should connect to this signal to provide a tooltip for given
+    /// `mark`. The tooltip should be just a plain text.
+    /// ## `mark`
+    /// The `Mark`.
+    ///
+    /// # Returns
+    ///
+    /// A tooltip. The string should be freed with
+    /// `g_free` when done with it.
     fn connect_query_tooltip_text<F: Fn(&Self, &Mark) -> String + 'static>(&self, f: F) -> SignalHandlerId;
 
     fn connect_property_background_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;

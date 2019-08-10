@@ -301,6 +301,8 @@ impl SetValue for CompressionType {
     }
 }
 
+/// The alignment mode of the renderer, when a cell spans multiple lines (due to
+/// text wrapping).
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[derive(Clone, Copy)]
 pub enum GutterRendererAlignmentMode {

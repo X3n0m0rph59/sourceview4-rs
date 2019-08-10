@@ -29,6 +29,14 @@ glib_wrapper! {
 }
 
 impl CompletionWords {
+    /// ## `name`
+    /// The name for the provider, or `None`.
+    /// ## `icon`
+    /// A specific icon for the provider, or `None`.
+    ///
+    /// # Returns
+    ///
+    /// a new `CompletionWords` provider
     pub fn new(name: Option<&str>, icon: Option<&gdk_pixbuf::Pixbuf>) -> CompletionWords {
         assert_initialized_main_thread!();
         unsafe {
@@ -39,11 +47,23 @@ impl CompletionWords {
 
 pub const NONE_COMPLETION_WORDS: Option<&CompletionWords> = None;
 
+/// Trait containing all `CompletionWords` methods.
+///
+/// # Implementors
+///
+/// [`CompletionWords`](struct.CompletionWords.html)
 pub trait CompletionWordsExt: 'static {
+    /// Registers `buffer` in the `self` provider.
+    /// ## `buffer`
+    /// a `gtk::TextBuffer`
     fn register<P: IsA<gtk::TextBuffer>>(&self, buffer: &P);
 
+    /// Unregisters `buffer` from the `self` provider.
+    /// ## `buffer`
+    /// a `gtk::TextBuffer`
     fn unregister<P: IsA<gtk::TextBuffer>>(&self, buffer: &P);
 
+    /// The type of activation.
     fn set_property_activation(&self, activation: CompletionActivation);
 
     fn set_property_icon(&self, icon: Option<&gdk_pixbuf::Pixbuf>);

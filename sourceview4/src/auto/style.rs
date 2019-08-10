@@ -23,12 +23,28 @@ glib_wrapper! {
 }
 
 impl Style {
+    /// This function modifies the `gtk::TextTag` properties that are related to the
+    /// `Style` properties. Other `gtk::TextTag` properties are left untouched.
+    ///
+    /// If `self` is non-`None`, applies `self` to `tag`.
+    ///
+    /// If `self` is `None`, the related *-set properties of `gtk::TextTag` are set to
+    /// `false`.
+    /// ## `tag`
+    /// a `gtk::TextTag` to apply styles to.
     pub fn apply<P: IsA<gtk::TextTag>>(&self, tag: &P) {
         unsafe {
             gtk_source_sys::gtk_source_style_apply(self.to_glib_none().0, tag.as_ref().to_glib_none().0);
         }
     }
 
+    /// Creates a copy of `self`, that is a new `Style` instance which
+    /// has the same attributes set.
+    ///
+    /// # Returns
+    ///
+    /// copy of `self`, call `gobject::Object::unref`
+    /// when you are done with it.
     pub fn copy(&self) -> Option<Style> {
         unsafe {
             from_glib_full(gtk_source_sys::gtk_source_style_copy(self.to_glib_none().0))

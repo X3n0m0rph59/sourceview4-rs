@@ -34,61 +34,193 @@ glib_wrapper! {
 
 pub const NONE_COMPLETION: Option<&Completion> = None;
 
+/// Trait containing all `Completion` methods.
+///
+/// # Implementors
+///
+/// [`Completion`](struct.Completion.html)
 pub trait CompletionExt: 'static {
+    /// Add a new `CompletionProvider` to the completion object. This will
+    /// add a reference `provider`, so make sure to unref your own copy when you
+    /// no longer need it.
+    /// ## `provider`
+    /// a `CompletionProvider`.
+    ///
+    /// # Returns
+    ///
+    /// `true` if `provider` was successfully added, otherwise if `error`
+    ///  is provided, it will be set with the error and `false` is returned.
     fn add_provider<P: IsA<CompletionProvider>>(&self, provider: &P) -> Result<(), Error>;
 
+    /// Block interactive completion. This can be used to disable interactive
+    /// completion when inserting or deleting text from the buffer associated with
+    /// the completion. Use `CompletionExt::unblock_interactive` to enable
+    /// interactive completion again.
+    ///
+    /// This function may be called multiple times. It will continue to block
+    /// interactive completion until `CompletionExt::unblock_interactive`
+    /// has been called the same number of times.
     fn block_interactive(&self);
 
+    /// The info widget is the window where the completion displays optional extra
+    /// information of the proposal.
+    ///
+    /// # Returns
+    ///
+    /// The `CompletionInfo` window
+    ///  associated with `self`.
     fn get_info_window(&self) -> Option<CompletionInfo>;
 
+    /// Get list of providers registered on `self`. The returned list is owned
+    /// by the completion and should not be freed.
+    ///
+    /// # Returns
+    ///
+    ///
+    /// list of `CompletionProvider`.
     fn get_providers(&self) -> Vec<CompletionProvider>;
 
+    /// The `View` associated with `self`, or `None` if the view has been
+    /// destroyed.
+    ///
+    /// # Returns
+    ///
+    /// The `View` associated with
+    /// `self`, or `None`.
     fn get_view(&self) -> Option<View>;
 
+    /// Hides the completion if it is active (visible).
     fn hide(&self);
 
+    /// Remove `provider` from the completion.
+    /// ## `provider`
+    /// a `CompletionProvider`.
+    ///
+    /// # Returns
+    ///
+    /// `true` if `provider` was successfully removed, otherwise if `error`
+    ///  is provided, it will be set with the error and `false` is returned.
     fn remove_provider<P: IsA<CompletionProvider>>(&self, provider: &P) -> Result<(), Error>;
 
+    /// Starts a new completion with the specified `CompletionContext` and
+    /// a list of potential candidate providers for completion.
+    ///
+    /// It can be convenient for showing a completion on-the-fly, without the need to
+    /// add or remove providers to the `Completion`.
+    ///
+    /// Another solution is to add providers with
+    /// `CompletionExt::add_provider`, and implement
+    /// `CompletionProvider::match` for each provider.
+    /// ## `providers`
+    ///
+    /// a list of `CompletionProvider`, or `None`.
+    /// ## `context`
+    /// The `CompletionContext`
+    /// with which to start the completion.
+    ///
+    /// # Returns
+    ///
+    /// `true` if it was possible to the show completion window.
     fn start<P: IsA<CompletionContext>>(&self, providers: &[CompletionProvider], context: &P) -> bool;
 
+    /// Unblock interactive completion. This can be used after using
+    /// `CompletionExt::block_interactive` to enable interactive completion
+    /// again.
     fn unblock_interactive(&self);
 
+    /// Number of keyboard accelerators to show for the first proposals. For
+    /// example, to activate the first proposal, the user can press
+    /// `<keycombo>``<keycap>`Alt`</keycap>``<keycap>`1`</keycap>``</keycombo>`.
     fn get_property_accelerators(&self) -> u32;
 
+    /// Number of keyboard accelerators to show for the first proposals. For
+    /// example, to activate the first proposal, the user can press
+    /// `<keycombo>``<keycap>`Alt`</keycap>``<keycap>`1`</keycap>``</keycombo>`.
     fn set_property_accelerators(&self, accelerators: u32);
 
+    /// Determines the popup delay (in milliseconds) at which the completion
+    /// will be shown for interactive completion.
     fn get_property_auto_complete_delay(&self) -> u32;
 
+    /// Determines the popup delay (in milliseconds) at which the completion
+    /// will be shown for interactive completion.
     fn set_property_auto_complete_delay(&self, auto_complete_delay: u32);
 
+    /// The scroll page size of the proposals in the completion window. In
+    /// other words, when `<keycap>`PageDown`</keycap>` or
+    /// `<keycap>`PageUp`</keycap>` is pressed, the selected
+    /// proposal becomes the one which is located one page size backward or
+    /// forward.
+    ///
+    /// See also the `Completion::move-cursor` signal.
     fn get_property_proposal_page_size(&self) -> u32;
 
+    /// The scroll page size of the proposals in the completion window. In
+    /// other words, when `<keycap>`PageDown`</keycap>` or
+    /// `<keycap>`PageUp`</keycap>` is pressed, the selected
+    /// proposal becomes the one which is located one page size backward or
+    /// forward.
+    ///
+    /// See also the `Completion::move-cursor` signal.
     fn set_property_proposal_page_size(&self, proposal_page_size: u32);
 
+    /// The scroll page size of the provider pages in the completion window.
+    ///
+    /// See the `Completion::move-page` signal.
     fn get_property_provider_page_size(&self) -> u32;
 
+    /// The scroll page size of the provider pages in the completion window.
+    ///
+    /// See the `Completion::move-page` signal.
     fn set_property_provider_page_size(&self, provider_page_size: u32);
 
+    /// Determines whether the visibility of the info window should be
+    /// saved when the completion is hidden, and restored when the completion
+    /// is shown again.
     fn get_property_remember_info_visibility(&self) -> bool;
 
+    /// Determines whether the visibility of the info window should be
+    /// saved when the completion is hidden, and restored when the completion
+    /// is shown again.
     fn set_property_remember_info_visibility(&self, remember_info_visibility: bool);
 
+    /// Determines whether the first proposal should be selected when the
+    /// completion is first shown.
     fn get_property_select_on_show(&self) -> bool;
 
+    /// Determines whether the first proposal should be selected when the
+    /// completion is first shown.
     fn set_property_select_on_show(&self, select_on_show: bool);
 
+    /// Determines whether provider headers should be shown in the proposal
+    /// list. It can be useful to disable when there is only one provider.
     fn get_property_show_headers(&self) -> bool;
 
+    /// Determines whether provider headers should be shown in the proposal
+    /// list. It can be useful to disable when there is only one provider.
     fn set_property_show_headers(&self, show_headers: bool);
 
+    /// Determines whether provider and proposal icons should be shown in
+    /// the completion popup.
     fn get_property_show_icons(&self) -> bool;
 
+    /// Determines whether provider and proposal icons should be shown in
+    /// the completion popup.
     fn set_property_show_icons(&self, show_icons: bool);
 
+    /// The `Completion::activate-proposal` signal is a
+    /// keybinding signal which gets emitted when the user initiates
+    /// a proposal activation.
+    ///
+    /// Applications should not connect to it, but may emit it with
+    /// `g_signal_emit_by_name` if they need to control the proposal
+    /// activation programmatically.
     fn connect_activate_proposal<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
 
     fn emit_activate_proposal(&self);
 
+    /// Emitted when the completion window is hidden. The default handler
+    /// will actually hide the window.
     fn connect_hide<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
 
     fn emit_hide(&self);
@@ -97,10 +229,16 @@ pub trait CompletionExt: 'static {
 
     //fn connect_move_page<Unsupported or ignored types>(&self, f: F) -> SignalHandlerId;
 
+    /// Emitted just before starting to populate the completion with providers.
+    /// You can use this signal to add additional attributes in the context.
+    /// ## `context`
+    /// The `CompletionContext` for the current completion
     fn connect_populate_context<F: Fn(&Self, &CompletionContext) + 'static>(&self, f: F) -> SignalHandlerId;
 
     fn emit_populate_context(&self, context: &CompletionContext);
 
+    /// Emitted when the completion window is shown. The default handler
+    /// will actually show the window.
     fn connect_show<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
 
     fn emit_show(&self);

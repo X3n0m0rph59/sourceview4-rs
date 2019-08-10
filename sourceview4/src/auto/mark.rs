@@ -18,6 +18,22 @@ glib_wrapper! {
 }
 
 impl Mark {
+    /// Creates a text mark. Add it to a buffer using `gtk::TextBufferExt::add_mark`.
+    /// If name is NULL, the mark is anonymous; otherwise, the mark can be retrieved
+    /// by name using `gtk::TextBufferExt::get_mark`.
+    /// Normally marks are created using the utility function
+    /// `BufferExt::create_source_mark`.
+    /// ## `name`
+    /// Name of the `Mark`, can be NULL when not using a name
+    /// ## `category`
+    /// is used to classify marks according to common characteristics
+    /// (e.g. all the marks representing a bookmark could belong to the "bookmark"
+    /// category, or all the marks representing a compilation error could belong to
+    /// "error" category).
+    ///
+    /// # Returns
+    ///
+    /// a new `Mark` that can be added using `gtk::TextBufferExt::add_mark`.
     pub fn new(name: &str, category: &str) -> Mark {
         assert_initialized_main_thread!();
         unsafe {
@@ -28,11 +44,41 @@ impl Mark {
 
 pub const NONE_MARK: Option<&Mark> = None;
 
+/// Trait containing all `Mark` methods.
+///
+/// # Implementors
+///
+/// [`Mark`](struct.Mark.html)
 pub trait MarkExt: 'static {
+    /// Returns the mark category.
+    ///
+    /// # Returns
+    ///
+    /// the category of the `Mark`.
     fn get_category(&self) -> Option<GString>;
 
+    /// Returns the next `Mark` in the buffer or `None` if the mark
+    /// was not added to a buffer. If there is no next mark, `None` will be returned.
+    ///
+    /// If `category` is `None`, looks for marks of any category.
+    /// ## `category`
+    /// a string specifying the mark category, or `None`.
+    ///
+    /// # Returns
+    ///
+    /// the next `Mark`, or `None`.
     fn next(&self, category: Option<&str>) -> Option<Mark>;
 
+    /// Returns the previous `Mark` in the buffer or `None` if the mark
+    /// was not added to a buffer. If there is no previous mark, `None` is returned.
+    ///
+    /// If `category` is `None`, looks for marks of any category
+    /// ## `category`
+    /// a string specifying the mark category, or `None`.
+    ///
+    /// # Returns
+    ///
+    /// the previous `Mark`, or `None`.
     fn prev(&self, category: &str) -> Option<Mark>;
 }
 

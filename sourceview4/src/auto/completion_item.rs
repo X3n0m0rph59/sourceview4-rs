@@ -25,6 +25,12 @@ glib_wrapper! {
 }
 
 impl CompletionItem {
+    /// Creates a new `CompletionItem`. The desired properties need to be set
+    /// afterwards.
+    ///
+    /// # Returns
+    ///
+    /// a new `CompletionItem`.
     pub fn new() -> CompletionItem {
         assert_initialized_main_thread!();
         unsafe {
@@ -41,19 +47,38 @@ impl Default for CompletionItem {
 
 pub const NONE_COMPLETION_ITEM: Option<&CompletionItem> = None;
 
+/// Trait containing all `CompletionItem` methods.
+///
+/// # Implementors
+///
+/// [`CompletionItem`](struct.CompletionItem.html)
 pub trait CompletionItemExt: 'static {
+    /// ## `gicon`
+    /// the `gio::Icon`, or `None`.
     fn set_gicon<P: IsA<gio::Icon>>(&self, gicon: Option<&P>);
 
+    /// ## `icon`
+    /// the `gdk_pixbuf::Pixbuf`, or `None`.
     fn set_icon(&self, icon: Option<&gdk_pixbuf::Pixbuf>);
 
+    /// ## `icon_name`
+    /// the icon name, or `None`.
     fn set_icon_name(&self, icon_name: Option<&str>);
 
+    /// ## `info`
+    /// the info, or `None`.
     fn set_info(&self, info: Option<&str>);
 
+    /// ## `label`
+    /// the label, or `None`.
     fn set_label(&self, label: Option<&str>);
 
+    /// ## `markup`
+    /// the markup, or `None`.
     fn set_markup(&self, markup: Option<&str>);
 
+    /// ## `text`
+    /// the text, or `None`.
     fn set_text(&self, text: Option<&str>);
 
     fn connect_property_gicon_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;

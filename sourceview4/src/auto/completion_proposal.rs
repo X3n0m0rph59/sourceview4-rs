@@ -29,27 +29,103 @@ glib_wrapper! {
 
 pub const NONE_COMPLETION_PROPOSAL: Option<&CompletionProposal> = None;
 
+/// Trait containing all `CompletionProposal` methods.
+///
+/// # Implementors
+///
+/// [`CompletionItem`](struct.CompletionItem.html), [`CompletionProposal`](struct.CompletionProposal.html)
 pub trait CompletionProposalExt: 'static {
+    /// Emits the "changed" signal on `self`. This should be called by
+    /// implementations whenever the name, icon or info of the proposal has
+    /// changed.
     fn changed(&self);
 
+    /// Get whether two proposal objects are the same. This is used to (together
+    /// with `CompletionProposal::hash`) to match proposals in the
+    /// completion model. By default, it uses direct equality (`g_direct_equal`).
+    /// ## `other`
+    /// a `CompletionProposal`.
+    ///
+    /// # Returns
+    ///
+    /// `true` if `self` and `object` are the same proposal
     fn equal<P: IsA<CompletionProposal>>(&self, other: &P) -> bool;
 
+    /// Gets the `gio::Icon` for the icon of `self`.
+    ///
+    /// # Returns
+    ///
+    /// A `gio::Icon` with the icon of `self`.
     fn get_gicon(&self) -> Option<gio::Icon>;
 
+    /// Gets the `gdk_pixbuf::Pixbuf` for the icon of `self`.
+    ///
+    /// # Returns
+    ///
+    /// A `gdk_pixbuf::Pixbuf` with the icon of `self`.
     fn get_icon(&self) -> Option<gdk_pixbuf::Pixbuf>;
 
+    /// Gets the icon name of `self`.
+    ///
+    /// # Returns
+    ///
+    /// The icon name of `self`.
     fn get_icon_name(&self) -> Option<GString>;
 
+    /// Gets extra information associated to the proposal. This information will be
+    /// used to present the user with extra, detailed information about the
+    /// selected proposal. The returned string must be freed with `g_free`.
+    ///
+    /// # Returns
+    ///
+    /// a newly-allocated string containing
+    /// extra information of `self` or `None` if no extra information is associated
+    /// to `self`.
     fn get_info(&self) -> Option<GString>;
 
+    /// Gets the label of `self`. The label is shown in the list of proposals as
+    /// plain text. If you need any markup (such as bold or italic text), you have
+    /// to implement `CompletionProposal::get_markup`. The returned string
+    /// must be freed with `g_free`.
+    ///
+    /// # Returns
+    ///
+    /// a new string containing the label of `self`.
     fn get_label(&self) -> Option<GString>;
 
+    /// Gets the label of `self` with markup. The label is shown in the list of
+    /// proposals and may contain markup. This will be used instead of
+    /// `CompletionProposal::get_label` if implemented. The returned string
+    /// must be freed with `g_free`.
+    ///
+    /// # Returns
+    ///
+    /// a new string containing the label of `self` with markup.
     fn get_markup(&self) -> Option<GString>;
 
+    /// Gets the text of `self`. The text that is inserted into
+    /// the text buffer when the proposal is activated by the default activation.
+    /// You are free to implement a custom activation handler in the provider and
+    /// not implement this function. For more information, see
+    /// `CompletionProvider::activate_proposal`. The returned string must
+    /// be freed with `g_free`.
+    ///
+    /// # Returns
+    ///
+    /// a new string containing the text of `self`.
     fn get_text(&self) -> Option<GString>;
 
+    /// Get the hash value of `self`. This is used to (together with
+    /// `CompletionProposal::equal`) to match proposals in the completion
+    /// model. By default, it uses a direct hash (`g_direct_hash`).
+    ///
+    /// # Returns
+    ///
+    /// The hash value of `self`.
     fn hash(&self) -> u32;
 
+    /// Emitted when the proposal has changed. The completion popup
+    /// will react to this by updating the shown information.
     fn connect_changed<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
 
     fn emit_changed(&self);

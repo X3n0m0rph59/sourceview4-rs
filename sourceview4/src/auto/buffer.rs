@@ -35,6 +35,13 @@ glib_wrapper! {
 }
 
 impl Buffer {
+    /// Creates a new source buffer.
+    /// ## `table`
+    /// a `gtk::TextTagTable`, or `None` to create a new one.
+    ///
+    /// # Returns
+    ///
+    /// a new source buffer.
     pub fn new<P: IsA<gtk::TextTagTable>>(table: Option<&P>) -> Buffer {
         assert_initialized_main_thread!();
         unsafe {
@@ -42,6 +49,16 @@ impl Buffer {
         }
     }
 
+    /// Creates a new source buffer using the highlighting patterns in
+    /// `language`. This is equivalent to creating a new source buffer with
+    /// a new tag table and then calling `BufferExt::set_language`.
+    /// ## `language`
+    /// a `Language`.
+    ///
+    /// # Returns
+    ///
+    /// a new source buffer which will highlight text
+    /// according to the highlighting patterns in `language`.
     pub fn new_with_language<P: IsA<Language>>(language: &P) -> Buffer {
         skip_assert_initialized!();
         unsafe {
@@ -52,89 +69,429 @@ impl Buffer {
 
 pub const NONE_BUFFER: Option<&Buffer> = None;
 
+/// Trait containing all `Buffer` methods.
+///
+/// # Implementors
+///
+/// [`Buffer`](struct.Buffer.html)
 pub trait BufferExt: 'static {
+    /// Moves `iter` to the position of the previous `Mark` of the given
+    /// category. Returns `true` if `iter` was moved. If `category` is NULL, the
+    /// previous source mark can be of any category.
+    /// ## `iter`
+    /// an iterator.
+    /// ## `category`
+    /// category to search for, or `None`
+    ///
+    /// # Returns
+    ///
+    /// whether `iter` was moved.
     fn backward_iter_to_source_mark(&self, iter: &mut gtk::TextIter, category: Option<&str>) -> bool;
 
+    /// Marks the beginning of a not undoable action on the buffer,
+    /// disabling the undo manager. Typically you would call this function
+    /// before initially setting the contents of the buffer (e.g. when
+    /// loading a file in a text editor).
+    ///
+    /// You may nest `BufferExt::begin_not_undoable_action` /
+    /// `BufferExt::end_not_undoable_action` blocks.
     fn begin_not_undoable_action(&self);
 
+    /// Determines whether a source buffer can redo the last action
+    /// (i.e. if the last operation was an undo).
+    ///
+    /// # Returns
+    ///
+    /// `true` if a redo is possible.
     fn can_redo(&self) -> bool;
 
+    /// Determines whether a source buffer can undo the last action.
+    ///
+    /// # Returns
+    ///
+    /// `true` if it's possible to undo the last action.
     fn can_undo(&self) -> bool;
 
+    /// Changes the case of the text between the specified iterators.
+    /// ## `case_type`
+    /// how to change the case.
+    /// ## `start`
+    /// a `gtk::TextIter`.
+    /// ## `end`
+    /// a `gtk::TextIter`.
     fn change_case(&self, case_type: ChangeCaseType, start: &mut gtk::TextIter, end: &mut gtk::TextIter);
 
+    /// Creates a source mark in the `self` of category `category`. A source mark is
+    /// a `gtk::TextMark` but organised into categories. Depending on the category
+    /// a pixbuf can be specified that will be displayed along the line of the mark.
+    ///
+    /// Like a `gtk::TextMark`, a `Mark` can be anonymous if the
+    /// passed `name` is `None`. Also, the buffer owns the marks so you
+    /// shouldn't unreference it.
+    ///
+    /// Marks always have left gravity and are moved to the beginning of
+    /// the line when the user deletes the line they were in.
+    ///
+    /// Typical uses for a source mark are bookmarks, breakpoints, current
+    /// executing instruction indication in a source file, etc..
+    /// ## `name`
+    /// the name of the mark, or `None`.
+    /// ## `category`
+    /// a string defining the mark category.
+    /// ## `where_`
+    /// location to place the mark.
+    ///
+    /// # Returns
+    ///
+    /// a new `Mark`, owned by the buffer.
     fn create_source_mark(&self, name: Option<&str>, category: &str, where_: &gtk::TextIter) -> Option<Mark>;
 
     //fn create_source_tag(&self, tag_name: Option<&str>, first_property_name: Option<&str>, : /*Unknown conversion*//*Unimplemented*/Fundamental: VarArgs) -> Option<gtk::TextTag>;
 
+    /// Marks the end of a not undoable action on the buffer. When the
+    /// last not undoable block is closed through the call to this
+    /// function, the list of undo actions is cleared and the undo manager
+    /// is re-enabled.
     fn end_not_undoable_action(&self);
 
+    /// Forces buffer to analyze and highlight the given area synchronously.
+    ///
+    /// `<note>`
+    ///  `<para>`
+    ///  This is a potentially slow operation and should be used only
+    ///  when you need to make sure that some text not currently
+    ///  visible is highlighted, for instance before printing.
+    ///  `</para>`
+    /// `</note>`
+    /// ## `start`
+    /// start of the area to highlight.
+    /// ## `end`
+    /// end of the area to highlight.
     fn ensure_highlight(&self, start: &gtk::TextIter, end: &gtk::TextIter);
 
+    /// Moves `iter` to the position of the next `Mark` of the given
+    /// `category`. Returns `true` if `iter` was moved. If `category` is NULL, the
+    /// next source mark can be of any category.
+    /// ## `iter`
+    /// an iterator.
+    /// ## `category`
+    /// category to search for, or `None`
+    ///
+    /// # Returns
+    ///
+    /// whether `iter` was moved.
     fn forward_iter_to_source_mark(&self, iter: &mut gtk::TextIter, category: Option<&str>) -> bool;
 
+    /// Get all defined context classes at `iter`.
+    ///
+    /// See the `Buffer` description for the list of default context classes.
+    /// ## `iter`
+    /// a `gtk::TextIter`.
+    ///
+    /// # Returns
+    ///
+    /// a new `None`
+    /// terminated array of context class names.
+    /// Use `g_strfreev` to free the array if it is no longer needed.
     fn get_context_classes_at_iter(&self, iter: &gtk::TextIter) -> Vec<GString>;
 
+    /// Determines whether bracket match highlighting is activated for the
+    /// source buffer.
+    ///
+    /// # Returns
+    ///
+    /// `true` if the source buffer will highlight matching
+    /// brackets.
     fn get_highlight_matching_brackets(&self) -> bool;
 
+    /// Determines whether syntax highlighting is activated in the source
+    /// buffer.
+    ///
+    /// # Returns
+    ///
+    /// `true` if syntax highlighting is enabled, `false` otherwise.
     fn get_highlight_syntax(&self) -> bool;
 
+    ///
+    /// # Returns
+    ///
+    /// whether the `self` has an implicit trailing newline.
     fn get_implicit_trailing_newline(&self) -> bool;
 
+    /// Returns the `Language` associated with the buffer,
+    /// see `BufferExt::set_language`. The returned object should not be
+    /// unreferenced by the user.
+    ///
+    /// # Returns
+    ///
+    /// the `Language` associated
+    /// with the buffer, or `None`.
     fn get_language(&self) -> Option<Language>;
 
+    /// Determines the number of undo levels the buffer will track for buffer edits.
+    ///
+    /// # Returns
+    ///
+    /// the maximum number of possible undo levels or -1 if no limit is set.
     fn get_max_undo_levels(&self) -> i32;
 
+    /// Returns the list of marks of the given category at `iter`. If `category`
+    /// is `None` it returns all marks at `iter`.
+    /// ## `iter`
+    /// an iterator.
+    /// ## `category`
+    /// category to search for, or `None`
+    ///
+    /// # Returns
+    ///
+    ///
+    /// a newly allocated `glib::SList`.
     fn get_source_marks_at_iter(&self, iter: &mut gtk::TextIter, category: Option<&str>) -> Vec<Mark>;
 
+    /// Returns the list of marks of the given category at `line`.
+    /// If `category` is `None`, all marks at `line` are returned.
+    /// ## `line`
+    /// a line number.
+    /// ## `category`
+    /// category to search for, or `None`
+    ///
+    /// # Returns
+    ///
+    ///
+    /// a newly allocated `glib::SList`.
     fn get_source_marks_at_line(&self, line: i32, category: Option<&str>) -> Vec<Mark>;
 
+    /// Returns the `StyleScheme` associated with the buffer,
+    /// see `BufferExt::set_style_scheme`.
+    /// The returned object should not be unreferenced by the user.
+    ///
+    /// # Returns
+    ///
+    /// the `StyleScheme`
+    /// associated with the buffer, or `None`.
     fn get_style_scheme(&self) -> Option<StyleScheme>;
 
+    /// Returns the `UndoManager` associated with the buffer,
+    /// see `BufferExt::set_undo_manager`. The returned object should not be
+    /// unreferenced by the user.
+    ///
+    /// # Returns
+    ///
+    /// the `UndoManager` associated
+    /// with the buffer, or `None`.
     fn get_undo_manager(&self) -> Option<UndoManager>;
 
+    /// Moves backward to the next toggle (on or off) of the context class. If no
+    /// matching context class toggles are found, returns `false`, otherwise `true`.
+    /// Does not return toggles located at `iter`, only toggles after `iter`. Sets
+    /// `iter` to the location of the toggle, or to the end of the buffer if no
+    /// toggle is found.
+    ///
+    /// See the `Buffer` description for the list of default context classes.
+    /// ## `iter`
+    /// a `gtk::TextIter`.
+    /// ## `context_class`
+    /// the context class.
+    ///
+    /// # Returns
+    ///
+    /// whether we found a context class toggle before `iter`
     fn iter_backward_to_context_class_toggle(&self, iter: &mut gtk::TextIter, context_class: &str) -> bool;
 
+    /// Moves forward to the next toggle (on or off) of the context class. If no
+    /// matching context class toggles are found, returns `false`, otherwise `true`.
+    /// Does not return toggles located at `iter`, only toggles after `iter`. Sets
+    /// `iter` to the location of the toggle, or to the end of the buffer if no
+    /// toggle is found.
+    ///
+    /// See the `Buffer` description for the list of default context classes.
+    /// ## `iter`
+    /// a `gtk::TextIter`.
+    /// ## `context_class`
+    /// the context class.
+    ///
+    /// # Returns
+    ///
+    /// whether we found a context class toggle after `iter`
     fn iter_forward_to_context_class_toggle(&self, iter: &mut gtk::TextIter, context_class: &str) -> bool;
 
+    /// Check if the class `context_class` is set on `iter`.
+    ///
+    /// See the `Buffer` description for the list of default context classes.
+    /// ## `iter`
+    /// a `gtk::TextIter`.
+    /// ## `context_class`
+    /// class to search for.
+    ///
+    /// # Returns
+    ///
+    /// whether `iter` has the context class.
     fn iter_has_context_class(&self, iter: &gtk::TextIter, context_class: &str) -> bool;
 
+    /// Joins the lines of text between the specified iterators.
+    /// ## `start`
+    /// a `gtk::TextIter`.
+    /// ## `end`
+    /// a `gtk::TextIter`.
     fn join_lines(&self, start: &mut gtk::TextIter, end: &mut gtk::TextIter);
 
+    /// Redoes the last undo operation. Use `BufferExt::can_redo`
+    /// to check whether a call to this function will have any effect.
+    ///
+    /// This function emits the `Buffer::redo` signal.
     fn redo(&self);
 
+    /// Remove all marks of `category` between `start` and `end` from the buffer.
+    /// If `category` is NULL, all marks in the range will be removed.
+    /// ## `start`
+    /// a `gtk::TextIter`.
+    /// ## `end`
+    /// a `gtk::TextIter`.
+    /// ## `category`
+    /// category to search for, or `None`.
     fn remove_source_marks(&self, start: &gtk::TextIter, end: &gtk::TextIter, category: Option<&str>);
 
+    /// Controls the bracket match highlighting function in the buffer. If
+    /// activated, when you position your cursor over a bracket character
+    /// (a parenthesis, a square bracket, etc.) the matching opening or
+    /// closing bracket character will be highlighted.
+    /// ## `highlight`
+    /// `true` if you want matching brackets highlighted.
     fn set_highlight_matching_brackets(&self, highlight: bool);
 
+    /// Controls whether syntax is highlighted in the buffer.
+    ///
+    /// If `highlight` is `true`, the text will be highlighted according to the syntax
+    /// patterns specified in the `Language` set with
+    /// `BufferExt::set_language`.
+    ///
+    /// If `highlight` is `false`, syntax highlighting is disabled and all the
+    /// `gtk::TextTag` objects that have been added by the syntax highlighting engine
+    /// are removed from the buffer.
+    /// ## `highlight`
+    /// `true` to enable syntax highlighting, `false` to disable it.
     fn set_highlight_syntax(&self, highlight: bool);
 
+    /// Sets whether the `self` has an implicit trailing newline.
+    ///
+    /// If an explicit trailing newline is present in a `gtk::TextBuffer`, `gtk::TextView`
+    /// shows it as an empty line. This is generally not what the user expects.
+    ///
+    /// If `implicit_trailing_newline` is `true` (the default value):
+    ///  - when a `FileLoader` loads the content of a file into the `self`,
+    ///  the trailing newline (if present in the file) is not inserted into the
+    ///  `self`.
+    ///  - when a `FileSaver` saves the content of the `self` into a file, a
+    ///  trailing newline is added to the file.
+    ///
+    /// On the other hand, if `implicit_trailing_newline` is `false`, the file's
+    /// content is not modified when loaded into the `self`, and the `self`'s
+    /// content is not modified when saved into a file.
+    /// ## `implicit_trailing_newline`
+    /// the new value.
     fn set_implicit_trailing_newline(&self, implicit_trailing_newline: bool);
 
+    /// Associates a `Language` with the buffer.
+    ///
+    /// Note that a `Language` affects not only the syntax highlighting, but
+    /// also the [context classes][context-classes]. If you want to disable just the
+    /// syntax highlighting, see `BufferExt::set_highlight_syntax`.
+    ///
+    /// The buffer holds a reference to `language`.
+    /// ## `language`
+    /// a `Language` to set, or `None`.
     fn set_language<P: IsA<Language>>(&self, language: Option<&P>);
 
+    /// Sets the number of undo levels for user actions the buffer will
+    /// track. If the number of user actions exceeds the limit set by this
+    /// function, older actions will be discarded.
+    ///
+    /// If `max_undo_levels` is -1, the undo/redo is unlimited.
+    ///
+    /// If `max_undo_levels` is 0, the undo/redo is disabled.
+    /// ## `max_undo_levels`
+    /// the desired maximum number of undo levels.
     fn set_max_undo_levels(&self, max_undo_levels: i32);
 
+    /// Sets a `StyleScheme` to be used by the buffer and the view.
+    ///
+    /// Note that a `StyleScheme` affects not only the syntax highlighting,
+    /// but also other `View` features such as highlighting the current line,
+    /// matching brackets, the line numbers, etc.
+    ///
+    /// Instead of setting a `None` `scheme`, it is better to disable syntax
+    /// highlighting with `BufferExt::set_highlight_syntax`, and setting the
+    /// `StyleScheme` with the "classic" or "tango" ID, because those two
+    /// style schemes follow more closely the GTK+ theme (for example for the
+    /// background color).
+    ///
+    /// The buffer holds a reference to `scheme`.
+    /// ## `scheme`
+    /// a `StyleScheme` or `None`.
     fn set_style_scheme<P: IsA<StyleScheme>>(&self, scheme: Option<&P>);
 
+    /// Set the buffer undo manager. If `manager` is `None` the default undo manager
+    /// will be set.
+    /// ## `manager`
+    /// A `UndoManager` or `None`.
     fn set_undo_manager<P: IsA<UndoManager>>(&self, manager: Option<&P>);
 
+    /// Sort the lines of text between the specified iterators.
+    /// ## `start`
+    /// a `gtk::TextIter`.
+    /// ## `end`
+    /// a `gtk::TextIter`.
+    /// ## `flags`
+    /// `SortFlags` specifying how the sort should behave
+    /// ## `column`
+    /// sort considering the text starting at the given column
     fn sort_lines(&self, start: &mut gtk::TextIter, end: &mut gtk::TextIter, flags: SortFlags, column: i32);
 
+    /// Undoes the last user action which modified the buffer. Use
+    /// `BufferExt::can_undo` to check whether a call to this
+    /// function will have any effect.
+    ///
+    /// This function emits the `Buffer::undo` signal.
     fn undo(&self);
 
     fn get_property_can_redo(&self) -> bool;
 
     fn get_property_can_undo(&self) -> bool;
 
+    /// `iter` is set to a valid iterator pointing to the matching bracket
+    /// if `state` is `BracketMatchType::Found`. Otherwise `iter` is
+    /// meaningless.
+    ///
+    /// The signal is emitted only when the `state` changes, typically when
+    /// the cursor moves.
+    ///
+    /// A use-case for this signal is to show messages in a `gtk::Statusbar`.
+    /// ## `iter`
+    /// if found, the location of the matching bracket.
+    /// ## `state`
+    /// state of bracket matching.
     fn connect_bracket_matched<F: Fn(&Self, Option<&gtk::TextIter>, BracketMatchType) + 'static>(&self, f: F) -> SignalHandlerId;
 
+    /// The ::highlight-updated signal is emitted when the syntax
+    /// highlighting and [context classes][context-classes] are updated in a
+    /// certain region of the `buffer`.
+    /// ## `start`
+    /// the start of the updated region
+    /// ## `end`
+    /// the end of the updated region
     fn connect_highlight_updated<F: Fn(&Self, &gtk::TextIter, &gtk::TextIter) + 'static>(&self, f: F) -> SignalHandlerId;
 
+    /// The ::redo signal is emitted to redo the last undo operation.
     fn connect_redo<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
 
+    /// The ::source-mark-updated signal is emitted each time
+    /// a mark is added to, moved or removed from the `buffer`.
+    /// ## `mark`
+    /// the `Mark`
     fn connect_source_mark_updated<F: Fn(&Self, &gtk::TextMark) + 'static>(&self, f: F) -> SignalHandlerId;
 
+    /// The ::undo signal is emitted to undo the last user action which
+    /// modified the buffer.
     fn connect_undo<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
 
     fn connect_property_can_redo_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;

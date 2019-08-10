@@ -25,17 +25,53 @@ glib_wrapper! {
 
 pub const NONE_STYLE_SCHEME: Option<&StyleScheme> = None;
 
+/// Trait containing all `StyleScheme` methods.
+///
+/// # Implementors
+///
+/// [`StyleScheme`](struct.StyleScheme.html)
 pub trait StyleSchemeExt: 'static {
+    ///
+    /// # Returns
+    ///
+    /// a
+    /// `None`-terminated array containing the `self` authors or `None` if
+    /// no author is specified by the style scheme.
     fn get_authors(&self) -> Vec<GString>;
 
+    ///
+    /// # Returns
+    ///
+    /// `self` description (if defined), or `None`.
     fn get_description(&self) -> Option<GString>;
 
+    ///
+    /// # Returns
+    ///
+    /// `self` file name if the scheme was created
+    /// parsing a style scheme file or `None` in the other cases.
     fn get_filename(&self) -> Option<GString>;
 
+    ///
+    /// # Returns
+    ///
+    /// `self` id.
     fn get_id(&self) -> Option<GString>;
 
+    ///
+    /// # Returns
+    ///
+    /// `self` name.
     fn get_name(&self) -> Option<GString>;
 
+    /// ## `style_id`
+    /// id of the style to retrieve.
+    ///
+    /// # Returns
+    ///
+    /// style which corresponds to `style_id` in
+    /// the `self`, or `None` when no style with this name found. It is owned by
+    /// `self` and may not be unref'ed.
     fn get_style(&self, style_id: &str) -> Option<Style>;
 
     fn connect_property_description_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;

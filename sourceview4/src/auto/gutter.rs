@@ -20,19 +20,62 @@ glib_wrapper! {
 
 pub const NONE_GUTTER: Option<&Gutter> = None;
 
+/// Trait containing all `Gutter` methods.
+///
+/// # Implementors
+///
+/// [`Gutter`](struct.Gutter.html)
 pub trait GutterExt: 'static {
+    /// Finds the `GutterRenderer` at (x, y).
+    /// ## `x`
+    /// The x position to get identified.
+    /// ## `y`
+    /// The y position to get identified.
+    ///
+    /// # Returns
+    ///
+    /// the renderer at (x, y) or `None`.
     fn get_renderer_at_pos(&self, x: i32, y: i32) -> Option<GutterRenderer>;
 
+    ///
+    /// # Returns
+    ///
+    /// the associated `View`.
     fn get_view(&self) -> Option<View>;
 
+    ///
+    /// # Returns
+    ///
+    /// the `gtk::TextWindowType` of `self`.
     fn get_window_type(&self) -> gtk::TextWindowType;
 
+    /// Insert `renderer` into the gutter. If `renderer` is yet unowned then gutter
+    /// claims its ownership. Otherwise just increases renderer's reference count.
+    /// `renderer` cannot be already inserted to another gutter.
+    /// ## `renderer`
+    /// a gutter renderer (must inherit from `GutterRenderer`).
+    /// ## `position`
+    /// the renderer position.
+    ///
+    /// # Returns
+    ///
+    /// `true` if operation succeeded. Otherwise `false`.
     fn insert<P: IsA<GutterRenderer>>(&self, renderer: &P, position: i32) -> bool;
 
+    /// Invalidates the drawable area of the gutter. You can use this to force a
+    /// redraw of the gutter if something has changed and needs to be redrawn.
     fn queue_draw(&self);
 
+    /// Removes `renderer` from `self`.
+    /// ## `renderer`
+    /// a `GutterRenderer`.
     fn remove<P: IsA<GutterRenderer>>(&self, renderer: &P);
 
+    /// Reorders `renderer` in `self` to new `position`.
+    /// ## `renderer`
+    /// a `gtk::CellRenderer`.
+    /// ## `position`
+    /// the new renderer position.
     fn reorder<P: IsA<GutterRenderer>>(&self, renderer: &P, position: i32);
 }
 

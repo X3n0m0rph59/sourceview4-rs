@@ -28,6 +28,11 @@ glib_wrapper! {
 }
 
 impl GutterRendererText {
+    /// Create a new `GutterRendererText`.
+    ///
+    /// # Returns
+    ///
+    /// A `GutterRenderer`
     pub fn new() -> GutterRendererText {
         assert_initialized_main_thread!();
         unsafe {
@@ -44,9 +49,34 @@ impl Default for GutterRendererText {
 
 pub const NONE_GUTTER_RENDERER_TEXT: Option<&GutterRendererText> = None;
 
+/// Trait containing all `GutterRendererText` methods.
+///
+/// # Implementors
+///
+/// [`GutterRendererText`](struct.GutterRendererText.html)
 pub trait GutterRendererTextExt: 'static {
+    /// Measures the text provided using the pango layout used by the
+    /// `GutterRendererText`.
+    /// ## `text`
+    /// the text to measure.
+    /// ## `width`
+    /// location to store the width of the text in pixels,
+    ///  or `None`.
+    /// ## `height`
+    /// location to store the height of the text in
+    ///  pixels, or `None`.
     fn measure(&self, text: &str) -> (i32, i32);
 
+    /// Measures the pango markup provided using the pango layout used by the
+    /// `GutterRendererText`.
+    /// ## `markup`
+    /// the pango markup to measure.
+    /// ## `width`
+    /// location to store the width of the text in pixels,
+    ///  or `None`.
+    /// ## `height`
+    /// location to store the height of the text in
+    ///  pixels, or `None`.
     fn measure_markup(&self, markup: &str) -> (i32, i32);
 
     fn set_markup(&self, markup: &str);

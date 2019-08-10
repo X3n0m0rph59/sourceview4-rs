@@ -29,6 +29,19 @@ glib_wrapper! {
 }
 
 impl FileSaver {
+    /// Creates a new `FileSaver` object. The `buffer` will be saved to the
+    /// `File`'s location.
+    ///
+    /// This constructor is suitable for a simple "save" operation, when the `file`
+    /// already contains a non-`None` `File:location`.
+    /// ## `buffer`
+    /// the `Buffer` to save.
+    /// ## `file`
+    /// the `File`.
+    ///
+    /// # Returns
+    ///
+    /// a new `FileSaver` object.
     pub fn new<P: IsA<Buffer>, Q: IsA<File>>(buffer: &P, file: &Q) -> FileSaver {
         skip_assert_initialized!();
         unsafe {
@@ -36,6 +49,23 @@ impl FileSaver {
         }
     }
 
+    /// Creates a new `FileSaver` object with a target location. When the
+    /// file saving is finished successfully, `target_location` is set to the `file`'s
+    /// `File:location` property. If an error occurs, the previous valid
+    /// location is still available in `File`.
+    ///
+    /// This constructor is suitable for a "save as" operation, or for saving a new
+    /// buffer for the first time.
+    /// ## `buffer`
+    /// the `Buffer` to save.
+    /// ## `file`
+    /// the `File`.
+    /// ## `target_location`
+    /// the `gio::File` where to save the buffer to.
+    ///
+    /// # Returns
+    ///
+    /// a new `FileSaver` object.
     pub fn new_with_target<P: IsA<Buffer>, Q: IsA<File>, R: IsA<gio::File>>(buffer: &P, file: &Q, target_location: &R) -> FileSaver {
         skip_assert_initialized!();
         unsafe {
@@ -46,19 +76,52 @@ impl FileSaver {
 
 pub const NONE_FILE_SAVER: Option<&FileSaver> = None;
 
+/// Trait containing all `FileSaver` methods.
+///
+/// # Implementors
+///
+/// [`FileSaver`](struct.FileSaver.html)
 pub trait FileSaverExt: 'static {
+    ///
+    /// # Returns
+    ///
+    /// the `Buffer` to save.
     fn get_buffer(&self) -> Option<Buffer>;
 
+    ///
+    /// # Returns
+    ///
+    /// the compression type.
     fn get_compression_type(&self) -> CompressionType;
 
+    ///
+    /// # Returns
+    ///
+    /// the encoding.
     fn get_encoding(&self) -> Option<Encoding>;
 
+    ///
+    /// # Returns
+    ///
+    /// the `File`.
     fn get_file(&self) -> Option<File>;
 
+    ///
+    /// # Returns
+    ///
+    /// the flags.
     fn get_flags(&self) -> FileSaverFlags;
 
+    ///
+    /// # Returns
+    ///
+    /// the `gio::File` where to save the buffer to.
     fn get_location(&self) -> Option<gio::File>;
 
+    ///
+    /// # Returns
+    ///
+    /// the newline type.
     fn get_newline_type(&self) -> NewlineType;
 
     //fn save_async<P: IsA<gio::Cancellable>, Q: FnOnce(Result<(), Error>) + Send + 'static, R: FnOnce(Result<(), Error>) + Send + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&P>, progress_callback: Q, progress_callback_notify: Fn() + 'static, callback: R);
@@ -66,12 +129,26 @@ pub trait FileSaverExt: 'static {
     //#[cfg(feature = "futures")]
     //fn save_async_future<Q: FnOnce(Result<(), Error>) + Send + 'static>(&self, io_priority: glib::Priority, progress_callback: Q, progress_callback_notify: Fn() + 'static) -> Box_<dyn future::Future<Output = Result<(), Error>> + std::marker::Unpin>;
 
+    /// Sets the compression type. By default the compression type is taken from the
+    /// `File`.
+    /// ## `compression_type`
+    /// the new compression type.
     fn set_compression_type(&self, compression_type: CompressionType);
 
+    /// Sets the encoding. If `encoding` is `None`, the UTF-8 encoding will be set.
+    /// By default the encoding is taken from the `File`.
+    /// ## `encoding`
+    /// the new encoding, or `None` for UTF-8.
     fn set_encoding(&self, encoding: Option<&Encoding>);
 
+    /// ## `flags`
+    /// the new flags.
     fn set_flags(&self, flags: FileSaverFlags);
 
+    /// Sets the newline type. By default the newline type is taken from the
+    /// `File`.
+    /// ## `newline_type`
+    /// the new newline type.
     fn set_newline_type(&self, newline_type: NewlineType);
 
     fn connect_property_compression_type_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;

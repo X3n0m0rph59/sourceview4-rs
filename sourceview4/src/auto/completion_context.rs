@@ -33,19 +33,55 @@ glib_wrapper! {
 
 pub const NONE_COMPLETION_CONTEXT: Option<&CompletionContext> = None;
 
+/// Trait containing all `CompletionContext` methods.
+///
+/// # Implementors
+///
+/// [`CompletionContext`](struct.CompletionContext.html)
 pub trait CompletionContextExt: 'static {
+    /// Providers can use this function to add proposals to the completion. They
+    /// can do so asynchronously by means of the `finished` argument. Providers must
+    /// ensure that they always call this function with `finished` set to `true`
+    /// once each population (even if no proposals need to be added).
+    /// Population occurs when the `CompletionProvider::populate`
+    /// function is called.
+    /// ## `provider`
+    /// a `CompletionProvider`.
+    /// ## `proposals`
+    /// The list of proposals to add.
+    /// ## `finished`
+    /// Whether the provider is finished adding proposals.
     fn add_proposals<P: IsA<CompletionProvider>>(&self, provider: &P, proposals: &[CompletionProposal], finished: bool);
 
+    /// Get the context activation.
+    ///
+    /// # Returns
+    ///
+    /// The context activation.
     fn get_activation(&self) -> CompletionActivation;
 
+    /// Get the iter at which the completion was invoked. Providers can use this
+    /// to determine how and if to match proposals.
+    /// ## `iter`
+    /// a `gtk::TextIter`.
+    ///
+    /// # Returns
+    ///
+    /// `true` if `iter` is correctly set, `false` otherwise.
     fn get_iter(&self) -> Option<gtk::TextIter>;
 
+    /// The completion activation
     fn set_property_activation(&self, activation: CompletionActivation);
 
+    /// The `Completion` associated with the context.
     fn get_property_completion(&self) -> Option<Completion>;
 
+    /// The `gtk::TextIter` at which the completion is invoked.
     fn set_property_iter(&self, iter: Option<&gtk::TextIter>);
 
+    /// Emitted when the current population of proposals has been cancelled.
+    /// Providers adding proposals asynchronously should connect to this signal
+    /// to know when to cancel running proposal queries.
     fn connect_cancelled<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
 
     fn emit_cancelled(&self);

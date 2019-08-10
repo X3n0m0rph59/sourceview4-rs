@@ -34,6 +34,18 @@ glib_wrapper! {
 }
 
 impl SearchContext {
+    /// Creates a new search context, associated with `buffer`, and customized with
+    /// `settings`. If `settings` is `None`, a new `SearchSettings` object will
+    /// be created, that you can retrieve with
+    /// `SearchContextExt::get_settings`.
+    /// ## `buffer`
+    /// a `Buffer`.
+    /// ## `settings`
+    /// a `SearchSettings`, or `None`.
+    ///
+    /// # Returns
+    ///
+    /// a new search context.
     pub fn new<P: IsA<Buffer>, Q: IsA<SearchSettings>>(buffer: &P, settings: Option<&Q>) -> SearchContext {
         skip_assert_initialized!();
         unsafe {
@@ -44,41 +56,218 @@ impl SearchContext {
 
 pub const NONE_SEARCH_CONTEXT: Option<&SearchContext> = None;
 
+/// Trait containing all `SearchContext` methods.
+///
+/// # Implementors
+///
+/// [`SearchContext`](struct.SearchContext.html)
 pub trait SearchContextExt: 'static {
+    /// Synchronous backward search. It is recommended to use the asynchronous
+    /// functions instead, to not block the user interface. However, if you are sure
+    /// that the `buffer` is small, this function is more convenient to use.
+    ///
+    /// If the `SearchSettings:wrap-around` property is `false`, this function
+    /// doesn't try to wrap around.
+    ///
+    /// The `has_wrapped_around` out parameter is set independently of whether a match
+    /// is found. So if this function returns `false`, `has_wrapped_around` will have
+    /// the same value as the `SearchSettings:wrap-around` property.
+    /// ## `iter`
+    /// start of search.
+    /// ## `match_start`
+    /// return location for start of match, or `None`.
+    /// ## `match_end`
+    /// return location for end of match, or `None`.
+    /// ## `has_wrapped_around`
+    /// return location to know whether the
+    ///  search has wrapped around, or `None`.
+    ///
+    /// # Returns
+    ///
+    /// whether a match was found.
     fn backward(&self, iter: &gtk::TextIter) -> Option<(gtk::TextIter, gtk::TextIter, bool)>;
 
+    /// The asynchronous version of `SearchContextExt::backward`.
+    ///
+    /// See the documentation of `SearchContextExt::backward` for more
+    /// details.
+    ///
+    /// See the `gio::AsyncResult` documentation to know how to use this function.
+    ///
+    /// If the operation is cancelled, the `callback` will only be called if
+    /// `cancellable` was not `None`. `SearchContextExt::backward_async` takes
+    /// ownership of `cancellable`, so you can unref it after calling this function.
+    /// ## `iter`
+    /// start of search.
+    /// ## `cancellable`
+    /// a `gio::Cancellable`, or `None`.
+    /// ## `callback`
+    /// a `GAsyncReadyCallback` to call when the operation is finished.
+    /// ## `user_data`
+    /// the data to pass to the `callback` function.
     fn backward_async<P: IsA<gio::Cancellable>, Q: FnOnce(Result<(gtk::TextIter, gtk::TextIter, bool), Error>) + Send + 'static>(&self, iter: &gtk::TextIter, cancellable: Option<&P>, callback: Q);
 
     #[cfg(feature = "futures")]
     fn backward_async_future(&self, iter: &gtk::TextIter) -> Box_<dyn future::Future<Output = Result<(gtk::TextIter, gtk::TextIter, bool), Error>> + std::marker::Unpin>;
 
+    /// Synchronous forward search. It is recommended to use the asynchronous
+    /// functions instead, to not block the user interface. However, if you are sure
+    /// that the `buffer` is small, this function is more convenient to use.
+    ///
+    /// If the `SearchSettings:wrap-around` property is `false`, this function
+    /// doesn't try to wrap around.
+    ///
+    /// The `has_wrapped_around` out parameter is set independently of whether a match
+    /// is found. So if this function returns `false`, `has_wrapped_around` will have
+    /// the same value as the `SearchSettings:wrap-around` property.
+    /// ## `iter`
+    /// start of search.
+    /// ## `match_start`
+    /// return location for start of match, or `None`.
+    /// ## `match_end`
+    /// return location for end of match, or `None`.
+    /// ## `has_wrapped_around`
+    /// return location to know whether the
+    ///  search has wrapped around, or `None`.
+    ///
+    /// # Returns
+    ///
+    /// whether a match was found.
     fn forward(&self, iter: &gtk::TextIter) -> Option<(gtk::TextIter, gtk::TextIter, bool)>;
 
+    /// The asynchronous version of `SearchContextExt::forward`.
+    ///
+    /// See the documentation of `SearchContextExt::forward` for more
+    /// details.
+    ///
+    /// See the `gio::AsyncResult` documentation to know how to use this function.
+    ///
+    /// If the operation is cancelled, the `callback` will only be called if
+    /// `cancellable` was not `None`. `SearchContextExt::forward_async` takes
+    /// ownership of `cancellable`, so you can unref it after calling this function.
+    /// ## `iter`
+    /// start of search.
+    /// ## `cancellable`
+    /// a `gio::Cancellable`, or `None`.
+    /// ## `callback`
+    /// a `GAsyncReadyCallback` to call when the operation is finished.
+    /// ## `user_data`
+    /// the data to pass to the `callback` function.
     fn forward_async<P: IsA<gio::Cancellable>, Q: FnOnce(Result<(gtk::TextIter, gtk::TextIter, bool), Error>) + Send + 'static>(&self, iter: &gtk::TextIter, cancellable: Option<&P>, callback: Q);
 
     #[cfg(feature = "futures")]
     fn forward_async_future(&self, iter: &gtk::TextIter) -> Box_<dyn future::Future<Output = Result<(gtk::TextIter, gtk::TextIter, bool), Error>> + std::marker::Unpin>;
 
+    ///
+    /// # Returns
+    ///
+    /// the associated buffer.
     fn get_buffer(&self) -> Option<Buffer>;
 
+    ///
+    /// # Returns
+    ///
+    /// whether to highlight the search occurrences.
     fn get_highlight(&self) -> bool;
 
+    ///
+    /// # Returns
+    ///
+    /// the `Style` to apply on search matches.
     fn get_match_style(&self) -> Option<Style>;
 
+    /// Gets the position of a search occurrence. If the buffer is not already fully
+    /// scanned, the position may be unknown, and -1 is returned. If 0 is returned,
+    /// it means that this part of the buffer has already been scanned, and that
+    /// `match_start` and `match_end` don't delimit an occurrence.
+    /// ## `match_start`
+    /// the start of the occurrence.
+    /// ## `match_end`
+    /// the end of the occurrence.
+    ///
+    /// # Returns
+    ///
+    /// the position of the search occurrence. The first occurrence has the
+    /// position 1 (not 0). Returns 0 if `match_start` and `match_end` don't delimit
+    /// an occurrence. Returns -1 if the position is not yet known.
     fn get_occurrence_position(&self, match_start: &gtk::TextIter, match_end: &gtk::TextIter) -> i32;
 
+    /// Gets the total number of search occurrences. If the buffer is not already
+    /// fully scanned, the total number of occurrences is unknown, and -1 is
+    /// returned.
+    ///
+    /// # Returns
+    ///
+    /// the total number of search occurrences, or -1 if unknown.
     fn get_occurrences_count(&self) -> i32;
 
+    /// Regular expression patterns must follow certain rules. If
+    /// `SearchSettings:search-text` breaks a rule, the error can be retrieved
+    /// with this function. The error domain is `G_REGEX_ERROR`.
+    ///
+    /// Free the return value with `glib::Error::free`.
+    ///
+    /// # Returns
+    ///
+    /// the `glib::Error`, or `None` if the pattern is valid.
     fn get_regex_error(&self) -> Option<Error>;
 
+    ///
+    /// # Returns
+    ///
+    /// the search settings.
     fn get_settings(&self) -> Option<SearchSettings>;
 
+    /// Replaces a search match by another text. If `match_start` and `match_end`
+    /// doesn't correspond to a search match, `false` is returned.
+    ///
+    /// `match_start` and `match_end` iters are revalidated to point to the replacement
+    /// text boundaries.
+    ///
+    /// For a regular expression replacement, you can check if `replace` is valid by
+    /// calling `glib::Regex::check_replacement`. The `replace` text can contain
+    /// backreferences; read the `glib::Regex::replace` documentation for more details.
+    /// ## `match_start`
+    /// the start of the match to replace.
+    /// ## `match_end`
+    /// the end of the match to replace.
+    /// ## `replace`
+    /// the replacement text.
+    /// ## `replace_length`
+    /// the length of `replace` in bytes, or -1.
+    ///
+    /// # Returns
+    ///
+    /// whether the match has been replaced.
     fn replace(&self, match_start: &mut gtk::TextIter, match_end: &mut gtk::TextIter, replace: &str) -> Result<(), Error>;
 
+    /// Replaces all search matches by another text. It is a synchronous function, so
+    /// it can block the user interface.
+    ///
+    /// For a regular expression replacement, you can check if `replace` is valid by
+    /// calling `glib::Regex::check_replacement`. The `replace` text can contain
+    /// backreferences; read the `glib::Regex::replace` documentation for more details.
+    /// ## `replace`
+    /// the replacement text.
+    /// ## `replace_length`
+    /// the length of `replace` in bytes, or -1.
+    ///
+    /// # Returns
+    ///
+    /// the number of replaced matches.
     fn replace_all(&self, replace: &str) -> Result<(), Error>;
 
+    /// Enables or disables the search occurrences highlighting.
+    /// ## `highlight`
+    /// the setting.
     fn set_highlight(&self, highlight: bool);
 
+    /// Set the style to apply on search matches. If `match_style` is `None`, default
+    /// theme's scheme 'match-style' will be used.
+    /// To enable or disable the search highlighting, use
+    /// `SearchContextExt::set_highlight`.
+    /// ## `match_style`
+    /// a `Style`, or `None`.
     fn set_match_style(&self, match_style: Option<&Style>);
 
     fn connect_property_highlight_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;

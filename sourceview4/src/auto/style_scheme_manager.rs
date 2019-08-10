@@ -24,6 +24,12 @@ glib_wrapper! {
 }
 
 impl StyleSchemeManager {
+    /// Creates a new style manager. If you do not need more than one style
+    /// manager then use `StyleSchemeManager::get_default` instead.
+    ///
+    /// # Returns
+    ///
+    /// a new `StyleSchemeManager`.
     pub fn new() -> StyleSchemeManager {
         assert_initialized_main_thread!();
         unsafe {
@@ -31,6 +37,12 @@ impl StyleSchemeManager {
         }
     }
 
+    /// Returns the default `StyleSchemeManager` instance.
+    ///
+    /// # Returns
+    ///
+    /// a `StyleSchemeManager`. Return value
+    /// is owned by `View` library and must not be unref'ed.
     pub fn get_default() -> Option<StyleSchemeManager> {
         assert_initialized_main_thread!();
         unsafe {
@@ -47,19 +59,68 @@ impl Default for StyleSchemeManager {
 
 pub const NONE_STYLE_SCHEME_MANAGER: Option<&StyleSchemeManager> = None;
 
+/// Trait containing all `StyleSchemeManager` methods.
+///
+/// # Implementors
+///
+/// [`StyleSchemeManager`](struct.StyleSchemeManager.html)
 pub trait StyleSchemeManagerExt: 'static {
+    /// Appends `path` to the list of directories where the `self` looks for
+    /// style scheme files.
+    /// See `StyleSchemeManagerExt::set_search_path` for details.
+    /// ## `path`
+    /// a directory or a filename.
     fn append_search_path(&self, path: &str);
 
+    /// Mark any currently cached information about the available style scehems
+    /// as invalid. All the available style schemes will be reloaded next time
+    /// the `self` is accessed.
     fn force_rescan(&self);
 
+    /// Looks up style scheme by id.
+    /// ## `scheme_id`
+    /// style scheme id to find.
+    ///
+    /// # Returns
+    ///
+    /// a `StyleScheme` object. Returned value is owned by
+    /// `self` and must not be unref'ed.
     fn get_scheme(&self, scheme_id: &str) -> Option<StyleScheme>;
 
+    /// Returns the ids of the available style schemes.
+    ///
+    /// # Returns
+    ///
+    ///
+    /// a `None`-terminated array of strings containing the ids of the available
+    /// style schemes or `None` if no style scheme is available.
+    /// The array is sorted alphabetically according to the scheme name.
+    /// The array is owned by the `self` and must not be modified.
     fn get_scheme_ids(&self) -> Vec<GString>;
 
+    /// Returns the current search path for the `self`.
+    /// See `StyleSchemeManagerExt::set_search_path` for details.
+    ///
+    /// # Returns
+    ///
+    /// a `None`-terminated array
+    /// of string containing the search path.
+    /// The array is owned by the `self` and must not be modified.
     fn get_search_path(&self) -> Vec<GString>;
 
+    /// Prepends `path` to the list of directories where the `self` looks
+    /// for style scheme files.
+    /// See `StyleSchemeManagerExt::set_search_path` for details.
+    /// ## `path`
+    /// a directory or a filename.
     fn prepend_search_path(&self, path: &str);
 
+    /// Sets the list of directories where the `self` looks for
+    /// style scheme files.
+    /// If `path` is `None`, the search path is reset to default.
+    /// ## `path`
+    ///
+    /// a `None`-terminated array of strings or `None`.
     fn set_search_path(&self, path: &[&str]);
 
     fn connect_property_scheme_ids_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;

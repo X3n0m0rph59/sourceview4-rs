@@ -17,6 +17,11 @@ glib_wrapper! {
 }
 
 impl StyleSchemeChooserButton {
+    /// Creates a new `StyleSchemeChooserButton`.
+    ///
+    /// # Returns
+    ///
+    /// a new `StyleSchemeChooserButton`.
     pub fn new() -> StyleSchemeChooserButton {
         assert_initialized_main_thread!();
         unsafe {

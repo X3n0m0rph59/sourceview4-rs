@@ -24,25 +24,118 @@ glib_wrapper! {
 
 pub const NONE_LANGUAGE: Option<&Language> = None;
 
+/// Trait containing all `Language` methods.
+///
+/// # Implementors
+///
+/// [`Language`](struct.Language.html)
 pub trait LanguageExt: 'static {
+    /// Returns the globs associated to this language. This is just
+    /// an utility wrapper around `LanguageExt::get_metadata` to
+    /// retrieve the "globs" metadata property and split it into an array.
+    ///
+    /// # Returns
+    ///
+    ///
+    /// a newly-allocated `None` terminated array containing the globs or `None`
+    /// if no globs are found.
+    /// The returned array must be freed with `g_strfreev`.
     fn get_globs(&self) -> Vec<GString>;
 
+    /// Returns whether the language should be hidden from the user.
+    ///
+    /// # Returns
+    ///
+    /// `true` if the language should be hidden, `false` otherwise.
     fn get_hidden(&self) -> bool;
 
+    /// Returns the ID of the language. The ID is not locale-dependent.
+    /// The returned string is owned by `self` and should not be freed
+    /// or modified.
+    ///
+    /// # Returns
+    ///
+    /// the ID of `self`.
     fn get_id(&self) -> Option<GString>;
 
+    /// ## `name`
+    /// metadata property name.
+    ///
+    /// # Returns
+    ///
+    /// value of property `name` stored in
+    /// the metadata of `self` or `None` if language does not contain the
+    /// specified metadata property.
+    /// The returned string is owned by `self` and should not be freed
+    /// or modified.
     fn get_metadata(&self, name: &str) -> Option<GString>;
 
+    /// Returns the mime types associated to this language. This is just
+    /// an utility wrapper around `LanguageExt::get_metadata` to
+    /// retrieve the "mimetypes" metadata property and split it into an
+    /// array.
+    ///
+    /// # Returns
+    ///
+    ///
+    /// a newly-allocated `None` terminated array containing the mime types
+    /// or `None` if no mime types are found.
+    /// The returned array must be freed with `g_strfreev`.
     fn get_mime_types(&self) -> Vec<GString>;
 
+    /// Returns the localized name of the language.
+    /// The returned string is owned by `self` and should not be freed
+    /// or modified.
+    ///
+    /// # Returns
+    ///
+    /// the name of `self`.
     fn get_name(&self) -> Option<GString>;
 
+    /// Returns the localized section of the language.
+    /// Each language belong to a section (ex. HTML belogs to the
+    /// Markup section).
+    /// The returned string is owned by `self` and should not be freed
+    /// or modified.
+    ///
+    /// # Returns
+    ///
+    /// the section of `self`.
     fn get_section(&self) -> Option<GString>;
 
+    /// Returns the ID of the style to use if the specified `style_id`
+    /// is not present in the current style scheme.
+    /// ## `style_id`
+    /// a style ID.
+    ///
+    /// # Returns
+    ///
+    /// the ID of the style to use if the
+    /// specified `style_id` is not present in the current style scheme or `None`
+    /// if the style has no fallback defined.
+    /// The returned string is owned by the `self` and must not be modified.
     fn get_style_fallback(&self, style_id: &str) -> Option<GString>;
 
+    /// Returns the ids of the styles defined by this `self`.
+    ///
+    /// # Returns
+    ///
+    ///
+    /// a newly-allocated `None` terminated array containing ids of the
+    /// styles defined by this `self` or `None` if no style is defined.
+    /// The returned array must be freed with `g_strfreev`.
     fn get_style_ids(&self) -> Vec<GString>;
 
+    /// Returns the name of the style with ID `style_id` defined by this `self`.
+    /// ## `style_id`
+    /// a style ID.
+    ///
+    /// # Returns
+    ///
+    /// the name of the style with ID `style_id`
+    /// defined by this `self` or `None` if the style has no name or there is no
+    /// style with ID `style_id` defined by this `self`.
+    /// The returned string is owned by the `self` and must not be modified.
     fn get_style_name(&self, style_id: &str) -> Option<GString>;
 
     fn connect_property_hidden_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;

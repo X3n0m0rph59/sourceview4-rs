@@ -26,6 +26,17 @@ glib_wrapper! {
 }
 
 impl Tag {
+    /// Creates a `Tag`. Configure the tag using object arguments,
+    /// i.e. using `gobject::Object::set`.
+    ///
+    /// For usual cases, `BufferExt::create_source_tag` is more convenient to
+    /// use.
+    /// ## `name`
+    /// tag name, or `None`.
+    ///
+    /// # Returns
+    ///
+    /// a new `Tag`.
     pub fn new(name: Option<&str>) -> Tag {
         assert_initialized_main_thread!();
         unsafe {
@@ -36,13 +47,34 @@ impl Tag {
 
 pub const NONE_TAG: Option<&Tag> = None;
 
+/// Trait containing all `Tag` methods.
+///
+/// # Implementors
+///
+/// [`Tag`](struct.Tag.html)
 pub trait TagExt: 'static {
+    /// Whether to draw white spaces. This property takes precedence over the value
+    /// defined by the `SpaceDrawer`'s `SpaceDrawer:matrix` property
+    /// (only where the tag is applied).
+    ///
+    /// Setting this property also changes `Tag:draw-spaces-set` to
+    /// `true`.
     fn get_property_draw_spaces(&self) -> bool;
 
+    /// Whether to draw white spaces. This property takes precedence over the value
+    /// defined by the `SpaceDrawer`'s `SpaceDrawer:matrix` property
+    /// (only where the tag is applied).
+    ///
+    /// Setting this property also changes `Tag:draw-spaces-set` to
+    /// `true`.
     fn set_property_draw_spaces(&self, draw_spaces: bool);
 
+    /// Whether the `Tag:draw-spaces` property is set and must be
+    /// taken into account.
     fn get_property_draw_spaces_set(&self) -> bool;
 
+    /// Whether the `Tag:draw-spaces` property is set and must be
+    /// taken into account.
     fn set_property_draw_spaces_set(&self, draw_spaces_set: bool);
 
     fn connect_property_draw_spaces_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;

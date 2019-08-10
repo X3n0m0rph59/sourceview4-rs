@@ -25,31 +25,160 @@ glib_wrapper! {
 
 pub const NONE_COMPLETION_PROVIDER: Option<&CompletionProvider> = None;
 
+/// Trait containing all `CompletionProvider` methods.
+///
+/// # Implementors
+///
+/// [`CompletionProvider`](struct.CompletionProvider.html), [`CompletionWords`](struct.CompletionWords.html)
 pub trait CompletionProviderExt: 'static {
+    /// Activate `proposal` at `iter`. When this functions returns `false`, the default
+    /// activation of `proposal` will take place which replaces the word at `iter`
+    /// with the text of `proposal` (see `CompletionProposal::get_text`).
+    ///
+    /// Here is how the default activation selects the boundaries of the word to
+    /// replace. The end of the word is `iter`. For the start of the word, it depends
+    /// on whether a start iter is defined for `proposal` (see
+    /// `CompletionProvider::get_start_iter`). If a start iter is defined,
+    /// the start of the word is the start iter. Else, the word (as long as possible)
+    /// will contain only alphanumerical and the "_" characters.
+    /// ## `proposal`
+    /// a `CompletionProposal`.
+    /// ## `iter`
+    /// a `gtk::TextIter`.
+    ///
+    /// # Returns
+    ///
+    /// `true` to indicate that the proposal activation has been handled,
+    ///  `false` otherwise.
     fn activate_proposal<P: IsA<CompletionProposal>>(&self, proposal: &P, iter: &mut gtk::TextIter) -> bool;
 
+    /// Get with what kind of activation the provider should be activated.
+    ///
+    /// # Returns
+    ///
+    /// a combination of `CompletionActivation`.
     fn get_activation(&self) -> CompletionActivation;
 
+    /// Gets the `gio::Icon` for the icon of `self`.
+    ///
+    /// # Returns
+    ///
+    /// The icon to be used for the provider,
+    ///  or `None` if the provider does not have a special icon.
     fn get_gicon(&self) -> Option<gio::Icon>;
 
+    /// Get the `gdk_pixbuf::Pixbuf` for the icon of the `self`.
+    ///
+    /// # Returns
+    ///
+    /// The icon to be used for the provider,
+    ///  or `None` if the provider does not have a special icon.
     fn get_icon(&self) -> Option<gdk_pixbuf::Pixbuf>;
 
+    /// Gets the icon name of `self`.
+    ///
+    /// # Returns
+    ///
+    /// The icon name to be used for the provider,
+    ///  or `None` if the provider does not have a special icon.
     fn get_icon_name(&self) -> Option<GString>;
 
+    /// Get a customized info widget to show extra information of a proposal.
+    /// This allows for customized widgets on a proposal basis, although in general
+    /// providers will have the same custom widget for all their proposals and
+    /// `proposal` can be ignored. The implementation of this function is optional.
+    ///
+    /// If this function is not implemented, the default widget is a `gtk::Label`. The
+    /// return value of `CompletionProposal::get_info` is used as the
+    /// content of the `gtk::Label`.
+    ///
+    /// `<note>`
+    ///  `<para>`
+    ///  If implemented, `CompletionProvider::update_info`
+    ///  `<emphasis>`must`</emphasis>` also be implemented.
+    ///  `</para>`
+    /// `</note>`
+    /// ## `proposal`
+    /// a currently selected `CompletionProposal`.
+    ///
+    /// # Returns
+    ///
+    /// a custom `gtk::Widget` to show extra
+    /// information about `proposal`, or `None` if the provider does not have a special
+    /// info widget.
     fn get_info_widget<P: IsA<CompletionProposal>>(&self, proposal: &P) -> Option<gtk::Widget>;
 
+    /// Get the delay in milliseconds before starting interactive completion for
+    /// this provider. A value of -1 indicates to use the default value as set
+    /// by the `Completion:auto-complete-delay` property.
+    ///
+    /// # Returns
+    ///
+    /// the interactive delay in milliseconds.
     fn get_interactive_delay(&self) -> i32;
 
+    /// Get the name of the provider. This should be a translatable name for
+    /// display to the user. For example: _("Document word completion provider"). The
+    /// returned string must be freed with `g_free`.
+    ///
+    /// # Returns
+    ///
+    /// a new string containing the name of the provider.
     fn get_name(&self) -> Option<GString>;
 
+    /// Get the provider priority. The priority determines the order in which
+    /// proposals appear in the completion popup. Higher priorities are sorted
+    /// before lower priorities. The default priority is 0.
+    ///
+    /// # Returns
+    ///
+    /// the provider priority.
     fn get_priority(&self) -> i32;
 
+    /// Get the `gtk::TextIter` at which the completion for `proposal` starts. When
+    /// implemented, this information is used to position the completion window
+    /// accordingly when a proposal is selected in the completion window. The
+    /// `proposal` text inside the completion window is aligned on `iter`.
+    ///
+    /// If this function is not implemented, the word boundary is taken to position
+    /// the completion window. See `CompletionProvider::activate_proposal`
+    /// for an explanation on the word boundaries.
+    ///
+    /// When the `proposal` is activated, the default handler uses `iter` as the start
+    /// of the word to replace. See
+    /// `CompletionProvider::activate_proposal` for more information.
+    /// ## `context`
+    /// a `CompletionContext`.
+    /// ## `proposal`
+    /// a `CompletionProposal`.
+    /// ## `iter`
+    /// a `gtk::TextIter`.
+    ///
+    /// # Returns
+    ///
+    /// `true` if `iter` was set for `proposal`, `false` otherwise.
     fn get_start_iter<P: IsA<CompletionContext>, Q: IsA<CompletionProposal>>(&self, context: &P, proposal: &Q) -> Option<gtk::TextIter>;
 
     fn match_<P: IsA<CompletionContext>>(&self, context: &P) -> bool;
 
+    /// Populate `context` with proposals from `self` added with the
+    /// `CompletionContextExt::add_proposals` function.
+    /// ## `context`
+    /// a `CompletionContext`.
     fn populate<P: IsA<CompletionContext>>(&self, context: &P);
 
+    /// Update extra information shown in `info` for `proposal`.
+    ///
+    /// `<note>`
+    ///  `<para>`
+    ///  This function `<emphasis>`must`</emphasis>` be implemented when
+    ///  `CompletionProvider::get_info_widget` is implemented.
+    ///  `</para>`
+    /// `</note>`
+    /// ## `proposal`
+    /// a `CompletionProposal`.
+    /// ## `info`
+    /// a `CompletionInfo`.
     fn update_info<P: IsA<CompletionProposal>, Q: IsA<CompletionInfo>>(&self, proposal: &P, info: &Q);
 }
 
