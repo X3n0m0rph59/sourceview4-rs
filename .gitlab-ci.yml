@@ -1,0 +1,18 @@
+variables:
+  FEDORA_DEPS: rust gtksourceview4-devel
+
+pages:
+  image: fedora:rawhide
+  stage: deploy
+  before_script:
+    - dnf update -y --nogpgcheck
+    - dnf install -y --nogpgcheck $FEDORA_DEPS
+  script:
+    - cargo doc -p sourceview4
+    - mv target/doc/ public
+  artifacts:
+    paths:
+      - public
+  only:
+    refs:
+      - master
