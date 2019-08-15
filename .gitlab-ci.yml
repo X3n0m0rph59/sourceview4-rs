@@ -8,6 +8,7 @@ pages:
     - dnf update -y --nogpgcheck
     - dnf install -y --nogpgcheck $FEDORA_DEPS
   script:
+    - git submodule update --init
     - cargo doc -p sourceview4
     - mv target/doc/ public
   artifacts:
