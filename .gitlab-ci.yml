@@ -1,5 +1,5 @@
 variables:
-  FEDORA_DEPS: rust cargo gtksourceview4-devel
+  FEDORA_DEPS: rust cargo git gtksourceview4-devel
 
 pages:
   image: fedora:rawhide
