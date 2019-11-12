@@ -545,7 +545,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "sourceview4"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "bitflags 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "cairo-rs 0.7.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -561,12 +561,12 @@ dependencies = [
  "gtk-sys 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.2.60 (registry+https://github.com/rust-lang/crates.io-index)",
  "pango 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "sourceview4-sys 0.1.0",
+ "sourceview4-sys 0.1.1",
 ]
 
 [[package]]
 name = "sourceview4-sys"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "cairo-sys-rs 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "gdk-pixbuf-sys 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
