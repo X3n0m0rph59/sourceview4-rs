@@ -34,7 +34,7 @@ version = "0.7.0"
 features = [ "v3_22" ]
 
 [dependencies.sourceview4-sys]
-version = "0.1.0"
+version = "0.1.1"
 path = "../sourceview4-sys"
 
 
