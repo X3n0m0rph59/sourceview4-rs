@@ -2,15 +2,14 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use GutterRenderer;
+use glib::object::Cast;
+use glib::object::IsA;
+use glib::signal::connect_raw;
+use glib::signal::SignalHandlerId;
+use glib::translate::*;
 use glib::GString;
 use glib::StaticType;
 use glib::Value;
-use glib::object::Cast;
-use glib::object::IsA;
-use glib::signal::SignalHandlerId;
-use glib::signal::connect_raw;
-use glib::translate::*;
 use glib_sys;
 use gobject_sys;
 use gtk_source_sys;
@@ -18,6 +17,7 @@ use std::boxed::Box as Box_;
 use std::fmt;
 use std::mem;
 use std::mem::transmute;
+use GutterRenderer;
 
 glib_wrapper! {
     pub struct GutterRendererText(Object<gtk_source_sys::GtkSourceGutterRendererText, gtk_source_sys::GtkSourceGutterRendererTextClass, GutterRendererTextClass>) @extends GutterRenderer;
@@ -28,11 +28,6 @@ glib_wrapper! {
 }
 
 impl GutterRendererText {
-    /// Create a new `GutterRendererText`.
-    ///
-    /// # Returns
-    ///
-    /// A `GutterRenderer`
     pub fn new() -> GutterRendererText {
         assert_initialized_main_thread!();
         unsafe {
@@ -49,34 +44,9 @@ impl Default for GutterRendererText {
 
 pub const NONE_GUTTER_RENDERER_TEXT: Option<&GutterRendererText> = None;
 
-/// Trait containing all `GutterRendererText` methods.
-///
-/// # Implementors
-///
-/// [`GutterRendererText`](struct.GutterRendererText.html)
 pub trait GutterRendererTextExt: 'static {
-    /// Measures the text provided using the pango layout used by the
-    /// `GutterRendererText`.
-    /// ## `text`
-    /// the text to measure.
-    /// ## `width`
-    /// location to store the width of the text in pixels,
-    ///  or `None`.
-    /// ## `height`
-    /// location to store the height of the text in
-    ///  pixels, or `None`.
     fn measure(&self, text: &str) -> (i32, i32);
 
-    /// Measures the pango markup provided using the pango layout used by the
-    /// `GutterRendererText`.
-    /// ## `markup`
-    /// the pango markup to measure.
-    /// ## `width`
-    /// location to store the width of the text in pixels,
-    ///  or `None`.
-    /// ## `height`
-    /// location to store the height of the text in
-    ///  pixels, or `None`.
     fn measure_markup(&self, markup: &str) -> (i32, i32);
 
     fn set_markup(&self, markup: &str);
@@ -95,18 +65,22 @@ pub trait GutterRendererTextExt: 'static {
 impl<O: IsA<GutterRendererText>> GutterRendererTextExt for O {
     fn measure(&self, text: &str) -> (i32, i32) {
         unsafe {
-            let mut width = mem::uninitialized();
-            let mut height = mem::uninitialized();
-            gtk_source_sys::gtk_source_gutter_renderer_text_measure(self.as_ref().to_glib_none().0, text.to_glib_none().0, &mut width, &mut height);
+            let mut width = mem::MaybeUninit::uninit();
+            let mut height = mem::MaybeUninit::uninit();
+            gtk_source_sys::gtk_source_gutter_renderer_text_measure(self.as_ref().to_glib_none().0, text.to_glib_none().0, width.as_mut_ptr(), height.as_mut_ptr());
+            let width = width.assume_init();
+            let height = height.assume_init();
             (width, height)
         }
     }
 
     fn measure_markup(&self, markup: &str) -> (i32, i32) {
         unsafe {
-            let mut width = mem::uninitialized();
-            let mut height = mem::uninitialized();
-            gtk_source_sys::gtk_source_gutter_renderer_text_measure_markup(self.as_ref().to_glib_none().0, markup.to_glib_none().0, &mut width, &mut height);
+            let mut width = mem::MaybeUninit::uninit();
+            let mut height = mem::MaybeUninit::uninit();
+            gtk_source_sys::gtk_source_gutter_renderer_text_measure_markup(self.as_ref().to_glib_none().0, markup.to_glib_none().0, width.as_mut_ptr(), height.as_mut_ptr());
+            let width = width.assume_init();
+            let height = height.assume_init();
             (width, height)
         }
     }
@@ -129,7 +103,7 @@ impl<O: IsA<GutterRendererText>> GutterRendererTextExt for O {
         unsafe {
             let mut value = Value::from_type(<GString as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"markup\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get()
+            value.get().expect("Return Value for property `markup` getter")
         }
     }
 
@@ -137,7 +111,7 @@ impl<O: IsA<GutterRendererText>> GutterRendererTextExt for O {
         unsafe {
             let mut value = Value::from_type(<GString as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"text\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get()
+            value.get().expect("Return Value for property `text` getter")
         }
     }
 

@@ -2,23 +2,23 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use Buffer;
-use CompressionType;
-use Encoding;
-use File;
-use FileSaverFlags;
-use NewlineType;
 use gio;
 use glib::object::Cast;
 use glib::object::IsA;
-use glib::signal::SignalHandlerId;
 use glib::signal::connect_raw;
+use glib::signal::SignalHandlerId;
 use glib::translate::*;
 use glib_sys;
 use gtk_source_sys;
 use std::boxed::Box as Box_;
 use std::fmt;
 use std::mem::transmute;
+use Buffer;
+use CompressionType;
+use Encoding;
+use File;
+use FileSaverFlags;
+use NewlineType;
 
 glib_wrapper! {
     pub struct FileSaver(Object<gtk_source_sys::GtkSourceFileSaver, gtk_source_sys::GtkSourceFileSaverClass, FileSaverClass>);
@@ -29,19 +29,6 @@ glib_wrapper! {
 }
 
 impl FileSaver {
-    /// Creates a new `FileSaver` object. The `buffer` will be saved to the
-    /// `File`'s location.
-    ///
-    /// This constructor is suitable for a simple "save" operation, when the `file`
-    /// already contains a non-`None` `File:location`.
-    /// ## `buffer`
-    /// the `Buffer` to save.
-    /// ## `file`
-    /// the `File`.
-    ///
-    /// # Returns
-    ///
-    /// a new `FileSaver` object.
     pub fn new<P: IsA<Buffer>, Q: IsA<File>>(buffer: &P, file: &Q) -> FileSaver {
         skip_assert_initialized!();
         unsafe {
@@ -49,23 +36,6 @@ impl FileSaver {
         }
     }
 
-    /// Creates a new `FileSaver` object with a target location. When the
-    /// file saving is finished successfully, `target_location` is set to the `file`'s
-    /// `File:location` property. If an error occurs, the previous valid
-    /// location is still available in `File`.
-    ///
-    /// This constructor is suitable for a "save as" operation, or for saving a new
-    /// buffer for the first time.
-    /// ## `buffer`
-    /// the `Buffer` to save.
-    /// ## `file`
-    /// the `File`.
-    /// ## `target_location`
-    /// the `gio::File` where to save the buffer to.
-    ///
-    /// # Returns
-    ///
-    /// a new `FileSaver` object.
     pub fn new_with_target<P: IsA<Buffer>, Q: IsA<File>, R: IsA<gio::File>>(buffer: &P, file: &Q, target_location: &R) -> FileSaver {
         skip_assert_initialized!();
         unsafe {
@@ -76,79 +46,32 @@ impl FileSaver {
 
 pub const NONE_FILE_SAVER: Option<&FileSaver> = None;
 
-/// Trait containing all `FileSaver` methods.
-///
-/// # Implementors
-///
-/// [`FileSaver`](struct.FileSaver.html)
 pub trait FileSaverExt: 'static {
-    ///
-    /// # Returns
-    ///
-    /// the `Buffer` to save.
     fn get_buffer(&self) -> Option<Buffer>;
 
-    ///
-    /// # Returns
-    ///
-    /// the compression type.
     fn get_compression_type(&self) -> CompressionType;
 
-    ///
-    /// # Returns
-    ///
-    /// the encoding.
     fn get_encoding(&self) -> Option<Encoding>;
 
-    ///
-    /// # Returns
-    ///
-    /// the `File`.
     fn get_file(&self) -> Option<File>;
 
-    ///
-    /// # Returns
-    ///
-    /// the flags.
     fn get_flags(&self) -> FileSaverFlags;
 
-    ///
-    /// # Returns
-    ///
-    /// the `gio::File` where to save the buffer to.
     fn get_location(&self) -> Option<gio::File>;
 
-    ///
-    /// # Returns
-    ///
-    /// the newline type.
     fn get_newline_type(&self) -> NewlineType;
 
-    //fn save_async<P: IsA<gio::Cancellable>, Q: FnOnce(Result<(), Error>) + Send + 'static, R: FnOnce(Result<(), Error>) + Send + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&P>, progress_callback: Q, progress_callback_notify: Fn() + 'static, callback: R);
+    //fn save_async<P: IsA<gio::Cancellable>, Q: FnOnce(Result<(), glib::Error>) + Send + 'static, R: FnOnce(Result<(), glib::Error>) + Send + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&P>, progress_callback: Q, progress_callback_notify: Fn() + 'static, callback: R);
 
-    //#[cfg(feature = "futures")]
-    //fn save_async_future<Q: FnOnce(Result<(), Error>) + Send + 'static>(&self, io_priority: glib::Priority, progress_callback: Q, progress_callback_notify: Fn() + 'static) -> Box_<dyn future::Future<Output = Result<(), Error>> + std::marker::Unpin>;
+    //
+    //fn save_async_future<Q: FnOnce(Result<(), glib::Error>) + Send + 'static>(&self, io_priority: glib::Priority, progress_callback: Q, progress_callback_notify: Fn() + 'static) -> Pin<Box_<dyn std::future::Future<Output = Result<(), glib::Error>> + 'static>>;
 
-    /// Sets the compression type. By default the compression type is taken from the
-    /// `File`.
-    /// ## `compression_type`
-    /// the new compression type.
     fn set_compression_type(&self, compression_type: CompressionType);
 
-    /// Sets the encoding. If `encoding` is `None`, the UTF-8 encoding will be set.
-    /// By default the encoding is taken from the `File`.
-    /// ## `encoding`
-    /// the new encoding, or `None` for UTF-8.
     fn set_encoding(&self, encoding: Option<&Encoding>);
 
-    /// ## `flags`
-    /// the new flags.
     fn set_flags(&self, flags: FileSaverFlags);
 
-    /// Sets the newline type. By default the newline type is taken from the
-    /// `File`.
-    /// ## `newline_type`
-    /// the new newline type.
     fn set_newline_type(&self, newline_type: NewlineType);
 
     fn connect_property_compression_type_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
@@ -203,32 +126,29 @@ impl<O: IsA<FileSaver>> FileSaverExt for O {
         }
     }
 
-    //fn save_async<P: IsA<gio::Cancellable>, Q: FnOnce(Result<(), Error>) + Send + 'static, R: FnOnce(Result<(), Error>) + Send + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&P>, progress_callback: Q, progress_callback_notify: Fn() + 'static, callback: R) {
+    //fn save_async<P: IsA<gio::Cancellable>, Q: FnOnce(Result<(), glib::Error>) + Send + 'static, R: FnOnce(Result<(), glib::Error>) + Send + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&P>, progress_callback: Q, progress_callback_notify: Fn() + 'static, callback: R) {
     //    unsafe { TODO: call gtk_source_sys:gtk_source_file_saver_save_async() }
     //}
 
-    //#[cfg(feature = "futures")]
-    //fn save_async_future<Q: FnOnce(Result<(), Error>) + Send + 'static>(&self, io_priority: glib::Priority, progress_callback: Q, progress_callback_notify: Fn() + 'static) -> Box_<dyn future::Future<Output = Result<(), Error>> + std::marker::Unpin> {
-        //use gio::GioFuture;
-        //use fragile::Fragile;
+    //
+    //fn save_async_future<Q: FnOnce(Result<(), glib::Error>) + Send + 'static>(&self, io_priority: glib::Priority, progress_callback: Q, progress_callback_notify: Fn() + 'static) -> Pin<Box_<dyn std::future::Future<Output = Result<(), glib::Error>> + 'static>> {
 
         //let progress_callback = progress_callback.map(ToOwned::to_owned);
         //let progress_callback_notify = progress_callback_notify.map(ToOwned::to_owned);
-        //GioFuture::new(self, move |obj, send| {
+        //Box_::pin(gio::GioFuture::new(self, move |obj, send| {
         //    let cancellable = gio::Cancellable::new();
-        //    let send = Fragile::new(send);
         //    obj.save_async(
         //        io_priority,
         //        Some(&cancellable),
         //        progress_callback.as_ref().map(::std::borrow::Borrow::borrow),
         //        progress_callback_notify.as_ref().map(::std::borrow::Borrow::borrow),
         //        move |res| {
-        //            let _ = send.into_inner().send(res);
+        //            send.resolve(res);
         //        },
         //    );
 
         //    cancellable
-        //})
+        //}))
     //}
 
     fn set_compression_type(&self, compression_type: CompressionType) {

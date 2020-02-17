@@ -2,17 +2,15 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use GutterRendererAlignmentMode;
-use GutterRendererState;
 use gdk;
 use gdk_sys;
-use glib::StaticType;
-use glib::Value;
 use glib::object::Cast;
 use glib::object::IsA;
-use glib::signal::SignalHandlerId;
 use glib::signal::connect_raw;
+use glib::signal::SignalHandlerId;
 use glib::translate::*;
+use glib::StaticType;
+use glib::Value;
 use glib_sys;
 use gobject_sys;
 use gtk;
@@ -23,6 +21,8 @@ use std::boxed::Box as Box_;
 use std::fmt;
 use std::mem;
 use std::mem::transmute;
+use GutterRendererAlignmentMode;
+use GutterRendererState;
 
 glib_wrapper! {
     pub struct GutterRenderer(Object<gtk_source_sys::GtkSourceGutterRenderer, gtk_source_sys::GtkSourceGutterRendererClass, GutterRendererClass>);
@@ -34,185 +34,45 @@ glib_wrapper! {
 
 pub const NONE_GUTTER_RENDERER: Option<&GutterRenderer> = None;
 
-/// Trait containing all `GutterRenderer` methods.
-///
-/// # Implementors
-///
-/// [`GutterRendererPixbuf`](struct.GutterRendererPixbuf.html), [`GutterRendererText`](struct.GutterRendererText.html), [`GutterRenderer`](struct.GutterRenderer.html)
 pub trait GutterRendererExt: 'static {
-    /// Emits the `GutterRenderer::activate` signal of the renderer. This is
-    /// called from `Gutter` and should never have to be called manually.
-    /// ## `iter`
-    /// a `gtk::TextIter` at the start of the line where the renderer is activated
-    /// ## `area`
-    /// a `gdk::Rectangle` of the cell area where the renderer is activated
-    /// ## `event`
-    /// the event that triggered the activation
     fn activate(&self, iter: &mut gtk::TextIter, area: &mut gdk::Rectangle, event: &mut gdk::Event);
 
-    /// Called when drawing a region of lines has ended.
     fn end(&self);
 
-    /// Get the x-alignment and y-alignment of the gutter renderer.
-    /// ## `xalign`
-    /// return location for the x-alignment,
-    ///  or `None` to ignore.
-    /// ## `yalign`
-    /// return location for the y-alignment,
-    ///  or `None` to ignore.
     fn get_alignment(&self) -> (f32, f32);
 
-    /// Get the alignment mode. The alignment mode describes the manner in which the
-    /// renderer is aligned (see :xalign and :yalign).
-    ///
-    /// # Returns
-    ///
-    /// a `GutterRendererAlignmentMode`
     fn get_alignment_mode(&self) -> GutterRendererAlignmentMode;
 
-    /// Get the background color of the renderer.
-    /// ## `color`
-    /// return value for a `gdk::RGBA`
-    ///
-    /// # Returns
-    ///
-    /// `true` if the background color is set, `false` otherwise
     fn get_background(&self) -> Option<gdk::RGBA>;
 
-    /// Get the x-padding and y-padding of the gutter renderer.
-    /// ## `xpad`
-    /// return location for the x-padding,
-    ///  or `None` to ignore.
-    /// ## `ypad`
-    /// return location for the y-padding,
-    ///  or `None` to ignore.
     fn get_padding(&self) -> (i32, i32);
 
-    /// Get the size of the renderer.
-    ///
-    /// # Returns
-    ///
-    /// the size of the renderer.
     fn get_size(&self) -> i32;
 
-    /// Get the view associated to the gutter renderer
-    ///
-    /// # Returns
-    ///
-    /// a `gtk::TextView`
     fn get_view(&self) -> Option<gtk::TextView>;
 
-    /// Get whether the gutter renderer is visible.
-    ///
-    /// # Returns
-    ///
-    /// `true` if the renderer is visible, `false` otherwise
     fn get_visible(&self) -> bool;
 
-    /// Get the `gtk::TextWindowType` associated with the gutter renderer.
-    ///
-    /// # Returns
-    ///
-    /// a `gtk::TextWindowType`
     fn get_window_type(&self) -> gtk::TextWindowType;
 
-    /// Get whether the renderer is activatable at the location in `event`. This is
-    /// called from `Gutter` to determine whether a renderer is activatable
-    /// using the mouse pointer.
-    /// ## `iter`
-    /// a `gtk::TextIter` at the start of the line to be activated
-    /// ## `area`
-    /// a `gdk::Rectangle` of the cell area to be activated
-    /// ## `event`
-    /// the event that triggered the query
-    ///
-    /// # Returns
-    ///
-    /// `true` if the renderer can be activated, `false` otherwise
     fn query_activatable(&self, iter: &mut gtk::TextIter, area: &mut gdk::Rectangle, event: &mut gdk::Event) -> bool;
 
-    /// Emit the `GutterRenderer::query-data` signal. This function is called
-    /// to query for data just before rendering a cell. This is called from the
-    /// `Gutter`. Implementations can override the default signal handler or
-    /// can connect a signal handler externally to the
-    /// `GutterRenderer::query-data` signal.
-    /// ## `start`
-    /// a `gtk::TextIter`.
-    /// ## `end`
-    /// a `gtk::TextIter`.
-    /// ## `state`
-    /// a `GutterRendererState`.
     fn query_data(&self, start: &mut gtk::TextIter, end: &mut gtk::TextIter, state: GutterRendererState);
 
-    /// Emits the `GutterRenderer::query-tooltip` signal. This function is
-    /// called from `Gutter`. Implementations can override the default signal
-    /// handler or can connect to the signal externally.
-    /// ## `iter`
-    /// a `gtk::TextIter`.
-    /// ## `area`
-    /// a `gdk::Rectangle`.
-    /// ## `x`
-    /// The x position of the tooltip.
-    /// ## `y`
-    /// The y position of the tooltip.
-    /// ## `tooltip`
-    /// a `gtk::Tooltip`.
-    ///
-    /// # Returns
-    ///
-    /// `true` if the tooltip has been set, `false` otherwise
     fn query_tooltip(&self, iter: &mut gtk::TextIter, area: &mut gdk::Rectangle, x: i32, y: i32, tooltip: &gtk::Tooltip) -> bool;
 
-    /// Emits the `GutterRenderer::queue-draw` signal of the renderer. Call
-    /// this from an implementation to inform that the renderer has changed such that
-    /// it needs to redraw.
     fn queue_draw(&self);
 
-    /// Set the alignment of the gutter renderer. Both `xalign` and `yalign` can be
-    /// -1, which means the values will not be changed (this allows changing only
-    /// one of the values).
-    ///
-    /// `xalign` is the horizontal alignment. Set to 0 for a left alignment. 1 for a
-    /// right alignment. And 0.5 for centering the cells. `yalign` is the vertical
-    /// alignment. Set to 0 for a top alignment. 1 for a bottom alignment.
-    /// ## `xalign`
-    /// the x-alignment
-    /// ## `yalign`
-    /// the y-alignment
     fn set_alignment(&self, xalign: f32, yalign: f32);
 
-    /// Set the alignment mode. The alignment mode describes the manner in which the
-    /// renderer is aligned (see :xalign and :yalign).
-    /// ## `mode`
-    /// a `GutterRendererAlignmentMode`
     fn set_alignment_mode(&self, mode: GutterRendererAlignmentMode);
 
-    /// Set the background color of the renderer. If `color` is set to `None`, the
-    /// renderer will not have a background color.
-    /// ## `color`
-    /// a `gdk::RGBA` or `None`
     fn set_background(&self, color: Option<&gdk::RGBA>);
 
-    /// Set the padding of the gutter renderer. Both `xpad` and `ypad` can be
-    /// -1, which means the values will not be changed (this allows changing only
-    /// one of the values).
-    ///
-    /// `xpad` is the left and right padding. `ypad` is the top and bottom padding.
-    /// ## `xpad`
-    /// the x-padding
-    /// ## `ypad`
-    /// the y-padding
     fn set_padding(&self, xpad: i32, ypad: i32);
 
-    /// Sets the size of the renderer. A value of -1 specifies that the size
-    /// is to be determined dynamically.
-    /// ## `size`
-    /// the size
     fn set_size(&self, size: i32);
 
-    /// Set whether the gutter renderer is visible.
-    /// ## `visible`
-    /// the visibility
     fn set_visible(&self, visible: bool);
 
     fn get_property_background_rgba(&self) -> Option<gdk::RGBA>;
@@ -223,88 +83,30 @@ pub trait GutterRendererExt: 'static {
 
     fn set_property_background_set(&self, background_set: bool);
 
-    /// The horizontal alignment of the renderer. Set to 0 for a left
-    /// alignment. 1 for a right alignment. And 0.5 for centering the cells.
-    /// A value lower than 0 doesn't modify the alignment.
     fn get_property_xalign(&self) -> f32;
 
-    /// The horizontal alignment of the renderer. Set to 0 for a left
-    /// alignment. 1 for a right alignment. And 0.5 for centering the cells.
-    /// A value lower than 0 doesn't modify the alignment.
     fn set_property_xalign(&self, xalign: f32);
 
-    /// The left and right padding of the renderer.
     fn get_property_xpad(&self) -> i32;
 
-    /// The left and right padding of the renderer.
     fn set_property_xpad(&self, xpad: i32);
 
-    /// The vertical alignment of the renderer. Set to 0 for a top
-    /// alignment. 1 for a bottom alignment. And 0.5 for centering the cells.
-    /// A value lower than 0 doesn't modify the alignment.
     fn get_property_yalign(&self) -> f32;
 
-    /// The vertical alignment of the renderer. Set to 0 for a top
-    /// alignment. 1 for a bottom alignment. And 0.5 for centering the cells.
-    /// A value lower than 0 doesn't modify the alignment.
     fn set_property_yalign(&self, yalign: f32);
 
-    /// The top and bottom padding of the renderer.
     fn get_property_ypad(&self) -> i32;
 
-    /// The top and bottom padding of the renderer.
     fn set_property_ypad(&self, ypad: i32);
 
-    /// The ::activate signal is emitted when the renderer is
-    /// activated.
-    /// ## `iter`
-    /// a `gtk::TextIter`
-    /// ## `area`
-    /// a `gdk::Rectangle`
-    /// ## `event`
-    /// the event that caused the activation
     fn connect_activate<F: Fn(&Self, &gtk::TextIter, &gdk::Rectangle, &gdk::Event) + 'static>(&self, f: F) -> SignalHandlerId;
 
-    /// The ::query-activatable signal is emitted when the renderer
-    /// can possibly be activated.
-    /// ## `iter`
-    /// a `gtk::TextIter`
-    /// ## `area`
-    /// a `gdk::Rectangle`
-    /// ## `event`
-    /// the ``GdkEvent`` that is causing the activatable query
     fn connect_query_activatable<F: Fn(&Self, &gtk::TextIter, &gdk::Rectangle, &gdk::Event) -> bool + 'static>(&self, f: F) -> SignalHandlerId;
 
-    /// The ::query-data signal is emitted when the renderer needs
-    /// to be filled with data just before a cell is drawn. This can
-    /// be used by general renderer implementations to allow render
-    /// data to be filled in externally.
-    /// ## `start`
-    /// a `gtk::TextIter`
-    /// ## `end`
-    /// a `gtk::TextIter`
-    /// ## `state`
-    /// the renderer state
     fn connect_query_data<F: Fn(&Self, &gtk::TextIter, &gtk::TextIter, GutterRendererState) + 'static>(&self, f: F) -> SignalHandlerId;
 
-    /// The ::query-tooltip signal is emitted when the renderer can
-    /// show a tooltip.
-    /// ## `iter`
-    /// a `gtk::TextIter`
-    /// ## `area`
-    /// a `gdk::Rectangle`
-    /// ## `x`
-    /// the x position (in window coordinates)
-    /// ## `y`
-    /// the y position (in window coordinates)
-    /// ## `tooltip`
-    /// a `gtk::Tooltip`
     fn connect_query_tooltip<F: Fn(&Self, &gtk::TextIter, &gdk::Rectangle, i32, i32, &gtk::Tooltip) -> bool + 'static>(&self, f: F) -> SignalHandlerId;
 
-    /// The ::queue-draw signal is emitted when the renderer needs
-    /// to be redrawn. Use `GutterRendererExt::queue_draw`
-    /// to emit this signal from an implementation of the
-    /// `GutterRenderer` interface.
     fn connect_queue_draw<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
 
     fn connect_property_alignment_mode_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
@@ -345,9 +147,11 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
 
     fn get_alignment(&self) -> (f32, f32) {
         unsafe {
-            let mut xalign = mem::uninitialized();
-            let mut yalign = mem::uninitialized();
-            gtk_source_sys::gtk_source_gutter_renderer_get_alignment(self.as_ref().to_glib_none().0, &mut xalign, &mut yalign);
+            let mut xalign = mem::MaybeUninit::uninit();
+            let mut yalign = mem::MaybeUninit::uninit();
+            gtk_source_sys::gtk_source_gutter_renderer_get_alignment(self.as_ref().to_glib_none().0, xalign.as_mut_ptr(), yalign.as_mut_ptr());
+            let xalign = xalign.assume_init();
+            let yalign = yalign.assume_init();
             (xalign, yalign)
         }
     }
@@ -368,9 +172,11 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
 
     fn get_padding(&self) -> (i32, i32) {
         unsafe {
-            let mut xpad = mem::uninitialized();
-            let mut ypad = mem::uninitialized();
-            gtk_source_sys::gtk_source_gutter_renderer_get_padding(self.as_ref().to_glib_none().0, &mut xpad, &mut ypad);
+            let mut xpad = mem::MaybeUninit::uninit();
+            let mut ypad = mem::MaybeUninit::uninit();
+            gtk_source_sys::gtk_source_gutter_renderer_get_padding(self.as_ref().to_glib_none().0, xpad.as_mut_ptr(), ypad.as_mut_ptr());
+            let xpad = xpad.assume_init();
+            let ypad = ypad.assume_init();
             (xpad, ypad)
         }
     }
@@ -463,7 +269,7 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
         unsafe {
             let mut value = Value::from_type(<gdk::RGBA as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"background-rgba\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get()
+            value.get().expect("Return Value for property `background-rgba` getter")
         }
     }
 
@@ -477,7 +283,7 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
         unsafe {
             let mut value = Value::from_type(<bool as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"background-set\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().unwrap()
+            value.get().expect("Return Value for property `background-set` getter").unwrap()
         }
     }
 
@@ -491,7 +297,7 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
         unsafe {
             let mut value = Value::from_type(<f32 as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"xalign\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().unwrap()
+            value.get().expect("Return Value for property `xalign` getter").unwrap()
         }
     }
 
@@ -505,7 +311,7 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
         unsafe {
             let mut value = Value::from_type(<i32 as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"xpad\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().unwrap()
+            value.get().expect("Return Value for property `xpad` getter").unwrap()
         }
     }
 
@@ -519,7 +325,7 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
         unsafe {
             let mut value = Value::from_type(<f32 as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"yalign\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().unwrap()
+            value.get().expect("Return Value for property `yalign` getter").unwrap()
         }
     }
 
@@ -533,7 +339,7 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
         unsafe {
             let mut value = Value::from_type(<i32 as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"ypad\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().unwrap()
+            value.get().expect("Return Value for property `ypad` getter").unwrap()
         }
     }
 

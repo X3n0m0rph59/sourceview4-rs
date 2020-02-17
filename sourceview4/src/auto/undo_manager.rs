@@ -6,8 +6,8 @@ use glib;
 use glib::object::Cast;
 use glib::object::IsA;
 use glib::object::ObjectExt;
-use glib::signal::SignalHandlerId;
 use glib::signal::connect_raw;
+use glib::signal::SignalHandlerId;
 use glib::translate::*;
 use glib_sys;
 use gobject_sys;
@@ -26,56 +26,27 @@ glib_wrapper! {
 
 pub const NONE_UNDO_MANAGER: Option<&UndoManager> = None;
 
-/// Trait containing all `UndoManager` methods.
-///
-/// # Implementors
-///
-/// [`UndoManager`](struct.UndoManager.html)
 pub trait UndoManagerExt: 'static {
-    /// Begin a not undoable action on the buffer. All changes between this call
-    /// and the call to `UndoManager::end_not_undoable_action` cannot
-    /// be undone. This function should be re-entrant.
     fn begin_not_undoable_action(&self);
 
-    /// Get whether there are redo operations available.
-    ///
-    /// # Returns
-    ///
-    /// `true` if there are redo operations available, `false` otherwise
     fn can_redo(&self) -> bool;
 
-    /// Emits the `UndoManager::can-redo-changed` signal.
     fn can_redo_changed(&self);
 
-    /// Get whether there are undo operations available.
-    ///
-    /// # Returns
-    ///
-    /// `true` if there are undo operations available, `false` otherwise
     fn can_undo(&self) -> bool;
 
-    /// Emits the `UndoManager::can-undo-changed` signal.
     fn can_undo_changed(&self);
 
-    /// Ends a not undoable action on the buffer.
     fn end_not_undoable_action(&self);
 
-    /// Perform a single redo. Calling this function when there are no redo operations
-    /// available is an error. Use `UndoManager::can_redo` to find out
-    /// if there are redo operations available.
     fn redo(&self);
 
-    /// Perform a single undo. Calling this function when there are no undo operations
-    /// available is an error. Use `UndoManager::can_undo` to find out
-    /// if there are undo operations available.
     fn undo(&self);
 
-    /// Emitted when the ability to redo has changed.
     fn connect_can_redo_changed<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
 
     fn emit_can_redo_changed(&self);
 
-    /// Emitted when the ability to undo has changed.
     fn connect_can_undo_changed<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
 
     fn emit_can_undo_changed(&self);

@@ -2,20 +2,20 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use SpaceLocationFlags;
-use SpaceTypeFlags;
 use gio;
 use glib;
 use glib::object::Cast;
 use glib::object::IsA;
-use glib::signal::SignalHandlerId;
 use glib::signal::connect_raw;
+use glib::signal::SignalHandlerId;
 use glib::translate::*;
 use glib_sys;
 use gtk_source_sys;
 use std::boxed::Box as Box_;
 use std::fmt;
 use std::mem::transmute;
+use SpaceLocationFlags;
+use SpaceTypeFlags;
 
 glib_wrapper! {
     pub struct SpaceDrawer(Object<gtk_source_sys::GtkSourceSpaceDrawer, gtk_source_sys::GtkSourceSpaceDrawerClass, SpaceDrawerClass>);
@@ -26,12 +26,6 @@ glib_wrapper! {
 }
 
 impl SpaceDrawer {
-    /// Creates a new `SpaceDrawer` object. Useful for storing space drawing
-    /// settings independently of a `View`.
-    ///
-    /// # Returns
-    ///
-    /// a new `SpaceDrawer`.
     pub fn new() -> SpaceDrawer {
         assert_initialized_main_thread!();
         unsafe {
@@ -48,85 +42,19 @@ impl Default for SpaceDrawer {
 
 pub const NONE_SPACE_DRAWER: Option<&SpaceDrawer> = None;
 
-/// Trait containing all `SpaceDrawer` methods.
-///
-/// # Implementors
-///
-/// [`SpaceDrawer`](struct.SpaceDrawer.html)
 pub trait SpaceDrawerExt: 'static {
-    /// Binds the `SpaceDrawer:matrix` property to a `gio::Settings` key.
-    ///
-    /// The `gio::Settings` key must be of the same type as the
-    /// `SpaceDrawer:matrix` property, that is, `"au"`.
-    ///
-    /// The `gio::SettingsExt::bind` function cannot be used, because the default GIO
-    /// mapping functions don't support `glib::Variant` properties (maybe it will be
-    /// supported by a future GIO version, in which case this function can be
-    /// deprecated).
-    /// ## `settings`
-    /// a `gio::Settings` object.
-    /// ## `key`
-    /// the `settings` key to bind.
-    /// ## `flags`
-    /// flags for the binding.
     fn bind_matrix_setting<P: IsA<gio::Settings>>(&self, settings: &P, key: &str, flags: gio::SettingsBindFlags);
 
-    ///
-    /// # Returns
-    ///
-    /// whether the `SpaceDrawer:matrix` property is enabled.
     fn get_enable_matrix(&self) -> bool;
 
-    /// Gets the value of the `SpaceDrawer:matrix` property, as a `glib::Variant`.
-    /// An empty array can be returned in case the matrix is a zero matrix.
-    ///
-    /// The `SpaceDrawerExt::get_types_for_locations` function may be more
-    /// convenient to use.
-    ///
-    /// # Returns
-    ///
-    /// the `SpaceDrawer:matrix` value as a new floating `glib::Variant`
-    ///  instance.
     fn get_matrix(&self) -> Option<glib::Variant>;
 
-    /// If only one location is specified, this function returns what kind of
-    /// white spaces are drawn at that location. The value is retrieved from the
-    /// `SpaceDrawer:matrix` property.
-    ///
-    /// If several locations are specified, this function returns the logical AND for
-    /// those locations. Which means that if a certain kind of white space is present
-    /// in the return value, then that kind of white space is drawn at all the
-    /// specified `locations`.
-    /// ## `locations`
-    /// one or several `SpaceLocationFlags`.
-    ///
-    /// # Returns
-    ///
-    /// a combination of `SpaceTypeFlags`.
     fn get_types_for_locations(&self, locations: SpaceLocationFlags) -> SpaceTypeFlags;
 
-    /// Sets whether the `SpaceDrawer:matrix` property is enabled.
-    /// ## `enable_matrix`
-    /// the new value.
     fn set_enable_matrix(&self, enable_matrix: bool);
 
-    /// Sets a new value to the `SpaceDrawer:matrix` property, as a
-    /// `glib::Variant`. If `matrix` is `None`, then an empty array is set.
-    ///
-    /// If `matrix` is floating, it is consumed.
-    ///
-    /// The `SpaceDrawerExt::set_types_for_locations` function may be more
-    /// convenient to use.
-    /// ## `matrix`
-    /// the new matrix value, or `None`.
     fn set_matrix(&self, matrix: Option<&glib::Variant>);
 
-    /// Modifies the `SpaceDrawer:matrix` property at the specified
-    /// `locations`.
-    /// ## `locations`
-    /// one or several `SpaceLocationFlags`.
-    /// ## `types`
-    /// a combination of `SpaceTypeFlags`.
     fn set_types_for_locations(&self, locations: SpaceLocationFlags, types: SpaceTypeFlags);
 
     fn connect_property_enable_matrix_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;

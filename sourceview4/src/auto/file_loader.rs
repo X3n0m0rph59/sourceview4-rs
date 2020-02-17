@@ -2,16 +2,16 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use Buffer;
-use CompressionType;
-use Encoding;
-use File;
-use NewlineType;
 use gio;
 use glib::object::IsA;
 use glib::translate::*;
 use gtk_source_sys;
 use std::fmt;
+use Buffer;
+use CompressionType;
+use Encoding;
+use File;
+use NewlineType;
 
 glib_wrapper! {
     pub struct FileLoader(Object<gtk_source_sys::GtkSourceFileLoader, gtk_source_sys::GtkSourceFileLoaderClass, FileLoaderClass>);
@@ -22,19 +22,6 @@ glib_wrapper! {
 }
 
 impl FileLoader {
-    /// Creates a new `FileLoader` object. The contents is read from the
-    /// `File`'s location. If not already done, call
-    /// `FileExt::set_location` before calling this constructor. The previous
-    /// location is anyway not needed, because as soon as the file loading begins,
-    /// the `buffer` is emptied.
-    /// ## `buffer`
-    /// the `Buffer` to load the contents into.
-    /// ## `file`
-    /// the `File`.
-    ///
-    /// # Returns
-    ///
-    /// a new `FileLoader` object.
     pub fn new<P: IsA<Buffer>, Q: IsA<File>>(buffer: &P, file: &Q) -> FileLoader {
         skip_assert_initialized!();
         unsafe {
@@ -42,17 +29,6 @@ impl FileLoader {
         }
     }
 
-    /// Creates a new `FileLoader` object. The contents is read from `stream`.
-    /// ## `buffer`
-    /// the `Buffer` to load the contents into.
-    /// ## `file`
-    /// the `File`.
-    /// ## `stream`
-    /// the `gio::InputStream` to load, e.g. stdin.
-    ///
-    /// # Returns
-    ///
-    /// a new `FileLoader` object.
     pub fn new_from_stream<P: IsA<Buffer>, Q: IsA<File>, R: IsA<gio::InputStream>>(buffer: &P, file: &Q, stream: &R) -> FileLoader {
         skip_assert_initialized!();
         unsafe {
@@ -63,60 +39,25 @@ impl FileLoader {
 
 pub const NONE_FILE_LOADER: Option<&FileLoader> = None;
 
-/// Trait containing all `FileLoader` methods.
-///
-/// # Implementors
-///
-/// [`FileLoader`](struct.FileLoader.html)
 pub trait FileLoaderExt: 'static {
-    ///
-    /// # Returns
-    ///
-    /// the `Buffer` to load the contents into.
     fn get_buffer(&self) -> Option<Buffer>;
 
-    ///
-    /// # Returns
-    ///
-    /// the detected compression type.
     fn get_compression_type(&self) -> CompressionType;
 
-    ///
-    /// # Returns
-    ///
-    /// the detected file encoding.
     fn get_encoding(&self) -> Option<Encoding>;
 
-    ///
-    /// # Returns
-    ///
-    /// the `File`.
     fn get_file(&self) -> Option<File>;
 
-    ///
-    /// # Returns
-    ///
-    /// the `gio::InputStream` to load, or `None`
-    /// if a `gio::File` is used.
     fn get_input_stream(&self) -> Option<gio::InputStream>;
 
-    ///
-    /// # Returns
-    ///
-    /// the `gio::File` to load, or `None`
-    /// if an input stream is used.
     fn get_location(&self) -> Option<gio::File>;
 
-    ///
-    /// # Returns
-    ///
-    /// the detected newline type.
     fn get_newline_type(&self) -> NewlineType;
 
-    //fn load_async<P: IsA<gio::Cancellable>, Q: FnOnce(Result<(), Error>) + Send + 'static, R: FnOnce(Result<(), Error>) + Send + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&P>, progress_callback: Q, progress_callback_notify: Fn() + 'static, callback: R);
+    //fn load_async<P: IsA<gio::Cancellable>, Q: FnOnce(Result<(), glib::Error>) + Send + 'static, R: FnOnce(Result<(), glib::Error>) + Send + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&P>, progress_callback: Q, progress_callback_notify: Fn() + 'static, callback: R);
 
-    //#[cfg(feature = "futures")]
-    //fn load_async_future<Q: FnOnce(Result<(), Error>) + Send + 'static>(&self, io_priority: glib::Priority, progress_callback: Q, progress_callback_notify: Fn() + 'static) -> Box_<dyn future::Future<Output = Result<(), Error>> + std::marker::Unpin>;
+    //
+    //fn load_async_future<Q: FnOnce(Result<(), glib::Error>) + Send + 'static>(&self, io_priority: glib::Priority, progress_callback: Q, progress_callback_notify: Fn() + 'static) -> Pin<Box_<dyn std::future::Future<Output = Result<(), glib::Error>> + 'static>>;
 }
 
 impl<O: IsA<FileLoader>> FileLoaderExt for O {
@@ -162,32 +103,29 @@ impl<O: IsA<FileLoader>> FileLoaderExt for O {
         }
     }
 
-    //fn load_async<P: IsA<gio::Cancellable>, Q: FnOnce(Result<(), Error>) + Send + 'static, R: FnOnce(Result<(), Error>) + Send + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&P>, progress_callback: Q, progress_callback_notify: Fn() + 'static, callback: R) {
+    //fn load_async<P: IsA<gio::Cancellable>, Q: FnOnce(Result<(), glib::Error>) + Send + 'static, R: FnOnce(Result<(), glib::Error>) + Send + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&P>, progress_callback: Q, progress_callback_notify: Fn() + 'static, callback: R) {
     //    unsafe { TODO: call gtk_source_sys:gtk_source_file_loader_load_async() }
     //}
 
-    //#[cfg(feature = "futures")]
-    //fn load_async_future<Q: FnOnce(Result<(), Error>) + Send + 'static>(&self, io_priority: glib::Priority, progress_callback: Q, progress_callback_notify: Fn() + 'static) -> Box_<dyn future::Future<Output = Result<(), Error>> + std::marker::Unpin> {
-        //use gio::GioFuture;
-        //use fragile::Fragile;
+    //
+    //fn load_async_future<Q: FnOnce(Result<(), glib::Error>) + Send + 'static>(&self, io_priority: glib::Priority, progress_callback: Q, progress_callback_notify: Fn() + 'static) -> Pin<Box_<dyn std::future::Future<Output = Result<(), glib::Error>> + 'static>> {
 
         //let progress_callback = progress_callback.map(ToOwned::to_owned);
         //let progress_callback_notify = progress_callback_notify.map(ToOwned::to_owned);
-        //GioFuture::new(self, move |obj, send| {
+        //Box_::pin(gio::GioFuture::new(self, move |obj, send| {
         //    let cancellable = gio::Cancellable::new();
-        //    let send = Fragile::new(send);
         //    obj.load_async(
         //        io_priority,
         //        Some(&cancellable),
         //        progress_callback.as_ref().map(::std::borrow::Borrow::borrow),
         //        progress_callback_notify.as_ref().map(::std::borrow::Borrow::borrow),
         //        move |res| {
-        //            let _ = send.into_inner().send(res);
+        //            send.resolve(res);
         //        },
         //    );
 
         //    cancellable
-        //})
+        //}))
     //}
 }
 

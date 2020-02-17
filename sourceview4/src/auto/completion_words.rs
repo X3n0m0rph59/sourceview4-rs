@@ -2,16 +2,14 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use CompletionActivation;
-use CompletionProvider;
 use gdk_pixbuf;
-use glib::StaticType;
-use glib::Value;
 use glib::object::Cast;
 use glib::object::IsA;
-use glib::signal::SignalHandlerId;
 use glib::signal::connect_raw;
+use glib::signal::SignalHandlerId;
 use glib::translate::*;
+use glib::StaticType;
+use glib::Value;
 use glib_sys;
 use gobject_sys;
 use gtk;
@@ -19,6 +17,8 @@ use gtk_source_sys;
 use std::boxed::Box as Box_;
 use std::fmt;
 use std::mem::transmute;
+use CompletionActivation;
+use CompletionProvider;
 
 glib_wrapper! {
     pub struct CompletionWords(Object<gtk_source_sys::GtkSourceCompletionWords, gtk_source_sys::GtkSourceCompletionWordsClass, CompletionWordsClass>) @implements CompletionProvider;
@@ -29,14 +29,6 @@ glib_wrapper! {
 }
 
 impl CompletionWords {
-    /// ## `name`
-    /// The name for the provider, or `None`.
-    /// ## `icon`
-    /// A specific icon for the provider, or `None`.
-    ///
-    /// # Returns
-    ///
-    /// a new `CompletionWords` provider
     pub fn new(name: Option<&str>, icon: Option<&gdk_pixbuf::Pixbuf>) -> CompletionWords {
         assert_initialized_main_thread!();
         unsafe {
@@ -47,23 +39,11 @@ impl CompletionWords {
 
 pub const NONE_COMPLETION_WORDS: Option<&CompletionWords> = None;
 
-/// Trait containing all `CompletionWords` methods.
-///
-/// # Implementors
-///
-/// [`CompletionWords`](struct.CompletionWords.html)
 pub trait CompletionWordsExt: 'static {
-    /// Registers `buffer` in the `self` provider.
-    /// ## `buffer`
-    /// a `gtk::TextBuffer`
     fn register<P: IsA<gtk::TextBuffer>>(&self, buffer: &P);
 
-    /// Unregisters `buffer` from the `self` provider.
-    /// ## `buffer`
-    /// a `gtk::TextBuffer`
     fn unregister<P: IsA<gtk::TextBuffer>>(&self, buffer: &P);
 
-    /// The type of activation.
     fn set_property_activation(&self, activation: CompletionActivation);
 
     fn set_property_icon(&self, icon: Option<&gdk_pixbuf::Pixbuf>);
@@ -138,7 +118,7 @@ impl<O: IsA<CompletionWords>> CompletionWordsExt for O {
         unsafe {
             let mut value = Value::from_type(<u32 as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"minimum-word-size\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().unwrap()
+            value.get().expect("Return Value for property `minimum-word-size` getter").unwrap()
         }
     }
 
@@ -164,7 +144,7 @@ impl<O: IsA<CompletionWords>> CompletionWordsExt for O {
         unsafe {
             let mut value = Value::from_type(<u32 as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"proposals-batch-size\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().unwrap()
+            value.get().expect("Return Value for property `proposals-batch-size` getter").unwrap()
         }
     }
 
@@ -178,7 +158,7 @@ impl<O: IsA<CompletionWords>> CompletionWordsExt for O {
         unsafe {
             let mut value = Value::from_type(<u32 as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"scan-batch-size\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().unwrap()
+            value.get().expect("Return Value for property `scan-batch-size` getter").unwrap()
         }
     }
 

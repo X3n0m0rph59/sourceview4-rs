@@ -2,20 +2,20 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use GutterRenderer;
 use gdk_pixbuf;
 use gio;
-use glib::GString;
 use glib::object::Cast;
 use glib::object::IsA;
-use glib::signal::SignalHandlerId;
 use glib::signal::connect_raw;
+use glib::signal::SignalHandlerId;
 use glib::translate::*;
+use glib::GString;
 use glib_sys;
 use gtk_source_sys;
 use std::boxed::Box as Box_;
 use std::fmt;
 use std::mem::transmute;
+use GutterRenderer;
 
 glib_wrapper! {
     pub struct GutterRendererPixbuf(Object<gtk_source_sys::GtkSourceGutterRendererPixbuf, gtk_source_sys::GtkSourceGutterRendererPixbufClass, GutterRendererPixbufClass>) @extends GutterRenderer;
@@ -26,11 +26,6 @@ glib_wrapper! {
 }
 
 impl GutterRendererPixbuf {
-    /// Create a new `GutterRendererPixbuf`.
-    ///
-    /// # Returns
-    ///
-    /// A `GutterRenderer`
     pub fn new() -> GutterRendererPixbuf {
         assert_initialized_main_thread!();
         unsafe {
@@ -47,38 +42,17 @@ impl Default for GutterRendererPixbuf {
 
 pub const NONE_GUTTER_RENDERER_PIXBUF: Option<&GutterRendererPixbuf> = None;
 
-/// Trait containing all `GutterRendererPixbuf` methods.
-///
-/// # Implementors
-///
-/// [`GutterRendererPixbuf`](struct.GutterRendererPixbuf.html)
 pub trait GutterRendererPixbufExt: 'static {
-    /// Get the gicon of the renderer
-    ///
-    /// # Returns
-    ///
-    /// a `gio::Icon`
     fn get_gicon(&self) -> Option<gio::Icon>;
 
     fn get_icon_name(&self) -> Option<GString>;
 
-    /// Get the pixbuf of the renderer.
-    ///
-    /// # Returns
-    ///
-    /// a `gdk_pixbuf::Pixbuf`
     fn get_pixbuf(&self) -> Option<gdk_pixbuf::Pixbuf>;
 
-    /// ## `icon`
-    /// the icon, or `None`.
     fn set_gicon<P: IsA<gio::Icon>>(&self, icon: Option<&P>);
 
-    /// ## `icon_name`
-    /// the icon name, or `None`.
     fn set_icon_name(&self, icon_name: Option<&str>);
 
-    /// ## `pixbuf`
-    /// the pixbuf, or `None`.
     fn set_pixbuf(&self, pixbuf: Option<&gdk_pixbuf::Pixbuf>);
 
     fn connect_property_gicon_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
