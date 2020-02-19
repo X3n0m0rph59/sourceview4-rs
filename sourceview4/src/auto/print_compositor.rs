@@ -2,20 +2,20 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use Buffer;
-use View;
-use glib::GString;
 use glib::object::Cast;
 use glib::object::IsA;
-use glib::signal::SignalHandlerId;
 use glib::signal::connect_raw;
+use glib::signal::SignalHandlerId;
 use glib::translate::*;
+use glib::GString;
 use glib_sys;
 use gtk;
 use gtk_source_sys;
 use std::boxed::Box as Box_;
 use std::fmt;
 use std::mem::transmute;
+use Buffer;
+use View;
 
 glib_wrapper! {
     pub struct PrintCompositor(Object<gtk_source_sys::GtkSourcePrintCompositor, gtk_source_sys::GtkSourcePrintCompositorClass, PrintCompositorClass>);
@@ -26,13 +26,6 @@ glib_wrapper! {
 }
 
 impl PrintCompositor {
-    /// Creates a new print compositor that can be used to print `buffer`.
-    /// ## `buffer`
-    /// the `Buffer` to print.
-    ///
-    /// # Returns
-    ///
-    /// a new print compositor object.
     pub fn new<P: IsA<Buffer>>(buffer: &P) -> PrintCompositor {
         skip_assert_initialized!();
         unsafe {
@@ -40,19 +33,6 @@ impl PrintCompositor {
         }
     }
 
-    /// Creates a new print compositor that can be used to print the buffer
-    /// associated with `view`.
-    /// This constructor sets some configuration properties to make the
-    /// printed output match `view` as much as possible. The properties set are
-    /// `PrintCompositor:tab-width`, `PrintCompositor:highlight-syntax`,
-    /// `PrintCompositor:wrap-mode`, `PrintCompositor:body-font-name` and
-    /// `PrintCompositor:print-line-numbers`.
-    /// ## `view`
-    /// a `View` to get configuration from.
-    ///
-    /// # Returns
-    ///
-    /// a new print compositor object.
     pub fn new_from_view<P: IsA<View>>(view: &P) -> PrintCompositor {
         skip_assert_initialized!();
         unsafe {
@@ -63,452 +43,75 @@ impl PrintCompositor {
 
 pub const NONE_PRINT_COMPOSITOR: Option<&PrintCompositor> = None;
 
-/// Trait containing all `PrintCompositor` methods.
-///
-/// # Implementors
-///
-/// [`PrintCompositor`](struct.PrintCompositor.html)
 pub trait PrintCompositorExt: 'static {
-    /// Draw page `page_nr` for printing on the the Cairo context encapsuled in `context`.
-    ///
-    /// This method has been designed to be called in the handler of the `gtk::PrintOperation::draw_page` signal
-    /// as shown in the following example:
-    ///
-    /// `<informalexample>``<programlisting>`
-    /// // Signal handler for the `gtk::PrintOperation`::draw_page signal
-    ///
-    /// static void
-    /// draw_page (`gtk::PrintOperation` *operation,
-    ///  `gtk::PrintContext` *context,
-    ///  gint page_nr,
-    ///  gpointer user_data)
-    /// {
-    ///  `PrintCompositor` *compositor;
-    ///
-    ///  compositor = GTK_SOURCE_PRINT_COMPOSITOR (user_data);
-    ///
-    ///  gtk_source_print_compositor_draw_page (compositor,
-    ///  context,
-    ///  page_nr);
-    /// }
-    /// `</programlisting>``</informalexample>`
-    /// ## `context`
-    /// the `gtk::PrintContext` encapsulating the context information that is required when
-    ///  drawing the page for printing.
-    /// ## `page_nr`
-    /// the number of the page to print.
     fn draw_page(&self, context: &gtk::PrintContext, page_nr: i32);
 
-    /// Returns the name of the font used to print the text body. The returned string
-    /// must be freed with `g_free`.
-    ///
-    /// # Returns
-    ///
-    /// a new string containing the name of the font used to print the
-    /// text body.
     fn get_body_font_name(&self) -> Option<GString>;
 
-    /// Gets the bottom margin in units of `unit`.
-    /// ## `unit`
-    /// the unit for the return value.
-    ///
-    /// # Returns
-    ///
-    /// the bottom margin.
     fn get_bottom_margin(&self, unit: gtk::Unit) -> f64;
 
-    /// Gets the `Buffer` associated with the compositor. The returned
-    /// object reference is owned by the compositor object and
-    /// should not be unreferenced.
-    ///
-    /// # Returns
-    ///
-    /// the `Buffer` associated with the compositor.
     fn get_buffer(&self) -> Option<Buffer>;
 
-    /// Returns the name of the font used to print the page footer.
-    /// The returned string must be freed with `g_free`.
-    ///
-    /// # Returns
-    ///
-    /// a new string containing the name of the font used to print
-    /// the page footer.
     fn get_footer_font_name(&self) -> Option<GString>;
 
-    /// Returns the name of the font used to print the page header.
-    /// The returned string must be freed with `g_free`.
-    ///
-    /// # Returns
-    ///
-    /// a new string containing the name of the font used to print
-    /// the page header.
     fn get_header_font_name(&self) -> Option<GString>;
 
-    /// Determines whether the printed text will be highlighted according to the
-    /// buffer rules. Note that highlighting will happen
-    /// only if the buffer to print has highlighting activated.
-    ///
-    /// # Returns
-    ///
-    /// `true` if the printed output will be highlighted.
     fn get_highlight_syntax(&self) -> bool;
 
-    /// Gets the left margin in units of `unit`.
-    /// ## `unit`
-    /// the unit for the return value.
-    ///
-    /// # Returns
-    ///
-    /// the left margin
     fn get_left_margin(&self, unit: gtk::Unit) -> f64;
 
-    /// Returns the name of the font used to print line numbers on the left margin.
-    /// The returned string must be freed with `g_free`.
-    ///
-    /// # Returns
-    ///
-    /// a new string containing the name of the font used to print
-    /// line numbers on the left margin.
     fn get_line_numbers_font_name(&self) -> Option<GString>;
 
-    /// Returns the number of pages in the document or `<code>`-1`</code>` if the
-    /// document has not been completely paginated.
-    ///
-    /// # Returns
-    ///
-    /// the number of pages in the document or `<code>`-1`</code>` if the
-    /// document has not been completely paginated.
     fn get_n_pages(&self) -> i32;
 
-    /// Returns the current fraction of the document pagination that has been completed.
-    ///
-    /// # Returns
-    ///
-    /// a fraction from 0.0 to 1.0 inclusive.
     fn get_pagination_progress(&self) -> f64;
 
-    /// Determines if a footer is set to be printed for each page. A
-    /// footer will be printed if this function returns `true`
-    /// `<emphasis>`and`</emphasis>` some format strings have been specified
-    /// with `PrintCompositorExt::set_footer_format`.
-    ///
-    /// # Returns
-    ///
-    /// `true` if the footer is set to be printed.
     fn get_print_footer(&self) -> bool;
 
-    /// Determines if a header is set to be printed for each page. A
-    /// header will be printed if this function returns `true`
-    /// `<emphasis>`and`</emphasis>` some format strings have been specified
-    /// with `PrintCompositorExt::set_header_format`.
-    ///
-    /// # Returns
-    ///
-    /// `true` if the header is set to be printed.
     fn get_print_header(&self) -> bool;
 
-    /// Returns the interval used for line number printing. If the
-    /// value is 0, no line numbers will be printed. The default value is
-    /// 1 (i.e. numbers printed in all lines).
-    ///
-    /// # Returns
-    ///
-    /// the interval of printed line numbers.
     fn get_print_line_numbers(&self) -> u32;
 
-    /// Gets the right margin in units of `unit`.
-    /// ## `unit`
-    /// the unit for the return value.
-    ///
-    /// # Returns
-    ///
-    /// the right margin.
     fn get_right_margin(&self, unit: gtk::Unit) -> f64;
 
-    /// Returns the width of tabulation in characters for printed text.
-    ///
-    /// # Returns
-    ///
-    /// width of tab.
     fn get_tab_width(&self) -> u32;
 
-    /// Gets the top margin in units of `unit`.
-    /// ## `unit`
-    /// the unit for the return value.
-    ///
-    /// # Returns
-    ///
-    /// the top margin.
     fn get_top_margin(&self, unit: gtk::Unit) -> f64;
 
-    /// Gets the line wrapping mode for the printed text.
-    ///
-    /// # Returns
-    ///
-    /// the line wrap mode.
     fn get_wrap_mode(&self) -> gtk::WrapMode;
 
-    /// Paginate the document associated with the `self`.
-    ///
-    /// In order to support non-blocking pagination, document is paginated in small chunks.
-    /// Each time `PrintCompositorExt::paginate` is invoked, a chunk of the document
-    /// is paginated. To paginate the entire document, `PrintCompositorExt::paginate`
-    /// must be invoked multiple times.
-    /// It returns `true` if the document has been completely paginated, otherwise it returns `false`.
-    ///
-    /// This method has been designed to be invoked in the handler of the `gtk::PrintOperation::paginate` signal,
-    /// as shown in the following example:
-    ///
-    /// `<informalexample>``<programlisting>`
-    /// // Signal handler for the `gtk::PrintOperation`::paginate signal
-    ///
-    /// static gboolean
-    /// paginate (`gtk::PrintOperation` *operation,
-    ///  `gtk::PrintContext` *context,
-    ///  gpointer user_data)
-    /// {
-    ///  `PrintCompositor` *compositor;
-    ///
-    ///  compositor = GTK_SOURCE_PRINT_COMPOSITOR (user_data);
-    ///
-    ///  if (gtk_source_print_compositor_paginate (compositor, context))
-    ///  {
-    ///  gint n_pages;
-    ///
-    ///  n_pages = gtk_source_print_compositor_get_n_pages (compositor);
-    ///  gtk_print_operation_set_n_pages (operation, n_pages);
-    ///
-    ///  return TRUE;
-    ///  }
-    ///
-    ///  return FALSE;
-    /// }
-    /// `</programlisting>``</informalexample>`
-    ///
-    /// If you don't need to do pagination in chunks, you can simply do it all in the
-    /// `gtk::PrintOperation::begin-print` handler, and set the number of pages from there, like
-    /// in the following example:
-    ///
-    /// `<informalexample>``<programlisting>`
-    /// // Signal handler for the `gtk::PrintOperation`::begin-print signal
-    ///
-    /// static void
-    /// begin_print (`gtk::PrintOperation` *operation,
-    ///  `gtk::PrintContext` *context,
-    ///  gpointer user_data)
-    /// {
-    ///  `PrintCompositor` *compositor;
-    ///  gint n_pages;
-    ///
-    ///  compositor = GTK_SOURCE_PRINT_COMPOSITOR (user_data);
-    ///
-    ///  while (!gtk_source_print_compositor_paginate (compositor, context));
-    ///
-    ///  n_pages = gtk_source_print_compositor_get_n_pages (compositor);
-    ///  gtk_print_operation_set_n_pages (operation, n_pages);
-    /// }
-    /// `</programlisting>``</informalexample>`
-    /// ## `context`
-    /// the `gtk::PrintContext` whose parameters (e.g. paper size, print margins, etc.)
-    /// are used by the the `self` to paginate the document.
-    ///
-    /// # Returns
-    ///
-    /// `true` if the document has been completely paginated, `false` otherwise.
     fn paginate(&self, context: &gtk::PrintContext) -> bool;
 
-    /// Sets the default font for the printed text.
-    ///
-    /// `font_name` should be a
-    /// string representation of a font description Pango can understand.
-    /// (e.g. &quot;Monospace 10&quot;). See `pango::FontDescription::from_string`
-    /// for a description of the format of the string representation.
-    ///
-    /// This function cannot be called anymore after the first call to the
-    /// `PrintCompositorExt::paginate` function.
-    /// ## `font_name`
-    /// the name of the default font for the body text.
     fn set_body_font_name(&self, font_name: &str);
 
-    /// Sets the bottom margin used by `self`.
-    /// ## `margin`
-    /// the new bottom margin in units of `unit`.
-    /// ## `unit`
-    /// the units for `margin`.
     fn set_bottom_margin(&self, margin: f64, unit: gtk::Unit);
 
-    /// Sets the font for printing the page footer. If
-    /// `None` is supplied, the default font (i.e. the one being used for the
-    /// text) will be used instead.
-    ///
-    /// `font_name` should be a
-    /// string representation of a font description Pango can understand.
-    /// (e.g. &quot;Monospace 10&quot;). See `pango::FontDescription::from_string`
-    /// for a description of the format of the string representation.
-    ///
-    /// This function cannot be called anymore after the first call to the
-    /// `PrintCompositorExt::paginate` function.
-    /// ## `font_name`
-    /// the name of the font for the footer text, or `None`.
     fn set_footer_font_name(&self, font_name: Option<&str>);
 
-    /// See `PrintCompositorExt::set_header_format` for more information
-    /// about the parameters.
-    /// ## `separator`
-    /// `true` if you want a separator line to be printed.
-    /// ## `left`
-    /// a format string to print on the left of the footer.
-    /// ## `center`
-    /// a format string to print on the center of the footer.
-    /// ## `right`
-    /// a format string to print on the right of the footer.
     fn set_footer_format(&self, separator: bool, left: Option<&str>, center: Option<&str>, right: Option<&str>);
 
-    /// Sets the font for printing the page header. If
-    /// `None` is supplied, the default font (i.e. the one being used for the
-    /// text) will be used instead.
-    ///
-    /// `font_name` should be a
-    /// string representation of a font description Pango can understand.
-    /// (e.g. &quot;Monospace 10&quot;). See `pango::FontDescription::from_string`
-    /// for a description of the format of the string representation.
-    ///
-    /// This function cannot be called anymore after the first call to the
-    /// `PrintCompositorExt::paginate` function.
-    /// ## `font_name`
-    /// the name of the font for header text, or `None`.
     fn set_header_font_name(&self, font_name: Option<&str>);
 
-    /// Sets strftime like header format strings, to be printed on the
-    /// left, center and right of the top of each page. The strings may
-    /// include strftime(3) codes which will be expanded at print time.
-    /// A subset of `strftime` codes are accepted, see `glib::DateTime::format`
-    /// for more details on the accepted format specifiers.
-    /// Additionally the following format specifiers are accepted:
-    /// - `N`: the page number
-    /// - `Q`: the page count.
-    ///
-    /// `separator` specifies if a solid line should be drawn to separate
-    /// the header from the document text.
-    ///
-    /// If `None` is given for any of the three arguments, that particular
-    /// string will not be printed.
-    ///
-    /// For the header to be printed, in
-    /// addition to specifying format strings, you need to enable header
-    /// printing with `PrintCompositorExt::set_print_header`.
-    ///
-    /// This function cannot be called anymore after the first call to the
-    /// `PrintCompositorExt::paginate` function.
-    /// ## `separator`
-    /// `true` if you want a separator line to be printed.
-    /// ## `left`
-    /// a format string to print on the left of the header.
-    /// ## `center`
-    /// a format string to print on the center of the header.
-    /// ## `right`
-    /// a format string to print on the right of the header.
     fn set_header_format(&self, separator: bool, left: Option<&str>, center: Option<&str>, right: Option<&str>);
 
-    /// Sets whether the printed text will be highlighted according to the
-    /// buffer rules. Both color and font style are applied.
-    ///
-    /// This function cannot be called anymore after the first call to the
-    /// `PrintCompositorExt::paginate` function.
-    /// ## `highlight`
-    /// whether syntax should be highlighted.
     fn set_highlight_syntax(&self, highlight: bool);
 
-    /// Sets the left margin used by `self`.
-    /// ## `margin`
-    /// the new left margin in units of `unit`.
-    /// ## `unit`
-    /// the units for `margin`.
     fn set_left_margin(&self, margin: f64, unit: gtk::Unit);
 
-    /// Sets the font for printing line numbers on the left margin. If
-    /// `None` is supplied, the default font (i.e. the one being used for the
-    /// text) will be used instead.
-    ///
-    /// `font_name` should be a
-    /// string representation of a font description Pango can understand.
-    /// (e.g. &quot;Monospace 10&quot;). See `pango::FontDescription::from_string`
-    /// for a description of the format of the string representation.
-    ///
-    /// This function cannot be called anymore after the first call to the
-    /// `PrintCompositorExt::paginate` function.
-    /// ## `font_name`
-    /// the name of the font for line numbers, or `None`.
     fn set_line_numbers_font_name(&self, font_name: Option<&str>);
 
-    /// Sets whether you want to print a footer in each page. The
-    /// footer consists of three pieces of text and an optional line
-    /// separator, configurable with
-    /// `PrintCompositorExt::set_footer_format`.
-    ///
-    /// Note that by default the footer format is unspecified, and if it's
-    /// empty it will not be printed, regardless of this setting.
-    ///
-    /// This function cannot be called anymore after the first call to the
-    /// `PrintCompositorExt::paginate` function.
-    /// ## `print`
-    /// `true` if you want the footer to be printed.
     fn set_print_footer(&self, print: bool);
 
-    /// Sets whether you want to print a header in each page. The
-    /// header consists of three pieces of text and an optional line
-    /// separator, configurable with
-    /// `PrintCompositorExt::set_header_format`.
-    ///
-    /// Note that by default the header format is unspecified, and if it's
-    /// empty it will not be printed, regardless of this setting.
-    ///
-    /// This function cannot be called anymore after the first call to the
-    /// `PrintCompositorExt::paginate` function.
-    /// ## `print`
-    /// `true` if you want the header to be printed.
     fn set_print_header(&self, print: bool);
 
-    /// Sets the interval for printed line numbers. If `interval` is 0 no
-    /// numbers will be printed. If greater than 0, a number will be
-    /// printed every `interval` lines (i.e. 1 will print all line numbers).
-    ///
-    /// Maximum accepted value for `interval` is 100.
-    ///
-    /// This function cannot be called anymore after the first call to the
-    /// `PrintCompositorExt::paginate` function.
-    /// ## `interval`
-    /// interval for printed line numbers.
     fn set_print_line_numbers(&self, interval: u32);
 
-    /// Sets the right margin used by `self`.
-    /// ## `margin`
-    /// the new right margin in units of `unit`.
-    /// ## `unit`
-    /// the units for `margin`.
     fn set_right_margin(&self, margin: f64, unit: gtk::Unit);
 
-    /// Sets the width of tabulation in characters for printed text.
-    ///
-    /// This function cannot be called anymore after the first call to the
-    /// `PrintCompositorExt::paginate` function.
-    /// ## `width`
-    /// width of tab in characters.
     fn set_tab_width(&self, width: u32);
 
-    /// Sets the top margin used by `self`.
-    /// ## `margin`
-    /// the new top margin in units of `unit`
-    /// ## `unit`
-    /// the units for `margin`
     fn set_top_margin(&self, margin: f64, unit: gtk::Unit);
 
-    /// Sets the line wrapping mode for the printed text.
-    ///
-    /// This function cannot be called anymore after the first call to the
-    /// `PrintCompositorExt::paginate` function.
-    /// ## `wrap_mode`
-    /// a `gtk::WrapMode`.
     fn set_wrap_mode(&self, wrap_mode: gtk::WrapMode);
 
     fn connect_property_body_font_name_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;

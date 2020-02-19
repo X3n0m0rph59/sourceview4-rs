@@ -2,18 +2,13 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use Buffer;
-use Error;
-use SearchSettings;
-use Style;
-#[cfg(feature = "futures")]
-use futures::future;
 use gio;
 use gio_sys;
+use glib;
 use glib::object::Cast;
 use glib::object::IsA;
-use glib::signal::SignalHandlerId;
 use glib::signal::connect_raw;
+use glib::signal::SignalHandlerId;
 use glib::translate::*;
 use glib_sys;
 use gobject_sys;
@@ -23,7 +18,11 @@ use std::boxed::Box as Box_;
 use std::fmt;
 use std::mem;
 use std::mem::transmute;
+use std::pin::Pin;
 use std::ptr;
+use Buffer;
+use SearchSettings;
+use Style;
 
 glib_wrapper! {
     pub struct SearchContext(Object<gtk_source_sys::GtkSourceSearchContext, gtk_source_sys::GtkSourceSearchContextClass, SearchContextClass>);
@@ -34,18 +33,6 @@ glib_wrapper! {
 }
 
 impl SearchContext {
-    /// Creates a new search context, associated with `buffer`, and customized with
-    /// `settings`. If `settings` is `None`, a new `SearchSettings` object will
-    /// be created, that you can retrieve with
-    /// `SearchContextExt::get_settings`.
-    /// ## `buffer`
-    /// a `Buffer`.
-    /// ## `settings`
-    /// a `SearchSettings`, or `None`.
-    ///
-    /// # Returns
-    ///
-    /// a new search context.
     pub fn new<P: IsA<Buffer>, Q: IsA<SearchSettings>>(buffer: &P, settings: Option<&Q>) -> SearchContext {
         skip_assert_initialized!();
         unsafe {
@@ -56,218 +43,41 @@ impl SearchContext {
 
 pub const NONE_SEARCH_CONTEXT: Option<&SearchContext> = None;
 
-/// Trait containing all `SearchContext` methods.
-///
-/// # Implementors
-///
-/// [`SearchContext`](struct.SearchContext.html)
 pub trait SearchContextExt: 'static {
-    /// Synchronous backward search. It is recommended to use the asynchronous
-    /// functions instead, to not block the user interface. However, if you are sure
-    /// that the `buffer` is small, this function is more convenient to use.
-    ///
-    /// If the `SearchSettings:wrap-around` property is `false`, this function
-    /// doesn't try to wrap around.
-    ///
-    /// The `has_wrapped_around` out parameter is set independently of whether a match
-    /// is found. So if this function returns `false`, `has_wrapped_around` will have
-    /// the same value as the `SearchSettings:wrap-around` property.
-    /// ## `iter`
-    /// start of search.
-    /// ## `match_start`
-    /// return location for start of match, or `None`.
-    /// ## `match_end`
-    /// return location for end of match, or `None`.
-    /// ## `has_wrapped_around`
-    /// return location to know whether the
-    ///  search has wrapped around, or `None`.
-    ///
-    /// # Returns
-    ///
-    /// whether a match was found.
     fn backward(&self, iter: &gtk::TextIter) -> Option<(gtk::TextIter, gtk::TextIter, bool)>;
 
-    /// The asynchronous version of `SearchContextExt::backward`.
-    ///
-    /// See the documentation of `SearchContextExt::backward` for more
-    /// details.
-    ///
-    /// See the `gio::AsyncResult` documentation to know how to use this function.
-    ///
-    /// If the operation is cancelled, the `callback` will only be called if
-    /// `cancellable` was not `None`. `SearchContextExt::backward_async` takes
-    /// ownership of `cancellable`, so you can unref it after calling this function.
-    /// ## `iter`
-    /// start of search.
-    /// ## `cancellable`
-    /// a `gio::Cancellable`, or `None`.
-    /// ## `callback`
-    /// a `GAsyncReadyCallback` to call when the operation is finished.
-    /// ## `user_data`
-    /// the data to pass to the `callback` function.
-    fn backward_async<P: IsA<gio::Cancellable>, Q: FnOnce(Result<(gtk::TextIter, gtk::TextIter, bool), Error>) + Send + 'static>(&self, iter: &gtk::TextIter, cancellable: Option<&P>, callback: Q);
+    fn backward_async<P: IsA<gio::Cancellable>, Q: FnOnce(Result<(gtk::TextIter, gtk::TextIter, bool), glib::Error>) + Send + 'static>(&self, iter: &gtk::TextIter, cancellable: Option<&P>, callback: Q);
 
-    #[cfg(feature = "futures")]
-    fn backward_async_future(&self, iter: &gtk::TextIter) -> Box_<dyn future::Future<Output = Result<(gtk::TextIter, gtk::TextIter, bool), Error>> + std::marker::Unpin>;
+    
+    fn backward_async_future(&self, iter: &gtk::TextIter) -> Pin<Box_<dyn std::future::Future<Output = Result<(gtk::TextIter, gtk::TextIter, bool), glib::Error>> + 'static>>;
 
-    /// Synchronous forward search. It is recommended to use the asynchronous
-    /// functions instead, to not block the user interface. However, if you are sure
-    /// that the `buffer` is small, this function is more convenient to use.
-    ///
-    /// If the `SearchSettings:wrap-around` property is `false`, this function
-    /// doesn't try to wrap around.
-    ///
-    /// The `has_wrapped_around` out parameter is set independently of whether a match
-    /// is found. So if this function returns `false`, `has_wrapped_around` will have
-    /// the same value as the `SearchSettings:wrap-around` property.
-    /// ## `iter`
-    /// start of search.
-    /// ## `match_start`
-    /// return location for start of match, or `None`.
-    /// ## `match_end`
-    /// return location for end of match, or `None`.
-    /// ## `has_wrapped_around`
-    /// return location to know whether the
-    ///  search has wrapped around, or `None`.
-    ///
-    /// # Returns
-    ///
-    /// whether a match was found.
     fn forward(&self, iter: &gtk::TextIter) -> Option<(gtk::TextIter, gtk::TextIter, bool)>;
 
-    /// The asynchronous version of `SearchContextExt::forward`.
-    ///
-    /// See the documentation of `SearchContextExt::forward` for more
-    /// details.
-    ///
-    /// See the `gio::AsyncResult` documentation to know how to use this function.
-    ///
-    /// If the operation is cancelled, the `callback` will only be called if
-    /// `cancellable` was not `None`. `SearchContextExt::forward_async` takes
-    /// ownership of `cancellable`, so you can unref it after calling this function.
-    /// ## `iter`
-    /// start of search.
-    /// ## `cancellable`
-    /// a `gio::Cancellable`, or `None`.
-    /// ## `callback`
-    /// a `GAsyncReadyCallback` to call when the operation is finished.
-    /// ## `user_data`
-    /// the data to pass to the `callback` function.
-    fn forward_async<P: IsA<gio::Cancellable>, Q: FnOnce(Result<(gtk::TextIter, gtk::TextIter, bool), Error>) + Send + 'static>(&self, iter: &gtk::TextIter, cancellable: Option<&P>, callback: Q);
+    fn forward_async<P: IsA<gio::Cancellable>, Q: FnOnce(Result<(gtk::TextIter, gtk::TextIter, bool), glib::Error>) + Send + 'static>(&self, iter: &gtk::TextIter, cancellable: Option<&P>, callback: Q);
 
-    #[cfg(feature = "futures")]
-    fn forward_async_future(&self, iter: &gtk::TextIter) -> Box_<dyn future::Future<Output = Result<(gtk::TextIter, gtk::TextIter, bool), Error>> + std::marker::Unpin>;
+    
+    fn forward_async_future(&self, iter: &gtk::TextIter) -> Pin<Box_<dyn std::future::Future<Output = Result<(gtk::TextIter, gtk::TextIter, bool), glib::Error>> + 'static>>;
 
-    ///
-    /// # Returns
-    ///
-    /// the associated buffer.
     fn get_buffer(&self) -> Option<Buffer>;
 
-    ///
-    /// # Returns
-    ///
-    /// whether to highlight the search occurrences.
     fn get_highlight(&self) -> bool;
 
-    ///
-    /// # Returns
-    ///
-    /// the `Style` to apply on search matches.
     fn get_match_style(&self) -> Option<Style>;
 
-    /// Gets the position of a search occurrence. If the buffer is not already fully
-    /// scanned, the position may be unknown, and -1 is returned. If 0 is returned,
-    /// it means that this part of the buffer has already been scanned, and that
-    /// `match_start` and `match_end` don't delimit an occurrence.
-    /// ## `match_start`
-    /// the start of the occurrence.
-    /// ## `match_end`
-    /// the end of the occurrence.
-    ///
-    /// # Returns
-    ///
-    /// the position of the search occurrence. The first occurrence has the
-    /// position 1 (not 0). Returns 0 if `match_start` and `match_end` don't delimit
-    /// an occurrence. Returns -1 if the position is not yet known.
     fn get_occurrence_position(&self, match_start: &gtk::TextIter, match_end: &gtk::TextIter) -> i32;
 
-    /// Gets the total number of search occurrences. If the buffer is not already
-    /// fully scanned, the total number of occurrences is unknown, and -1 is
-    /// returned.
-    ///
-    /// # Returns
-    ///
-    /// the total number of search occurrences, or -1 if unknown.
     fn get_occurrences_count(&self) -> i32;
 
-    /// Regular expression patterns must follow certain rules. If
-    /// `SearchSettings:search-text` breaks a rule, the error can be retrieved
-    /// with this function. The error domain is `G_REGEX_ERROR`.
-    ///
-    /// Free the return value with `glib::Error::free`.
-    ///
-    /// # Returns
-    ///
-    /// the `glib::Error`, or `None` if the pattern is valid.
-    fn get_regex_error(&self) -> Option<Error>;
+    fn get_regex_error(&self) -> Option<glib::Error>;
 
-    ///
-    /// # Returns
-    ///
-    /// the search settings.
     fn get_settings(&self) -> Option<SearchSettings>;
 
-    /// Replaces a search match by another text. If `match_start` and `match_end`
-    /// doesn't correspond to a search match, `false` is returned.
-    ///
-    /// `match_start` and `match_end` iters are revalidated to point to the replacement
-    /// text boundaries.
-    ///
-    /// For a regular expression replacement, you can check if `replace` is valid by
-    /// calling `glib::Regex::check_replacement`. The `replace` text can contain
-    /// backreferences; read the `glib::Regex::replace` documentation for more details.
-    /// ## `match_start`
-    /// the start of the match to replace.
-    /// ## `match_end`
-    /// the end of the match to replace.
-    /// ## `replace`
-    /// the replacement text.
-    /// ## `replace_length`
-    /// the length of `replace` in bytes, or -1.
-    ///
-    /// # Returns
-    ///
-    /// whether the match has been replaced.
-    fn replace(&self, match_start: &mut gtk::TextIter, match_end: &mut gtk::TextIter, replace: &str) -> Result<(), Error>;
+    fn replace(&self, match_start: &mut gtk::TextIter, match_end: &mut gtk::TextIter, replace: &str) -> Result<(), glib::Error>;
 
-    /// Replaces all search matches by another text. It is a synchronous function, so
-    /// it can block the user interface.
-    ///
-    /// For a regular expression replacement, you can check if `replace` is valid by
-    /// calling `glib::Regex::check_replacement`. The `replace` text can contain
-    /// backreferences; read the `glib::Regex::replace` documentation for more details.
-    /// ## `replace`
-    /// the replacement text.
-    /// ## `replace_length`
-    /// the length of `replace` in bytes, or -1.
-    ///
-    /// # Returns
-    ///
-    /// the number of replaced matches.
-    fn replace_all(&self, replace: &str) -> Result<(), Error>;
+    fn replace_all(&self, replace: &str) -> Result<(), glib::Error>;
 
-    /// Enables or disables the search occurrences highlighting.
-    /// ## `highlight`
-    /// the setting.
     fn set_highlight(&self, highlight: bool);
 
-    /// Set the style to apply on search matches. If `match_style` is `None`, default
-    /// theme's scheme 'match-style' will be used.
-    /// To enable or disable the search highlighting, use
-    /// `SearchContextExt::set_highlight`.
-    /// ## `match_style`
-    /// a `Style`, or `None`.
     fn set_match_style(&self, match_style: Option<&Style>);
 
     fn connect_property_highlight_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
@@ -284,98 +94,96 @@ impl<O: IsA<SearchContext>> SearchContextExt for O {
         unsafe {
             let mut match_start = gtk::TextIter::uninitialized();
             let mut match_end = gtk::TextIter::uninitialized();
-            let mut has_wrapped_around = mem::uninitialized();
-            let ret = from_glib(gtk_source_sys::gtk_source_search_context_backward(self.as_ref().to_glib_none().0, iter.to_glib_none().0, match_start.to_glib_none_mut().0, match_end.to_glib_none_mut().0, &mut has_wrapped_around));
+            let mut has_wrapped_around = mem::MaybeUninit::uninit();
+            let ret = from_glib(gtk_source_sys::gtk_source_search_context_backward(self.as_ref().to_glib_none().0, iter.to_glib_none().0, match_start.to_glib_none_mut().0, match_end.to_glib_none_mut().0, has_wrapped_around.as_mut_ptr()));
+            let has_wrapped_around = has_wrapped_around.assume_init();
             if ret { Some((match_start, match_end, from_glib(has_wrapped_around))) } else { None }
         }
     }
 
-    fn backward_async<P: IsA<gio::Cancellable>, Q: FnOnce(Result<(gtk::TextIter, gtk::TextIter, bool), Error>) + Send + 'static>(&self, iter: &gtk::TextIter, cancellable: Option<&P>, callback: Q) {
-        let user_data: Box<Q> = Box::new(callback);
-        unsafe extern "C" fn backward_async_trampoline<Q: FnOnce(Result<(gtk::TextIter, gtk::TextIter, bool), Error>) + Send + 'static>(_source_object: *mut gobject_sys::GObject, res: *mut gio_sys::GAsyncResult, user_data: glib_sys::gpointer) {
+    fn backward_async<P: IsA<gio::Cancellable>, Q: FnOnce(Result<(gtk::TextIter, gtk::TextIter, bool), glib::Error>) + Send + 'static>(&self, iter: &gtk::TextIter, cancellable: Option<&P>, callback: Q) {
+        let user_data: Box_<Q> = Box_::new(callback);
+        unsafe extern "C" fn backward_async_trampoline<Q: FnOnce(Result<(gtk::TextIter, gtk::TextIter, bool), glib::Error>) + Send + 'static>(_source_object: *mut gobject_sys::GObject, res: *mut gio_sys::GAsyncResult, user_data: glib_sys::gpointer) {
             let mut error = ptr::null_mut();
             let mut match_start = gtk::TextIter::uninitialized();
             let mut match_end = gtk::TextIter::uninitialized();
-            let mut has_wrapped_around = mem::uninitialized();
-            let _ = gtk_source_sys::gtk_source_search_context_backward_finish(_source_object as *mut _, res, match_start.to_glib_none_mut().0, match_end.to_glib_none_mut().0, &mut has_wrapped_around, &mut error);
+            let mut has_wrapped_around = mem::MaybeUninit::uninit();
+            let _ = gtk_source_sys::gtk_source_search_context_backward_finish(_source_object as *mut _, res, match_start.to_glib_none_mut().0, match_end.to_glib_none_mut().0, has_wrapped_around.as_mut_ptr(), &mut error);
+            let has_wrapped_around = has_wrapped_around.assume_init();
             let result = if error.is_null() { Ok((match_start, match_end, from_glib(has_wrapped_around))) } else { Err(from_glib_full(error)) };
-            let callback: Box<Q> = Box::from_raw(user_data as *mut _);
+            let callback: Box_<Q> = Box_::from_raw(user_data as *mut _);
             callback(result);
         }
         let callback = backward_async_trampoline::<Q>;
         unsafe {
-            gtk_source_sys::gtk_source_search_context_backward_async(self.as_ref().to_glib_none().0, iter.to_glib_none().0, cancellable.map(|p| p.as_ref()).to_glib_none().0, Some(callback), Box::into_raw(user_data) as *mut _);
+            gtk_source_sys::gtk_source_search_context_backward_async(self.as_ref().to_glib_none().0, iter.to_glib_none().0, cancellable.map(|p| p.as_ref()).to_glib_none().0, Some(callback), Box_::into_raw(user_data) as *mut _);
         }
     }
 
-    #[cfg(feature = "futures")]
-    fn backward_async_future(&self, iter: &gtk::TextIter) -> Box_<dyn future::Future<Output = Result<(gtk::TextIter, gtk::TextIter, bool), Error>> + std::marker::Unpin> {
-        use gio::GioFuture;
-        use fragile::Fragile;
+    
+    fn backward_async_future(&self, iter: &gtk::TextIter) -> Pin<Box_<dyn std::future::Future<Output = Result<(gtk::TextIter, gtk::TextIter, bool), glib::Error>> + 'static>> {
 
         let iter = iter.clone();
-        GioFuture::new(self, move |obj, send| {
+        Box_::pin(gio::GioFuture::new(self, move |obj, send| {
             let cancellable = gio::Cancellable::new();
-            let send = Fragile::new(send);
             obj.backward_async(
                 &iter,
                 Some(&cancellable),
                 move |res| {
-                    let _ = send.into_inner().send(res);
+                    send.resolve(res);
                 },
             );
 
             cancellable
-        })
+        }))
     }
 
     fn forward(&self, iter: &gtk::TextIter) -> Option<(gtk::TextIter, gtk::TextIter, bool)> {
         unsafe {
             let mut match_start = gtk::TextIter::uninitialized();
             let mut match_end = gtk::TextIter::uninitialized();
-            let mut has_wrapped_around = mem::uninitialized();
-            let ret = from_glib(gtk_source_sys::gtk_source_search_context_forward(self.as_ref().to_glib_none().0, iter.to_glib_none().0, match_start.to_glib_none_mut().0, match_end.to_glib_none_mut().0, &mut has_wrapped_around));
+            let mut has_wrapped_around = mem::MaybeUninit::uninit();
+            let ret = from_glib(gtk_source_sys::gtk_source_search_context_forward(self.as_ref().to_glib_none().0, iter.to_glib_none().0, match_start.to_glib_none_mut().0, match_end.to_glib_none_mut().0, has_wrapped_around.as_mut_ptr()));
+            let has_wrapped_around = has_wrapped_around.assume_init();
             if ret { Some((match_start, match_end, from_glib(has_wrapped_around))) } else { None }
         }
     }
 
-    fn forward_async<P: IsA<gio::Cancellable>, Q: FnOnce(Result<(gtk::TextIter, gtk::TextIter, bool), Error>) + Send + 'static>(&self, iter: &gtk::TextIter, cancellable: Option<&P>, callback: Q) {
-        let user_data: Box<Q> = Box::new(callback);
-        unsafe extern "C" fn forward_async_trampoline<Q: FnOnce(Result<(gtk::TextIter, gtk::TextIter, bool), Error>) + Send + 'static>(_source_object: *mut gobject_sys::GObject, res: *mut gio_sys::GAsyncResult, user_data: glib_sys::gpointer) {
+    fn forward_async<P: IsA<gio::Cancellable>, Q: FnOnce(Result<(gtk::TextIter, gtk::TextIter, bool), glib::Error>) + Send + 'static>(&self, iter: &gtk::TextIter, cancellable: Option<&P>, callback: Q) {
+        let user_data: Box_<Q> = Box_::new(callback);
+        unsafe extern "C" fn forward_async_trampoline<Q: FnOnce(Result<(gtk::TextIter, gtk::TextIter, bool), glib::Error>) + Send + 'static>(_source_object: *mut gobject_sys::GObject, res: *mut gio_sys::GAsyncResult, user_data: glib_sys::gpointer) {
             let mut error = ptr::null_mut();
             let mut match_start = gtk::TextIter::uninitialized();
             let mut match_end = gtk::TextIter::uninitialized();
-            let mut has_wrapped_around = mem::uninitialized();
-            let _ = gtk_source_sys::gtk_source_search_context_forward_finish(_source_object as *mut _, res, match_start.to_glib_none_mut().0, match_end.to_glib_none_mut().0, &mut has_wrapped_around, &mut error);
+            let mut has_wrapped_around = mem::MaybeUninit::uninit();
+            let _ = gtk_source_sys::gtk_source_search_context_forward_finish(_source_object as *mut _, res, match_start.to_glib_none_mut().0, match_end.to_glib_none_mut().0, has_wrapped_around.as_mut_ptr(), &mut error);
+            let has_wrapped_around = has_wrapped_around.assume_init();
             let result = if error.is_null() { Ok((match_start, match_end, from_glib(has_wrapped_around))) } else { Err(from_glib_full(error)) };
-            let callback: Box<Q> = Box::from_raw(user_data as *mut _);
+            let callback: Box_<Q> = Box_::from_raw(user_data as *mut _);
             callback(result);
         }
         let callback = forward_async_trampoline::<Q>;
         unsafe {
-            gtk_source_sys::gtk_source_search_context_forward_async(self.as_ref().to_glib_none().0, iter.to_glib_none().0, cancellable.map(|p| p.as_ref()).to_glib_none().0, Some(callback), Box::into_raw(user_data) as *mut _);
+            gtk_source_sys::gtk_source_search_context_forward_async(self.as_ref().to_glib_none().0, iter.to_glib_none().0, cancellable.map(|p| p.as_ref()).to_glib_none().0, Some(callback), Box_::into_raw(user_data) as *mut _);
         }
     }
 
-    #[cfg(feature = "futures")]
-    fn forward_async_future(&self, iter: &gtk::TextIter) -> Box_<dyn future::Future<Output = Result<(gtk::TextIter, gtk::TextIter, bool), Error>> + std::marker::Unpin> {
-        use gio::GioFuture;
-        use fragile::Fragile;
+    
+    fn forward_async_future(&self, iter: &gtk::TextIter) -> Pin<Box_<dyn std::future::Future<Output = Result<(gtk::TextIter, gtk::TextIter, bool), glib::Error>> + 'static>> {
 
         let iter = iter.clone();
-        GioFuture::new(self, move |obj, send| {
+        Box_::pin(gio::GioFuture::new(self, move |obj, send| {
             let cancellable = gio::Cancellable::new();
-            let send = Fragile::new(send);
             obj.forward_async(
                 &iter,
                 Some(&cancellable),
                 move |res| {
-                    let _ = send.into_inner().send(res);
+                    send.resolve(res);
                 },
             );
 
             cancellable
-        })
+        }))
     }
 
     fn get_buffer(&self) -> Option<Buffer> {
@@ -408,7 +216,7 @@ impl<O: IsA<SearchContext>> SearchContextExt for O {
         }
     }
 
-    fn get_regex_error(&self) -> Option<Error> {
+    fn get_regex_error(&self) -> Option<glib::Error> {
         unsafe {
             from_glib_full(gtk_source_sys::gtk_source_search_context_get_regex_error(self.as_ref().to_glib_none().0))
         }
@@ -420,7 +228,7 @@ impl<O: IsA<SearchContext>> SearchContextExt for O {
         }
     }
 
-    fn replace(&self, match_start: &mut gtk::TextIter, match_end: &mut gtk::TextIter, replace: &str) -> Result<(), Error> {
+    fn replace(&self, match_start: &mut gtk::TextIter, match_end: &mut gtk::TextIter, replace: &str) -> Result<(), glib::Error> {
         let replace_length = replace.len() as i32;
         unsafe {
             let mut error = ptr::null_mut();
@@ -429,7 +237,7 @@ impl<O: IsA<SearchContext>> SearchContextExt for O {
         }
     }
 
-    fn replace_all(&self, replace: &str) -> Result<(), Error> {
+    fn replace_all(&self, replace: &str) -> Result<(), glib::Error> {
         let replace_length = replace.len() as i32;
         unsafe {
             let mut error = ptr::null_mut();

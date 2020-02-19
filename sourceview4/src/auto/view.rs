@@ -2,22 +2,14 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use BackgroundPatternType;
-use Buffer;
-use ChangeCaseType;
-use Completion;
-use Gutter;
-use MarkAttributes;
-use SmartHomeEndType;
-use SpaceDrawer;
 use gdk;
 use gdk_sys;
 use glib;
 use glib::object::Cast;
 use glib::object::IsA;
 use glib::object::ObjectExt;
-use glib::signal::SignalHandlerId;
 use glib::signal::connect_raw;
+use glib::signal::SignalHandlerId;
 use glib::translate::*;
 use glib_sys;
 use gobject_sys;
@@ -28,6 +20,14 @@ use libc;
 use std::boxed::Box as Box_;
 use std::fmt;
 use std::mem::transmute;
+use BackgroundPatternType;
+use Buffer;
+use ChangeCaseType;
+use Completion;
+use Gutter;
+use MarkAttributes;
+use SmartHomeEndType;
+use SpaceDrawer;
 
 glib_wrapper! {
     pub struct View(Object<gtk_source_sys::GtkSourceView, gtk_source_sys::GtkSourceViewClass, ViewClass>) @extends gtk::TextView, gtk::Container, gtk::Widget;
@@ -38,18 +38,6 @@ glib_wrapper! {
 }
 
 impl View {
-    /// Creates a new `View`.
-    ///
-    /// By default, an empty `Buffer` will be lazily created and can be
-    /// retrieved with `gtk::TextViewExt::get_buffer`.
-    ///
-    /// If you want to specify your own buffer, either override the
-    /// `gtk::TextViewClass` create_buffer factory method, or use
-    /// `View::new_with_buffer`.
-    ///
-    /// # Returns
-    ///
-    /// a new `View`.
     pub fn new() -> View {
         assert_initialized_main_thread!();
         unsafe {
@@ -57,14 +45,6 @@ impl View {
         }
     }
 
-    /// Creates a new `View` widget displaying the buffer
-    /// `buffer`. One buffer can be shared among many widgets.
-    /// ## `buffer`
-    /// a `Buffer`.
-    ///
-    /// # Returns
-    ///
-    /// a new `View`.
     pub fn new_with_buffer<P: IsA<Buffer>>(buffer: &P) -> View {
         skip_assert_initialized!();
         unsafe {
@@ -81,328 +61,95 @@ impl Default for View {
 
 pub const NONE_VIEW: Option<&View> = None;
 
-/// Trait containing all `View` methods.
-///
-/// # Implementors
-///
-/// [`Map`](struct.Map.html), [`View`](struct.View.html)
 pub trait ViewExt: 'static {
-    /// Returns whether auto-indentation of text is enabled.
-    ///
-    /// # Returns
-    ///
-    /// `true` if auto indentation is enabled.
     fn get_auto_indent(&self) -> bool;
 
-    /// Returns the `BackgroundPatternType` specifying if and how
-    /// the background pattern should be displayed for this `self`.
-    ///
-    /// # Returns
-    ///
-    /// the `BackgroundPatternType`.
     fn get_background_pattern(&self) -> BackgroundPatternType;
 
-    /// Gets the `Completion` associated with `self`. The returned object is
-    /// guaranteed to be the same for the lifetime of `self`. Each `View`
-    /// object has a different `Completion`.
-    ///
-    /// # Returns
-    ///
-    /// the `Completion` associated with `self`.
     fn get_completion(&self) -> Option<Completion>;
 
-    /// Returns the `Gutter` object associated with `window_type` for `self`.
-    /// Only GTK_TEXT_WINDOW_LEFT and GTK_TEXT_WINDOW_RIGHT are supported,
-    /// respectively corresponding to the left and right gutter. The line numbers
-    /// and mark category icons are rendered in the left gutter.
-    /// ## `window_type`
-    /// the gutter window type.
-    ///
-    /// # Returns
-    ///
-    /// the `Gutter`.
     fn get_gutter(&self, window_type: gtk::TextWindowType) -> Option<Gutter>;
 
-    /// Returns whether the current line is highlighted.
-    ///
-    /// # Returns
-    ///
-    /// `true` if the current line is highlighted.
     fn get_highlight_current_line(&self) -> bool;
 
-    /// Returns whether when the tab key is pressed the current selection
-    /// should get indented instead of replaced with the \t character.
-    ///
-    /// # Returns
-    ///
-    /// `true` if the selection is indented when tab is pressed.
     fn get_indent_on_tab(&self) -> bool;
 
-    /// Returns the number of spaces to use for each step of indent.
-    /// See `ViewExt::set_indent_width` for details.
-    ///
-    /// # Returns
-    ///
-    /// indent width.
     fn get_indent_width(&self) -> i32;
 
-    /// Returns whether when inserting a tabulator character it should
-    /// be replaced by a group of space characters.
-    ///
-    /// # Returns
-    ///
-    /// `true` if spaces are inserted instead of tabs.
     fn get_insert_spaces_instead_of_tabs(&self) -> bool;
 
-    /// Gets the position of the right margin in the given `self`.
-    ///
-    /// # Returns
-    ///
-    /// the position of the right margin.
     fn get_right_margin_position(&self) -> u32;
 
-    /// Returns whether line marks are displayed beside the text.
-    ///
-    /// # Returns
-    ///
-    /// `true` if the line marks are displayed.
     fn get_show_line_marks(&self) -> bool;
 
-    /// Returns whether line numbers are displayed beside the text.
-    ///
-    /// # Returns
-    ///
-    /// `true` if the line numbers are displayed.
     fn get_show_line_numbers(&self) -> bool;
 
-    /// Returns whether a right margin is displayed.
-    ///
-    /// # Returns
-    ///
-    /// `true` if the right margin is shown.
     fn get_show_right_margin(&self) -> bool;
 
-    /// Returns `true` if pressing the Backspace key will try to delete spaces
-    /// up to the previous tab stop.
-    ///
-    /// # Returns
-    ///
-    /// `true` if smart Backspace handling is enabled.
     fn get_smart_backspace(&self) -> bool;
 
-    /// Returns a `SmartHomeEndType` end value specifying
-    /// how the cursor will move when HOME and END keys are pressed.
-    ///
-    /// # Returns
-    ///
-    /// a `SmartHomeEndType` value.
     fn get_smart_home_end(&self) -> SmartHomeEndType;
 
-    /// Gets the `SpaceDrawer` associated with `self`. The returned object is
-    /// guaranteed to be the same for the lifetime of `self`. Each `View`
-    /// object has a different `SpaceDrawer`.
-    ///
-    /// # Returns
-    ///
-    /// the `SpaceDrawer` associated with `self`.
     fn get_space_drawer(&self) -> Option<SpaceDrawer>;
 
-    /// Returns the width of tabulation in characters.
-    ///
-    /// # Returns
-    ///
-    /// width of tab.
     fn get_tab_width(&self) -> u32;
 
-    /// Determines the visual column at `iter` taking into consideration the
-    /// `View:tab-width` of `self`.
-    /// ## `iter`
-    /// a position in `self`.
-    ///
-    /// # Returns
-    ///
-    /// the visual column at `iter`.
     fn get_visual_column(&self, iter: &gtk::TextIter) -> u32;
 
-    /// Inserts one indentation level at the beginning of the specified lines. The
-    /// empty lines are not indented.
-    /// ## `start`
-    /// `gtk::TextIter` of the first line to indent
-    /// ## `end`
-    /// `gtk::TextIter` of the last line to indent
     fn indent_lines(&self, start: &mut gtk::TextIter, end: &mut gtk::TextIter);
 
-    /// If `true` auto-indentation of text is enabled.
-    ///
-    /// When Enter is pressed to create a new line, the auto-indentation inserts the
-    /// same indentation as the previous line. This is `<emphasis>`not`</emphasis>` a
-    /// "smart indentation" where an indentation level is added or removed depending
-    /// on the context.
-    /// ## `enable`
-    /// whether to enable auto indentation.
     fn set_auto_indent(&self, enable: bool);
 
-    /// Set if and how the background pattern should be displayed.
-    /// ## `background_pattern`
-    /// the `BackgroundPatternType`.
     fn set_background_pattern(&self, background_pattern: BackgroundPatternType);
 
-    /// If `highlight` is `true` the current line will be highlighted.
-    /// ## `highlight`
-    /// whether to highlight the current line.
     fn set_highlight_current_line(&self, highlight: bool);
 
-    /// If `true`, when the tab key is pressed when several lines are selected, the
-    /// selected lines are indented of one level instead of being replaced with a \t
-    /// character. Shift+Tab unindents the selection.
-    ///
-    /// If the first or last line is not selected completely, it is also indented or
-    /// unindented.
-    ///
-    /// When the selection doesn't span several lines, the tab key always replaces
-    /// the selection with a normal \t character.
-    /// ## `enable`
-    /// whether to indent a block when tab is pressed.
     fn set_indent_on_tab(&self, enable: bool);
 
-    /// Sets the number of spaces to use for each step of indent when the tab key is
-    /// pressed. If `width` is -1, the value of the `View:tab-width` property
-    /// will be used.
-    ///
-    /// The `View:indent-width` interacts with the
-    /// `View:insert-spaces-instead-of-tabs` property and
-    /// `View:tab-width`. An example will be clearer: if the
-    /// `View:indent-width` is 4 and
-    /// `View:tab-width` is 8 and
-    /// `View:insert-spaces-instead-of-tabs` is `false`, then pressing the tab
-    /// key at the beginning of a line will insert 4 spaces. So far so good. Pressing
-    /// the tab key a second time will remove the 4 spaces and insert a \t character
-    /// instead (since `View:tab-width` is 8). On the other hand, if
-    /// `View:insert-spaces-instead-of-tabs` is `true`, the second tab key
-    /// pressed will insert 4 more spaces for a total of 8 spaces in the
-    /// `gtk::TextBuffer`.
-    ///
-    /// The test-widget program (available in the `View` repository) may be
-    /// useful to better understand the indentation settings (enable the space
-    /// drawing!).
-    /// ## `width`
-    /// indent width in characters.
     fn set_indent_width(&self, width: i32);
 
-    /// If `true` a tab key pressed is replaced by a group of space characters. Of
-    /// course it is still possible to insert a real \t programmatically with the
-    /// `gtk::TextBuffer` API.
-    /// ## `enable`
-    /// whether to insert spaces instead of tabs.
     fn set_insert_spaces_instead_of_tabs(&self, enable: bool);
 
-    /// Sets attributes and priority for the `category`.
-    /// ## `category`
-    /// the category.
-    /// ## `attributes`
-    /// mark attributes.
-    /// ## `priority`
-    /// priority of the category.
     fn set_mark_attributes<P: IsA<MarkAttributes>>(&self, category: &str, attributes: &P, priority: i32);
 
-    /// Sets the position of the right margin in the given `self`.
-    /// ## `pos`
-    /// the width in characters where to position the right margin.
     fn set_right_margin_position(&self, pos: u32);
 
-    /// If `true` line marks will be displayed beside the text.
-    /// ## `show`
-    /// whether line marks should be displayed.
     fn set_show_line_marks(&self, show: bool);
 
-    /// If `true` line numbers will be displayed beside the text.
-    /// ## `show`
-    /// whether line numbers should be displayed.
     fn set_show_line_numbers(&self, show: bool);
 
-    /// If `true` a right margin is displayed.
-    /// ## `show`
-    /// whether to show a right margin.
     fn set_show_right_margin(&self, show: bool);
 
-    /// When set to `true`, pressing the Backspace key will try to delete spaces
-    /// up to the previous tab stop.
-    /// ## `smart_backspace`
-    /// whether to enable smart Backspace handling.
     fn set_smart_backspace(&self, smart_backspace: bool);
 
-    /// Set the desired movement of the cursor when HOME and END keys
-    /// are pressed.
-    /// ## `smart_home_end`
-    /// the desired behavior among `SmartHomeEndType`.
     fn set_smart_home_end(&self, smart_home_end: SmartHomeEndType);
 
-    /// Sets the width of tabulation in characters. The `gtk::TextBuffer` still contains
-    /// \t characters, but they can take a different visual width in a `View`
-    /// widget.
-    /// ## `width`
-    /// width of tab in characters.
     fn set_tab_width(&self, width: u32);
 
-    /// Removes one indentation level at the beginning of the
-    /// specified lines.
-    /// ## `start`
-    /// `gtk::TextIter` of the first line to indent
-    /// ## `end`
-    /// `gtk::TextIter` of the last line to indent
     fn unindent_lines(&self, start: &mut gtk::TextIter, end: &mut gtk::TextIter);
 
-    /// Keybinding signal to change case of the text at the current cursor position.
-    /// ## `case_type`
-    /// the case to use
     fn connect_change_case<F: Fn(&Self, ChangeCaseType) + 'static>(&self, f: F) -> SignalHandlerId;
 
     fn emit_change_case(&self, case_type: ChangeCaseType);
 
-    /// Keybinding signal to edit a number at the current cursor position.
-    /// ## `count`
-    /// the number to add to the number at the current position
     fn connect_change_number<F: Fn(&Self, i32) + 'static>(&self, f: F) -> SignalHandlerId;
 
     fn emit_change_number(&self, count: i32);
 
-    /// Keybinding signal to join the lines currently selected.
     fn connect_join_lines<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
 
     fn emit_join_lines(&self);
 
-    /// Emitted when a line mark has been activated (for instance when there
-    /// was a button press in the line marks gutter). You can use `iter` to
-    /// determine on which line the activation took place.
-    /// ## `iter`
-    /// a `gtk::TextIter`
-    /// ## `event`
-    /// the ``GdkEvent`` that activated the event
     fn connect_line_mark_activated<F: Fn(&Self, &gtk::TextIter, &gdk::Event) + 'static>(&self, f: F) -> SignalHandlerId;
 
-    /// The ::move-lines signal is a keybinding which gets emitted
-    /// when the user initiates moving a line. The default binding key
-    /// is Alt+Up/Down arrow. And moves the currently selected lines,
-    /// or the current line up or down by one line.
-    /// ## `down`
-    /// `true` to move down, `false` to move up.
     fn connect_move_lines<F: Fn(&Self, bool) + 'static>(&self, f: F) -> SignalHandlerId;
 
     fn emit_move_lines(&self, down: bool);
 
-    /// Keybinding signal to move the cursor to the matching bracket.
-    /// ## `extend_selection`
-    /// `true` if the move should extend the selection
     fn connect_move_to_matching_bracket<F: Fn(&Self, bool) + 'static>(&self, f: F) -> SignalHandlerId;
 
     fn emit_move_to_matching_bracket(&self, extend_selection: bool);
 
-    /// The ::move-words signal is a keybinding which gets emitted
-    /// when the user initiates moving a word. The default binding key
-    /// is Alt+Left/Right Arrow and moves the current selection, or the current
-    /// word by one word.
-    /// ## `count`
-    /// the number of words to move over
     fn connect_move_words<F: Fn(&Self, i32) + 'static>(&self, f: F) -> SignalHandlerId;
 
     fn emit_move_words(&self, count: i32);
@@ -411,29 +158,10 @@ pub trait ViewExt: 'static {
 
     fn emit_redo(&self);
 
-    /// The ::show-completion signal is a key binding signal which gets
-    /// emitted when the user requests a completion, by pressing
-    /// `<keycombo>``<keycap>`Control`</keycap>``<keycap>`space`</keycap>``</keycombo>`.
-    ///
-    /// This will create a `CompletionContext` with the activation
-    /// type as `CompletionActivation::UserRequested`.
-    ///
-    /// Applications should not connect to it, but may emit it with
-    /// `g_signal_emit_by_name` if they need to activate the completion by
-    /// another means, for example with another key binding or a menu entry.
     fn connect_show_completion<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
 
     fn emit_show_completion(&self);
 
-    /// Emitted when a the cursor was moved according to the smart home
-    /// end setting. The signal is emitted after the cursor is moved, but
-    /// during the `gtk::TextView`::move-cursor action. This can be used to find
-    /// out whether the cursor was moved by a normal home/end or by a smart
-    /// home/end.
-    /// ## `iter`
-    /// a `gtk::TextIter`
-    /// ## `count`
-    /// the count
     fn connect_smart_home_end<F: Fn(&Self, &gtk::TextIter, i32) + 'static>(&self, f: F) -> SignalHandlerId;
 
     fn connect_undo<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;

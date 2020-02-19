@@ -16,10 +16,6 @@ glib_wrapper! {
 }
 
 impl CompletionInfo {
-    ///
-    /// # Returns
-    ///
-    /// a new `CompletionInfo`.
     pub fn new() -> CompletionInfo {
         assert_initialized_main_thread!();
         unsafe {

@@ -2,8 +2,8 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use glib::GString;
 use glib::translate::*;
+use glib::GString;
 use gtk_source_sys;
 use std::fmt;
 
@@ -19,45 +19,24 @@ glib_wrapper! {
 }
 
 impl Encoding {
-    /// Gets the character set of the `Encoding`, such as "UTF-8" or
-    /// "ISO-8859-1".
-    ///
-    /// # Returns
-    ///
-    /// the character set of the `Encoding`.
     pub fn get_charset(&self) -> Option<GString> {
         unsafe {
             from_glib_none(gtk_source_sys::gtk_source_encoding_get_charset(self.to_glib_none().0))
         }
     }
 
-    /// Gets the name of the `Encoding` such as "Unicode" or "Western".
-    ///
-    /// # Returns
-    ///
-    /// the name of the `Encoding`.
     pub fn get_name(&self) -> Option<GString> {
         unsafe {
             from_glib_none(gtk_source_sys::gtk_source_encoding_get_name(self.to_glib_none().0))
         }
     }
 
-    ///
-    /// # Returns
-    ///
-    /// a string representation. Free with `g_free` when no longer needed.
     fn to_string(&self) -> GString {
         unsafe {
             from_glib_full(gtk_source_sys::gtk_source_encoding_to_string(self.to_glib_none().0))
         }
     }
 
-    /// Gets all encodings.
-    ///
-    /// # Returns
-    ///
-    /// a list of
-    /// all `Encoding`'s. Free with `glib::SList::free`.
     pub fn get_all() -> Vec<Encoding> {
         assert_initialized_main_thread!();
         unsafe {
@@ -65,11 +44,6 @@ impl Encoding {
         }
     }
 
-    /// Gets the `Encoding` for the current locale. See also `g_get_charset`.
-    ///
-    /// # Returns
-    ///
-    /// the current locale encoding.
     pub fn get_current() -> Option<Encoding> {
         assert_initialized_main_thread!();
         unsafe {
@@ -77,17 +51,6 @@ impl Encoding {
         }
     }
 
-    /// Gets the list of default candidate encodings to try when loading a file. See
-    /// `FileLoader::set_candidate_encodings`.
-    ///
-    /// This function returns a different list depending on the current locale (i.e.
-    /// language, country and default encoding). The UTF-8 encoding and the current
-    /// locale encoding are guaranteed to be present in the returned list.
-    ///
-    /// # Returns
-    ///
-    /// the list of
-    /// default candidate encodings. Free with `glib::SList::free`.
     pub fn get_default_candidates() -> Vec<Encoding> {
         assert_initialized_main_thread!();
         unsafe {
@@ -95,15 +58,6 @@ impl Encoding {
         }
     }
 
-    /// Gets a `Encoding` from a character set such as "UTF-8" or
-    /// "ISO-8859-1".
-    /// ## `charset`
-    /// a character set.
-    ///
-    /// # Returns
-    ///
-    /// the corresponding `Encoding`, or `None`
-    /// if not found.
     pub fn get_from_charset(charset: &str) -> Option<Encoding> {
         assert_initialized_main_thread!();
         unsafe {
@@ -111,10 +65,6 @@ impl Encoding {
         }
     }
 
-    ///
-    /// # Returns
-    ///
-    /// the UTF-8 encoding.
     pub fn get_utf8() -> Option<Encoding> {
         assert_initialized_main_thread!();
         unsafe {

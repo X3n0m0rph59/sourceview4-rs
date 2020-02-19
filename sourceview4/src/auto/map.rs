@@ -2,14 +2,13 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use View;
-use glib::StaticType;
-use glib::Value;
 use glib::object::Cast;
 use glib::object::IsA;
-use glib::signal::SignalHandlerId;
 use glib::signal::connect_raw;
+use glib::signal::SignalHandlerId;
 use glib::translate::*;
+use glib::StaticType;
+use glib::Value;
 use glib_sys;
 use gobject_sys;
 use gtk;
@@ -18,6 +17,7 @@ use pango;
 use std::boxed::Box as Box_;
 use std::fmt;
 use std::mem::transmute;
+use View;
 
 glib_wrapper! {
     pub struct Map(Object<gtk_source_sys::GtkSourceMap, gtk_source_sys::GtkSourceMapClass, MapClass>) @extends View, gtk::TextView, gtk::Container, gtk::Widget;
@@ -28,11 +28,6 @@ glib_wrapper! {
 }
 
 impl Map {
-    /// Creates a new `Map`.
-    ///
-    /// # Returns
-    ///
-    /// a new `Map`.
     pub fn new() -> Map {
         assert_initialized_main_thread!();
         unsafe {
@@ -49,22 +44,9 @@ impl Default for Map {
 
 pub const NONE_MAP: Option<&Map> = None;
 
-/// Trait containing all `Map` methods.
-///
-/// # Implementors
-///
-/// [`Map`](struct.Map.html)
 pub trait MapExt: 'static {
-    /// Gets the `Map:view` property, which is the view this widget is mapping.
-    ///
-    /// # Returns
-    ///
-    /// a `View` or `None`.
     fn get_view(&self) -> Option<View>;
 
-    /// Sets the view that `self` will be doing the mapping to.
-    /// ## `view`
-    /// a `View`
     fn set_view<P: IsA<View>>(&self, view: &P);
 
     fn get_property_font_desc(&self) -> Option<pango::FontDescription>;
@@ -93,7 +75,7 @@ impl<O: IsA<Map>> MapExt for O {
         unsafe {
             let mut value = Value::from_type(<pango::FontDescription as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"font-desc\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get()
+            value.get().expect("Return Value for property `font-desc` getter")
         }
     }
 

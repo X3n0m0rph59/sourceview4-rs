@@ -2,12 +2,12 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use glib::GString;
-use glib::StaticType;
-use glib::Value;
 use glib::object::IsA;
 use glib::object::ObjectType as ObjectType_;
 use glib::translate::*;
+use glib::GString;
+use glib::StaticType;
+use glib::Value;
 use gobject_sys;
 use gtk;
 use gtk_source_sys;
@@ -23,28 +23,12 @@ glib_wrapper! {
 }
 
 impl Style {
-    /// This function modifies the `gtk::TextTag` properties that are related to the
-    /// `Style` properties. Other `gtk::TextTag` properties are left untouched.
-    ///
-    /// If `self` is non-`None`, applies `self` to `tag`.
-    ///
-    /// If `self` is `None`, the related *-set properties of `gtk::TextTag` are set to
-    /// `false`.
-    /// ## `tag`
-    /// a `gtk::TextTag` to apply styles to.
     pub fn apply<P: IsA<gtk::TextTag>>(&self, tag: &P) {
         unsafe {
             gtk_source_sys::gtk_source_style_apply(self.to_glib_none().0, tag.as_ref().to_glib_none().0);
         }
     }
 
-    /// Creates a copy of `self`, that is a new `Style` instance which
-    /// has the same attributes set.
-    ///
-    /// # Returns
-    ///
-    /// copy of `self`, call `gobject::Object::unref`
-    /// when you are done with it.
     pub fn copy(&self) -> Option<Style> {
         unsafe {
             from_glib_full(gtk_source_sys::gtk_source_style_copy(self.to_glib_none().0))
@@ -55,7 +39,7 @@ impl Style {
         unsafe {
             let mut value = Value::from_type(<GString as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.as_ptr() as *mut gobject_sys::GObject, b"background\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get()
+            value.get().expect("Return Value for property `background` getter")
         }
     }
 
@@ -63,7 +47,7 @@ impl Style {
         unsafe {
             let mut value = Value::from_type(<bool as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.as_ptr() as *mut gobject_sys::GObject, b"background-set\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().unwrap()
+            value.get().expect("Return Value for property `background-set` getter").unwrap()
         }
     }
 
@@ -71,7 +55,7 @@ impl Style {
         unsafe {
             let mut value = Value::from_type(<bool as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.as_ptr() as *mut gobject_sys::GObject, b"bold\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().unwrap()
+            value.get().expect("Return Value for property `bold` getter").unwrap()
         }
     }
 
@@ -79,7 +63,7 @@ impl Style {
         unsafe {
             let mut value = Value::from_type(<bool as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.as_ptr() as *mut gobject_sys::GObject, b"bold-set\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().unwrap()
+            value.get().expect("Return Value for property `bold-set` getter").unwrap()
         }
     }
 
@@ -87,7 +71,7 @@ impl Style {
         unsafe {
             let mut value = Value::from_type(<GString as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.as_ptr() as *mut gobject_sys::GObject, b"foreground\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get()
+            value.get().expect("Return Value for property `foreground` getter")
         }
     }
 
@@ -95,7 +79,7 @@ impl Style {
         unsafe {
             let mut value = Value::from_type(<bool as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.as_ptr() as *mut gobject_sys::GObject, b"foreground-set\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().unwrap()
+            value.get().expect("Return Value for property `foreground-set` getter").unwrap()
         }
     }
 
@@ -103,7 +87,7 @@ impl Style {
         unsafe {
             let mut value = Value::from_type(<bool as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.as_ptr() as *mut gobject_sys::GObject, b"italic\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().unwrap()
+            value.get().expect("Return Value for property `italic` getter").unwrap()
         }
     }
 
@@ -111,7 +95,7 @@ impl Style {
         unsafe {
             let mut value = Value::from_type(<bool as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.as_ptr() as *mut gobject_sys::GObject, b"italic-set\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().unwrap()
+            value.get().expect("Return Value for property `italic-set` getter").unwrap()
         }
     }
 
@@ -119,7 +103,7 @@ impl Style {
         unsafe {
             let mut value = Value::from_type(<GString as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.as_ptr() as *mut gobject_sys::GObject, b"line-background\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get()
+            value.get().expect("Return Value for property `line-background` getter")
         }
     }
 
@@ -127,7 +111,7 @@ impl Style {
         unsafe {
             let mut value = Value::from_type(<bool as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.as_ptr() as *mut gobject_sys::GObject, b"line-background-set\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().unwrap()
+            value.get().expect("Return Value for property `line-background-set` getter").unwrap()
         }
     }
 
@@ -135,7 +119,7 @@ impl Style {
         unsafe {
             let mut value = Value::from_type(<pango::Underline as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.as_ptr() as *mut gobject_sys::GObject, b"pango-underline\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().unwrap()
+            value.get().expect("Return Value for property `pango-underline` getter").unwrap()
         }
     }
 
@@ -143,7 +127,7 @@ impl Style {
         unsafe {
             let mut value = Value::from_type(<GString as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.as_ptr() as *mut gobject_sys::GObject, b"scale\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get()
+            value.get().expect("Return Value for property `scale` getter")
         }
     }
 
@@ -151,7 +135,7 @@ impl Style {
         unsafe {
             let mut value = Value::from_type(<bool as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.as_ptr() as *mut gobject_sys::GObject, b"scale-set\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().unwrap()
+            value.get().expect("Return Value for property `scale-set` getter").unwrap()
         }
     }
 
@@ -159,7 +143,7 @@ impl Style {
         unsafe {
             let mut value = Value::from_type(<bool as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.as_ptr() as *mut gobject_sys::GObject, b"strikethrough\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().unwrap()
+            value.get().expect("Return Value for property `strikethrough` getter").unwrap()
         }
     }
 
@@ -167,7 +151,7 @@ impl Style {
         unsafe {
             let mut value = Value::from_type(<bool as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.as_ptr() as *mut gobject_sys::GObject, b"strikethrough-set\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().unwrap()
+            value.get().expect("Return Value for property `strikethrough-set` getter").unwrap()
         }
     }
 
@@ -175,7 +159,7 @@ impl Style {
         unsafe {
             let mut value = Value::from_type(<GString as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.as_ptr() as *mut gobject_sys::GObject, b"underline-color\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get()
+            value.get().expect("Return Value for property `underline-color` getter")
         }
     }
 
@@ -183,7 +167,7 @@ impl Style {
         unsafe {
             let mut value = Value::from_type(<bool as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.as_ptr() as *mut gobject_sys::GObject, b"underline-color-set\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().unwrap()
+            value.get().expect("Return Value for property `underline-color-set` getter").unwrap()
         }
     }
 
@@ -191,7 +175,7 @@ impl Style {
         unsafe {
             let mut value = Value::from_type(<bool as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.as_ptr() as *mut gobject_sys::GObject, b"underline-set\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().unwrap()
+            value.get().expect("Return Value for property `underline-set` getter").unwrap()
         }
     }
 }

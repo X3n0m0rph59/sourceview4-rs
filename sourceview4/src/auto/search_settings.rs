@@ -2,12 +2,12 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use glib::GString;
 use glib::object::Cast;
 use glib::object::IsA;
-use glib::signal::SignalHandlerId;
 use glib::signal::connect_raw;
+use glib::signal::SignalHandlerId;
 use glib::translate::*;
+use glib::GString;
 use glib_sys;
 use gtk_source_sys;
 use std::boxed::Box as Box_;
@@ -23,11 +23,6 @@ glib_wrapper! {
 }
 
 impl SearchSettings {
-    /// Creates a new search settings object.
-    ///
-    /// # Returns
-    ///
-    /// a new search settings object.
     pub fn new() -> SearchSettings {
         assert_initialized_main_thread!();
         unsafe {
@@ -44,86 +39,25 @@ impl Default for SearchSettings {
 
 pub const NONE_SEARCH_SETTINGS: Option<&SearchSettings> = None;
 
-/// Trait containing all `SearchSettings` methods.
-///
-/// # Implementors
-///
-/// [`SearchSettings`](struct.SearchSettings.html)
 pub trait SearchSettingsExt: 'static {
-    ///
-    /// # Returns
-    ///
-    /// whether to search at word boundaries.
     fn get_at_word_boundaries(&self) -> bool;
 
-    ///
-    /// # Returns
-    ///
-    /// whether the search is case sensitive.
     fn get_case_sensitive(&self) -> bool;
 
-    ///
-    /// # Returns
-    ///
-    /// whether to search by regular expressions.
     fn get_regex_enabled(&self) -> bool;
 
-    /// Gets the text to search. The return value must not be freed.
-    ///
-    /// You may be interested to call `gtk_source_utils_escape_search_text` after
-    /// this function.
-    ///
-    /// # Returns
-    ///
-    /// the text to search, or `None` if the search is disabled.
     fn get_search_text(&self) -> Option<GString>;
 
-    ///
-    /// # Returns
-    ///
-    /// whether to wrap around the search.
     fn get_wrap_around(&self) -> bool;
 
-    /// Change whether the search is done at word boundaries. If `at_word_boundaries`
-    /// is `true`, a search match must start and end a word. The match can span
-    /// multiple words. See also `gtk::TextIter::starts_word` and
-    /// `gtk::TextIter::ends_word`.
-    /// ## `at_word_boundaries`
-    /// the setting.
     fn set_at_word_boundaries(&self, at_word_boundaries: bool);
 
-    /// Enables or disables the case sensitivity for the search.
-    /// ## `case_sensitive`
-    /// the setting.
     fn set_case_sensitive(&self, case_sensitive: bool);
 
-    /// Enables or disables whether to search by regular expressions.
-    /// If enabled, the `SearchSettings:search-text` property contains the
-    /// pattern of the regular expression.
-    ///
-    /// `SearchContext` uses `glib::Regex` when regex search is enabled. See the
-    /// [Regular expression syntax](https://developer.gnome.org/glib/stable/glib-regex-syntax.html)
-    /// page in the GLib reference manual.
-    /// ## `regex_enabled`
-    /// the setting.
     fn set_regex_enabled(&self, regex_enabled: bool);
 
-    /// Sets the text to search. If `search_text` is `None` or is empty, the search
-    /// will be disabled. A copy of `search_text` will be made, so you can safely free
-    /// `search_text` after a call to this function.
-    ///
-    /// You may be interested to call `gtk_source_utils_unescape_search_text` before
-    /// this function.
-    /// ## `search_text`
-    /// the nul-terminated text to search, or `None` to disable the search.
     fn set_search_text(&self, search_text: Option<&str>);
 
-    /// Enables or disables the wrap around search. If `wrap_around` is `true`, the
-    /// forward search continues at the beginning of the buffer if no search
-    /// occurrences are found. Similarly, the backward search continues to search at
-    /// the end of the buffer.
-    /// ## `wrap_around`
-    /// the setting.
     fn set_wrap_around(&self, wrap_around: bool);
 
     fn connect_property_at_word_boundaries_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;

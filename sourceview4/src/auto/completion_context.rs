@@ -2,19 +2,15 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use Completion;
-use CompletionActivation;
-use CompletionProposal;
-use CompletionProvider;
 use glib;
-use glib::StaticType;
-use glib::Value;
 use glib::object::Cast;
 use glib::object::IsA;
 use glib::object::ObjectExt;
-use glib::signal::SignalHandlerId;
 use glib::signal::connect_raw;
+use glib::signal::SignalHandlerId;
 use glib::translate::*;
+use glib::StaticType;
+use glib::Value;
 use glib_sys;
 use gobject_sys;
 use gtk;
@@ -22,6 +18,10 @@ use gtk_source_sys;
 use std::boxed::Box as Box_;
 use std::fmt;
 use std::mem::transmute;
+use Completion;
+use CompletionActivation;
+use CompletionProposal;
+use CompletionProvider;
 
 glib_wrapper! {
     pub struct CompletionContext(Object<gtk_source_sys::GtkSourceCompletionContext, gtk_source_sys::GtkSourceCompletionContextClass, CompletionContextClass>);
@@ -33,55 +33,19 @@ glib_wrapper! {
 
 pub const NONE_COMPLETION_CONTEXT: Option<&CompletionContext> = None;
 
-/// Trait containing all `CompletionContext` methods.
-///
-/// # Implementors
-///
-/// [`CompletionContext`](struct.CompletionContext.html)
 pub trait CompletionContextExt: 'static {
-    /// Providers can use this function to add proposals to the completion. They
-    /// can do so asynchronously by means of the `finished` argument. Providers must
-    /// ensure that they always call this function with `finished` set to `true`
-    /// once each population (even if no proposals need to be added).
-    /// Population occurs when the `CompletionProvider::populate`
-    /// function is called.
-    /// ## `provider`
-    /// a `CompletionProvider`.
-    /// ## `proposals`
-    /// The list of proposals to add.
-    /// ## `finished`
-    /// Whether the provider is finished adding proposals.
     fn add_proposals<P: IsA<CompletionProvider>>(&self, provider: &P, proposals: &[CompletionProposal], finished: bool);
 
-    /// Get the context activation.
-    ///
-    /// # Returns
-    ///
-    /// The context activation.
     fn get_activation(&self) -> CompletionActivation;
 
-    /// Get the iter at which the completion was invoked. Providers can use this
-    /// to determine how and if to match proposals.
-    /// ## `iter`
-    /// a `gtk::TextIter`.
-    ///
-    /// # Returns
-    ///
-    /// `true` if `iter` is correctly set, `false` otherwise.
     fn get_iter(&self) -> Option<gtk::TextIter>;
 
-    /// The completion activation
     fn set_property_activation(&self, activation: CompletionActivation);
 
-    /// The `Completion` associated with the context.
     fn get_property_completion(&self) -> Option<Completion>;
 
-    /// The `gtk::TextIter` at which the completion is invoked.
     fn set_property_iter(&self, iter: Option<&gtk::TextIter>);
 
-    /// Emitted when the current population of proposals has been cancelled.
-    /// Providers adding proposals asynchronously should connect to this signal
-    /// to know when to cancel running proposal queries.
     fn connect_cancelled<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
 
     fn emit_cancelled(&self);
@@ -122,7 +86,7 @@ impl<O: IsA<CompletionContext>> CompletionContextExt for O {
         unsafe {
             let mut value = Value::from_type(<Completion as StaticType>::static_type());
             gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"completion\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get()
+            value.get().expect("Return Value for property `completion` getter")
         }
     }
 
