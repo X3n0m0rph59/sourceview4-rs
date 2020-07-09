@@ -29,7 +29,7 @@ impl FileLoader {
         }
     }
 
-    pub fn new_from_stream<P: IsA<Buffer>, Q: IsA<File>, R: IsA<gio::InputStream>>(buffer: &P, file: &Q, stream: &R) -> FileLoader {
+    pub fn from_stream<P: IsA<Buffer>, Q: IsA<File>, R: IsA<gio::InputStream>>(buffer: &P, file: &Q, stream: &R) -> FileLoader {
         skip_assert_initialized!();
         unsafe {
             from_glib_full(gtk_source_sys::gtk_source_file_loader_new_from_stream(buffer.as_ref().to_glib_none().0, file.as_ref().to_glib_none().0, stream.as_ref().to_glib_none().0))

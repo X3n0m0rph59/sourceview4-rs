@@ -36,7 +36,7 @@ impl FileSaver {
         }
     }
 
-    pub fn new_with_target<P: IsA<Buffer>, Q: IsA<File>, R: IsA<gio::File>>(buffer: &P, file: &Q, target_location: &R) -> FileSaver {
+    pub fn with_target<P: IsA<Buffer>, Q: IsA<File>, R: IsA<gio::File>>(buffer: &P, file: &Q, target_location: &R) -> FileSaver {
         skip_assert_initialized!();
         unsafe {
             from_glib_full(gtk_source_sys::gtk_source_file_saver_new_with_target(buffer.as_ref().to_glib_none().0, file.as_ref().to_glib_none().0, target_location.as_ref().to_glib_none().0))
@@ -180,12 +180,12 @@ impl<O: IsA<FileSaver>> FileSaverExt for O {
             where P: IsA<FileSaver>
         {
             let f: &F = &*(f as *const F);
-            f(&FileSaver::from_glib_borrow(this).unsafe_cast())
+            f(&FileSaver::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::compression-type\0".as_ptr() as *const _,
-                Some(transmute(notify_compression_type_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_compression_type_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -194,12 +194,12 @@ impl<O: IsA<FileSaver>> FileSaverExt for O {
             where P: IsA<FileSaver>
         {
             let f: &F = &*(f as *const F);
-            f(&FileSaver::from_glib_borrow(this).unsafe_cast())
+            f(&FileSaver::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::encoding\0".as_ptr() as *const _,
-                Some(transmute(notify_encoding_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_encoding_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -208,12 +208,12 @@ impl<O: IsA<FileSaver>> FileSaverExt for O {
             where P: IsA<FileSaver>
         {
             let f: &F = &*(f as *const F);
-            f(&FileSaver::from_glib_borrow(this).unsafe_cast())
+            f(&FileSaver::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::flags\0".as_ptr() as *const _,
-                Some(transmute(notify_flags_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_flags_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -222,12 +222,12 @@ impl<O: IsA<FileSaver>> FileSaverExt for O {
             where P: IsA<FileSaver>
         {
             let f: &F = &*(f as *const F);
-            f(&FileSaver::from_glib_borrow(this).unsafe_cast())
+            f(&FileSaver::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::newline-type\0".as_ptr() as *const _,
-                Some(transmute(notify_newline_type_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_newline_type_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 }

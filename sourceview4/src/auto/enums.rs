@@ -15,6 +15,7 @@ use std::fmt;
 
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[derive(Clone, Copy)]
+#[non_exhaustive]
 pub enum BackgroundPatternType {
     None,
     Grid,
@@ -83,6 +84,7 @@ impl SetValue for BackgroundPatternType {
 
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[derive(Clone, Copy)]
+#[non_exhaustive]
 pub enum BracketMatchType {
     None,
     OutOfRange,
@@ -159,6 +161,7 @@ impl SetValue for BracketMatchType {
 
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[derive(Clone, Copy)]
+#[non_exhaustive]
 pub enum ChangeCaseType {
     Lower,
     Upper,
@@ -235,6 +238,7 @@ impl SetValue for ChangeCaseType {
 
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[derive(Clone, Copy)]
+#[non_exhaustive]
 pub enum CompressionType {
     None,
     Gzip,
@@ -303,6 +307,7 @@ impl SetValue for CompressionType {
 
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[derive(Clone, Copy)]
+#[non_exhaustive]
 pub enum GutterRendererAlignmentMode {
     Cell,
     First,
@@ -375,6 +380,7 @@ impl SetValue for GutterRendererAlignmentMode {
 
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[derive(Clone, Copy)]
+#[non_exhaustive]
 pub enum NewlineType {
     Lf,
     Cr,
@@ -447,6 +453,7 @@ impl SetValue for NewlineType {
 
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[derive(Clone, Copy)]
+#[non_exhaustive]
 pub enum SmartHomeEndType {
     Disabled,
     Before,

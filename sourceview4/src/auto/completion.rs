@@ -297,17 +297,17 @@ impl<O: IsA<Completion>> CompletionExt for O {
             where P: IsA<Completion>
         {
             let f: &F = &*(f as *const F);
-            f(&Completion::from_glib_borrow(this).unsafe_cast())
+            f(&Completion::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"activate-proposal\0".as_ptr() as *const _,
-                Some(transmute(activate_proposal_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(activate_proposal_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
     fn emit_activate_proposal(&self) {
-        let _ = unsafe { glib::Object::from_glib_borrow(self.to_glib_none().0 as *mut gobject_sys::GObject).emit("activate-proposal", &[]).unwrap() };
+        let _ = unsafe { glib::Object::from_glib_borrow(self.as_ptr() as *mut gobject_sys::GObject).emit("activate-proposal", &[]).unwrap() };
     }
 
     fn connect_hide<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
@@ -315,17 +315,17 @@ impl<O: IsA<Completion>> CompletionExt for O {
             where P: IsA<Completion>
         {
             let f: &F = &*(f as *const F);
-            f(&Completion::from_glib_borrow(this).unsafe_cast())
+            f(&Completion::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"hide\0".as_ptr() as *const _,
-                Some(transmute(hide_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(hide_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
     fn emit_hide(&self) {
-        let _ = unsafe { glib::Object::from_glib_borrow(self.to_glib_none().0 as *mut gobject_sys::GObject).emit("hide", &[]).unwrap() };
+        let _ = unsafe { glib::Object::from_glib_borrow(self.as_ptr() as *mut gobject_sys::GObject).emit("hide", &[]).unwrap() };
     }
 
     //fn connect_move_cursor<Unsupported or ignored types>(&self, f: F) -> SignalHandlerId {
@@ -341,17 +341,17 @@ impl<O: IsA<Completion>> CompletionExt for O {
             where P: IsA<Completion>
         {
             let f: &F = &*(f as *const F);
-            f(&Completion::from_glib_borrow(this).unsafe_cast(), &from_glib_borrow(context))
+            f(&Completion::from_glib_borrow(this).unsafe_cast_ref(), &from_glib_borrow(context))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"populate-context\0".as_ptr() as *const _,
-                Some(transmute(populate_context_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(populate_context_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
     fn emit_populate_context(&self, context: &CompletionContext) {
-        let _ = unsafe { glib::Object::from_glib_borrow(self.to_glib_none().0 as *mut gobject_sys::GObject).emit("populate-context", &[&context]).unwrap() };
+        let _ = unsafe { glib::Object::from_glib_borrow(self.as_ptr() as *mut gobject_sys::GObject).emit("populate-context", &[&context]).unwrap() };
     }
 
     fn connect_show<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
@@ -359,17 +359,17 @@ impl<O: IsA<Completion>> CompletionExt for O {
             where P: IsA<Completion>
         {
             let f: &F = &*(f as *const F);
-            f(&Completion::from_glib_borrow(this).unsafe_cast())
+            f(&Completion::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"show\0".as_ptr() as *const _,
-                Some(transmute(show_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(show_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
     fn emit_show(&self) {
-        let _ = unsafe { glib::Object::from_glib_borrow(self.to_glib_none().0 as *mut gobject_sys::GObject).emit("show", &[]).unwrap() };
+        let _ = unsafe { glib::Object::from_glib_borrow(self.as_ptr() as *mut gobject_sys::GObject).emit("show", &[]).unwrap() };
     }
 
     fn connect_property_accelerators_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
@@ -377,12 +377,12 @@ impl<O: IsA<Completion>> CompletionExt for O {
             where P: IsA<Completion>
         {
             let f: &F = &*(f as *const F);
-            f(&Completion::from_glib_borrow(this).unsafe_cast())
+            f(&Completion::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::accelerators\0".as_ptr() as *const _,
-                Some(transmute(notify_accelerators_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_accelerators_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -391,12 +391,12 @@ impl<O: IsA<Completion>> CompletionExt for O {
             where P: IsA<Completion>
         {
             let f: &F = &*(f as *const F);
-            f(&Completion::from_glib_borrow(this).unsafe_cast())
+            f(&Completion::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::auto-complete-delay\0".as_ptr() as *const _,
-                Some(transmute(notify_auto_complete_delay_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_auto_complete_delay_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -405,12 +405,12 @@ impl<O: IsA<Completion>> CompletionExt for O {
             where P: IsA<Completion>
         {
             let f: &F = &*(f as *const F);
-            f(&Completion::from_glib_borrow(this).unsafe_cast())
+            f(&Completion::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::proposal-page-size\0".as_ptr() as *const _,
-                Some(transmute(notify_proposal_page_size_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_proposal_page_size_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -419,12 +419,12 @@ impl<O: IsA<Completion>> CompletionExt for O {
             where P: IsA<Completion>
         {
             let f: &F = &*(f as *const F);
-            f(&Completion::from_glib_borrow(this).unsafe_cast())
+            f(&Completion::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::provider-page-size\0".as_ptr() as *const _,
-                Some(transmute(notify_provider_page_size_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_provider_page_size_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -433,12 +433,12 @@ impl<O: IsA<Completion>> CompletionExt for O {
             where P: IsA<Completion>
         {
             let f: &F = &*(f as *const F);
-            f(&Completion::from_glib_borrow(this).unsafe_cast())
+            f(&Completion::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::remember-info-visibility\0".as_ptr() as *const _,
-                Some(transmute(notify_remember_info_visibility_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_remember_info_visibility_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -447,12 +447,12 @@ impl<O: IsA<Completion>> CompletionExt for O {
             where P: IsA<Completion>
         {
             let f: &F = &*(f as *const F);
-            f(&Completion::from_glib_borrow(this).unsafe_cast())
+            f(&Completion::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::select-on-show\0".as_ptr() as *const _,
-                Some(transmute(notify_select_on_show_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_select_on_show_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -461,12 +461,12 @@ impl<O: IsA<Completion>> CompletionExt for O {
             where P: IsA<Completion>
         {
             let f: &F = &*(f as *const F);
-            f(&Completion::from_glib_borrow(this).unsafe_cast())
+            f(&Completion::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::show-headers\0".as_ptr() as *const _,
-                Some(transmute(notify_show_headers_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_show_headers_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -475,12 +475,12 @@ impl<O: IsA<Completion>> CompletionExt for O {
             where P: IsA<Completion>
         {
             let f: &F = &*(f as *const F);
-            f(&Completion::from_glib_borrow(this).unsafe_cast())
+            f(&Completion::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::show-icons\0".as_ptr() as *const _,
-                Some(transmute(notify_show_icons_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_show_icons_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 }

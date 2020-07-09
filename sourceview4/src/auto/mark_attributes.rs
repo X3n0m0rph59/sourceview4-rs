@@ -155,12 +155,12 @@ impl<O: IsA<MarkAttributes>> MarkAttributesExt for O {
             where P: IsA<MarkAttributes>
         {
             let f: &F = &*(f as *const F);
-            f(&MarkAttributes::from_glib_borrow(this).unsafe_cast(), &from_glib_borrow(mark)).to_glib_full()
+            f(&MarkAttributes::from_glib_borrow(this).unsafe_cast_ref(), &from_glib_borrow(mark)).to_glib_full()
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"query-tooltip-markup\0".as_ptr() as *const _,
-                Some(transmute(query_tooltip_markup_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(query_tooltip_markup_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -169,12 +169,12 @@ impl<O: IsA<MarkAttributes>> MarkAttributesExt for O {
             where P: IsA<MarkAttributes>
         {
             let f: &F = &*(f as *const F);
-            f(&MarkAttributes::from_glib_borrow(this).unsafe_cast(), &from_glib_borrow(mark)).to_glib_full()
+            f(&MarkAttributes::from_glib_borrow(this).unsafe_cast_ref(), &from_glib_borrow(mark)).to_glib_full()
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"query-tooltip-text\0".as_ptr() as *const _,
-                Some(transmute(query_tooltip_text_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(query_tooltip_text_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -183,12 +183,12 @@ impl<O: IsA<MarkAttributes>> MarkAttributesExt for O {
             where P: IsA<MarkAttributes>
         {
             let f: &F = &*(f as *const F);
-            f(&MarkAttributes::from_glib_borrow(this).unsafe_cast())
+            f(&MarkAttributes::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::background\0".as_ptr() as *const _,
-                Some(transmute(notify_background_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_background_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -197,12 +197,12 @@ impl<O: IsA<MarkAttributes>> MarkAttributesExt for O {
             where P: IsA<MarkAttributes>
         {
             let f: &F = &*(f as *const F);
-            f(&MarkAttributes::from_glib_borrow(this).unsafe_cast())
+            f(&MarkAttributes::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::gicon\0".as_ptr() as *const _,
-                Some(transmute(notify_gicon_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_gicon_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -211,12 +211,12 @@ impl<O: IsA<MarkAttributes>> MarkAttributesExt for O {
             where P: IsA<MarkAttributes>
         {
             let f: &F = &*(f as *const F);
-            f(&MarkAttributes::from_glib_borrow(this).unsafe_cast())
+            f(&MarkAttributes::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::icon-name\0".as_ptr() as *const _,
-                Some(transmute(notify_icon_name_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_icon_name_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -225,12 +225,12 @@ impl<O: IsA<MarkAttributes>> MarkAttributesExt for O {
             where P: IsA<MarkAttributes>
         {
             let f: &F = &*(f as *const F);
-            f(&MarkAttributes::from_glib_borrow(this).unsafe_cast())
+            f(&MarkAttributes::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::pixbuf\0".as_ptr() as *const _,
-                Some(transmute(notify_pixbuf_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_pixbuf_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 }

@@ -121,17 +121,17 @@ impl<O: IsA<CompletionProposal>> CompletionProposalExt for O {
             where P: IsA<CompletionProposal>
         {
             let f: &F = &*(f as *const F);
-            f(&CompletionProposal::from_glib_borrow(this).unsafe_cast())
+            f(&CompletionProposal::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"changed\0".as_ptr() as *const _,
-                Some(transmute(changed_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(changed_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
     fn emit_changed(&self) {
-        let _ = unsafe { glib::Object::from_glib_borrow(self.to_glib_none().0 as *mut gobject_sys::GObject).emit("changed", &[]).unwrap() };
+        let _ = unsafe { glib::Object::from_glib_borrow(self.as_ptr() as *mut gobject_sys::GObject).emit("changed", &[]).unwrap() };
     }
 }
 

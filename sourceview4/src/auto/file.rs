@@ -159,12 +159,12 @@ impl<O: IsA<File>> FileExt for O {
             where P: IsA<File>
         {
             let f: &F = &*(f as *const F);
-            f(&File::from_glib_borrow(this).unsafe_cast())
+            f(&File::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::compression-type\0".as_ptr() as *const _,
-                Some(transmute(notify_compression_type_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_compression_type_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -173,12 +173,12 @@ impl<O: IsA<File>> FileExt for O {
             where P: IsA<File>
         {
             let f: &F = &*(f as *const F);
-            f(&File::from_glib_borrow(this).unsafe_cast())
+            f(&File::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::encoding\0".as_ptr() as *const _,
-                Some(transmute(notify_encoding_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_encoding_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -187,12 +187,12 @@ impl<O: IsA<File>> FileExt for O {
             where P: IsA<File>
         {
             let f: &F = &*(f as *const F);
-            f(&File::from_glib_borrow(this).unsafe_cast())
+            f(&File::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::location\0".as_ptr() as *const _,
-                Some(transmute(notify_location_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_location_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -201,12 +201,12 @@ impl<O: IsA<File>> FileExt for O {
             where P: IsA<File>
         {
             let f: &F = &*(f as *const F);
-            f(&File::from_glib_borrow(this).unsafe_cast())
+            f(&File::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::newline-type\0".as_ptr() as *const _,
-                Some(transmute(notify_newline_type_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_newline_type_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -215,12 +215,12 @@ impl<O: IsA<File>> FileExt for O {
             where P: IsA<File>
         {
             let f: &F = &*(f as *const F);
-            f(&File::from_glib_borrow(this).unsafe_cast())
+            f(&File::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::read-only\0".as_ptr() as *const _,
-                Some(transmute(notify_read_only_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_read_only_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 }

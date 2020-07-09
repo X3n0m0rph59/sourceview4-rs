@@ -106,17 +106,17 @@ impl<O: IsA<UndoManager>> UndoManagerExt for O {
             where P: IsA<UndoManager>
         {
             let f: &F = &*(f as *const F);
-            f(&UndoManager::from_glib_borrow(this).unsafe_cast())
+            f(&UndoManager::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"can-redo-changed\0".as_ptr() as *const _,
-                Some(transmute(can_redo_changed_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(can_redo_changed_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
     fn emit_can_redo_changed(&self) {
-        let _ = unsafe { glib::Object::from_glib_borrow(self.to_glib_none().0 as *mut gobject_sys::GObject).emit("can-redo-changed", &[]).unwrap() };
+        let _ = unsafe { glib::Object::from_glib_borrow(self.as_ptr() as *mut gobject_sys::GObject).emit("can-redo-changed", &[]).unwrap() };
     }
 
     fn connect_can_undo_changed<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
@@ -124,17 +124,17 @@ impl<O: IsA<UndoManager>> UndoManagerExt for O {
             where P: IsA<UndoManager>
         {
             let f: &F = &*(f as *const F);
-            f(&UndoManager::from_glib_borrow(this).unsafe_cast())
+            f(&UndoManager::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"can-undo-changed\0".as_ptr() as *const _,
-                Some(transmute(can_undo_changed_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(can_undo_changed_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
     fn emit_can_undo_changed(&self) {
-        let _ = unsafe { glib::Object::from_glib_borrow(self.to_glib_none().0 as *mut gobject_sys::GObject).emit("can-undo-changed", &[]).unwrap() };
+        let _ = unsafe { glib::Object::from_glib_borrow(self.as_ptr() as *mut gobject_sys::GObject).emit("can-undo-changed", &[]).unwrap() };
     }
 }
 

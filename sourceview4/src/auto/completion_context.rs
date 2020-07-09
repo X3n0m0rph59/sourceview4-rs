@@ -101,17 +101,17 @@ impl<O: IsA<CompletionContext>> CompletionContextExt for O {
             where P: IsA<CompletionContext>
         {
             let f: &F = &*(f as *const F);
-            f(&CompletionContext::from_glib_borrow(this).unsafe_cast())
+            f(&CompletionContext::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"cancelled\0".as_ptr() as *const _,
-                Some(transmute(cancelled_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(cancelled_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
     fn emit_cancelled(&self) {
-        let _ = unsafe { glib::Object::from_glib_borrow(self.to_glib_none().0 as *mut gobject_sys::GObject).emit("cancelled", &[]).unwrap() };
+        let _ = unsafe { glib::Object::from_glib_borrow(self.as_ptr() as *mut gobject_sys::GObject).emit("cancelled", &[]).unwrap() };
     }
 
     fn connect_property_activation_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
@@ -119,12 +119,12 @@ impl<O: IsA<CompletionContext>> CompletionContextExt for O {
             where P: IsA<CompletionContext>
         {
             let f: &F = &*(f as *const F);
-            f(&CompletionContext::from_glib_borrow(this).unsafe_cast())
+            f(&CompletionContext::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::activation\0".as_ptr() as *const _,
-                Some(transmute(notify_activation_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_activation_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -133,12 +133,12 @@ impl<O: IsA<CompletionContext>> CompletionContextExt for O {
             where P: IsA<CompletionContext>
         {
             let f: &F = &*(f as *const F);
-            f(&CompletionContext::from_glib_borrow(this).unsafe_cast())
+            f(&CompletionContext::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::iter\0".as_ptr() as *const _,
-                Some(transmute(notify_iter_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_iter_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 }

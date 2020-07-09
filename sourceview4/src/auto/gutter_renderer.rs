@@ -354,12 +354,12 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
             where P: IsA<GutterRenderer>
         {
             let f: &F = &*(f as *const F);
-            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast(), &from_glib_borrow(iter), &from_glib_borrow(area), &from_glib_none(event))
+            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast_ref(), &from_glib_borrow(iter), &from_glib_borrow(area), &from_glib_none(event))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"activate\0".as_ptr() as *const _,
-                Some(transmute(activate_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(activate_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -368,12 +368,12 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
             where P: IsA<GutterRenderer>
         {
             let f: &F = &*(f as *const F);
-            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast(), &from_glib_borrow(iter), &from_glib_borrow(area), &from_glib_none(event)).to_glib()
+            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast_ref(), &from_glib_borrow(iter), &from_glib_borrow(area), &from_glib_none(event)).to_glib()
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"query-activatable\0".as_ptr() as *const _,
-                Some(transmute(query_activatable_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(query_activatable_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -382,12 +382,12 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
             where P: IsA<GutterRenderer>
         {
             let f: &F = &*(f as *const F);
-            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast(), &from_glib_borrow(start), &from_glib_borrow(end), from_glib(state))
+            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast_ref(), &from_glib_borrow(start), &from_glib_borrow(end), from_glib(state))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"query-data\0".as_ptr() as *const _,
-                Some(transmute(query_data_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(query_data_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -396,12 +396,12 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
             where P: IsA<GutterRenderer>
         {
             let f: &F = &*(f as *const F);
-            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast(), &from_glib_borrow(iter), &from_glib_borrow(area), x, y, &from_glib_borrow(tooltip)).to_glib()
+            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast_ref(), &from_glib_borrow(iter), &from_glib_borrow(area), x, y, &from_glib_borrow(tooltip)).to_glib()
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"query-tooltip\0".as_ptr() as *const _,
-                Some(transmute(query_tooltip_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(query_tooltip_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -410,12 +410,12 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
             where P: IsA<GutterRenderer>
         {
             let f: &F = &*(f as *const F);
-            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast())
+            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"queue-draw\0".as_ptr() as *const _,
-                Some(transmute(queue_draw_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(queue_draw_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -424,12 +424,12 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
             where P: IsA<GutterRenderer>
         {
             let f: &F = &*(f as *const F);
-            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast())
+            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::alignment-mode\0".as_ptr() as *const _,
-                Some(transmute(notify_alignment_mode_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_alignment_mode_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -438,12 +438,12 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
             where P: IsA<GutterRenderer>
         {
             let f: &F = &*(f as *const F);
-            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast())
+            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::background-rgba\0".as_ptr() as *const _,
-                Some(transmute(notify_background_rgba_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_background_rgba_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -452,12 +452,12 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
             where P: IsA<GutterRenderer>
         {
             let f: &F = &*(f as *const F);
-            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast())
+            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::background-set\0".as_ptr() as *const _,
-                Some(transmute(notify_background_set_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_background_set_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -466,12 +466,12 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
             where P: IsA<GutterRenderer>
         {
             let f: &F = &*(f as *const F);
-            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast())
+            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::size\0".as_ptr() as *const _,
-                Some(transmute(notify_size_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_size_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -480,12 +480,12 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
             where P: IsA<GutterRenderer>
         {
             let f: &F = &*(f as *const F);
-            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast())
+            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::view\0".as_ptr() as *const _,
-                Some(transmute(notify_view_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_view_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -494,12 +494,12 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
             where P: IsA<GutterRenderer>
         {
             let f: &F = &*(f as *const F);
-            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast())
+            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::visible\0".as_ptr() as *const _,
-                Some(transmute(notify_visible_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_visible_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -508,12 +508,12 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
             where P: IsA<GutterRenderer>
         {
             let f: &F = &*(f as *const F);
-            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast())
+            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::window-type\0".as_ptr() as *const _,
-                Some(transmute(notify_window_type_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_window_type_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -522,12 +522,12 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
             where P: IsA<GutterRenderer>
         {
             let f: &F = &*(f as *const F);
-            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast())
+            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::xalign\0".as_ptr() as *const _,
-                Some(transmute(notify_xalign_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_xalign_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -536,12 +536,12 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
             where P: IsA<GutterRenderer>
         {
             let f: &F = &*(f as *const F);
-            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast())
+            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::xpad\0".as_ptr() as *const _,
-                Some(transmute(notify_xpad_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_xpad_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -550,12 +550,12 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
             where P: IsA<GutterRenderer>
         {
             let f: &F = &*(f as *const F);
-            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast())
+            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::yalign\0".as_ptr() as *const _,
-                Some(transmute(notify_yalign_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_yalign_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -564,12 +564,12 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
             where P: IsA<GutterRenderer>
         {
             let f: &F = &*(f as *const F);
-            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast())
+            f(&GutterRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::ypad\0".as_ptr() as *const _,
-                Some(transmute(notify_ypad_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_ypad_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 }

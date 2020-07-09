@@ -173,12 +173,12 @@ impl<O: IsA<CompletionWords>> CompletionWordsExt for O {
             where P: IsA<CompletionWords>
         {
             let f: &F = &*(f as *const F);
-            f(&CompletionWords::from_glib_borrow(this).unsafe_cast())
+            f(&CompletionWords::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::activation\0".as_ptr() as *const _,
-                Some(transmute(notify_activation_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_activation_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -187,12 +187,12 @@ impl<O: IsA<CompletionWords>> CompletionWordsExt for O {
             where P: IsA<CompletionWords>
         {
             let f: &F = &*(f as *const F);
-            f(&CompletionWords::from_glib_borrow(this).unsafe_cast())
+            f(&CompletionWords::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::icon\0".as_ptr() as *const _,
-                Some(transmute(notify_icon_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_icon_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -201,12 +201,12 @@ impl<O: IsA<CompletionWords>> CompletionWordsExt for O {
             where P: IsA<CompletionWords>
         {
             let f: &F = &*(f as *const F);
-            f(&CompletionWords::from_glib_borrow(this).unsafe_cast())
+            f(&CompletionWords::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::interactive-delay\0".as_ptr() as *const _,
-                Some(transmute(notify_interactive_delay_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_interactive_delay_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -215,12 +215,12 @@ impl<O: IsA<CompletionWords>> CompletionWordsExt for O {
             where P: IsA<CompletionWords>
         {
             let f: &F = &*(f as *const F);
-            f(&CompletionWords::from_glib_borrow(this).unsafe_cast())
+            f(&CompletionWords::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::minimum-word-size\0".as_ptr() as *const _,
-                Some(transmute(notify_minimum_word_size_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_minimum_word_size_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -229,12 +229,12 @@ impl<O: IsA<CompletionWords>> CompletionWordsExt for O {
             where P: IsA<CompletionWords>
         {
             let f: &F = &*(f as *const F);
-            f(&CompletionWords::from_glib_borrow(this).unsafe_cast())
+            f(&CompletionWords::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::name\0".as_ptr() as *const _,
-                Some(transmute(notify_name_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_name_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -243,12 +243,12 @@ impl<O: IsA<CompletionWords>> CompletionWordsExt for O {
             where P: IsA<CompletionWords>
         {
             let f: &F = &*(f as *const F);
-            f(&CompletionWords::from_glib_borrow(this).unsafe_cast())
+            f(&CompletionWords::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::priority\0".as_ptr() as *const _,
-                Some(transmute(notify_priority_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_priority_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -257,12 +257,12 @@ impl<O: IsA<CompletionWords>> CompletionWordsExt for O {
             where P: IsA<CompletionWords>
         {
             let f: &F = &*(f as *const F);
-            f(&CompletionWords::from_glib_borrow(this).unsafe_cast())
+            f(&CompletionWords::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::proposals-batch-size\0".as_ptr() as *const _,
-                Some(transmute(notify_proposals_batch_size_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_proposals_batch_size_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -271,12 +271,12 @@ impl<O: IsA<CompletionWords>> CompletionWordsExt for O {
             where P: IsA<CompletionWords>
         {
             let f: &F = &*(f as *const F);
-            f(&CompletionWords::from_glib_borrow(this).unsafe_cast())
+            f(&CompletionWords::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::scan-batch-size\0".as_ptr() as *const _,
-                Some(transmute(notify_scan_batch_size_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_scan_batch_size_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 }

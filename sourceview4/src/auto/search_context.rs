@@ -263,12 +263,12 @@ impl<O: IsA<SearchContext>> SearchContextExt for O {
             where P: IsA<SearchContext>
         {
             let f: &F = &*(f as *const F);
-            f(&SearchContext::from_glib_borrow(this).unsafe_cast())
+            f(&SearchContext::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::highlight\0".as_ptr() as *const _,
-                Some(transmute(notify_highlight_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_highlight_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -277,12 +277,12 @@ impl<O: IsA<SearchContext>> SearchContextExt for O {
             where P: IsA<SearchContext>
         {
             let f: &F = &*(f as *const F);
-            f(&SearchContext::from_glib_borrow(this).unsafe_cast())
+            f(&SearchContext::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::match-style\0".as_ptr() as *const _,
-                Some(transmute(notify_match_style_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_match_style_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -291,12 +291,12 @@ impl<O: IsA<SearchContext>> SearchContextExt for O {
             where P: IsA<SearchContext>
         {
             let f: &F = &*(f as *const F);
-            f(&SearchContext::from_glib_borrow(this).unsafe_cast())
+            f(&SearchContext::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::occurrences-count\0".as_ptr() as *const _,
-                Some(transmute(notify_occurrences_count_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_occurrences_count_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 
@@ -305,12 +305,12 @@ impl<O: IsA<SearchContext>> SearchContextExt for O {
             where P: IsA<SearchContext>
         {
             let f: &F = &*(f as *const F);
-            f(&SearchContext::from_glib_borrow(this).unsafe_cast())
+            f(&SearchContext::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
             connect_raw(self.as_ptr() as *mut _, b"notify::regex-error\0".as_ptr() as *const _,
-                Some(transmute(notify_regex_error_trampoline::<Self, F> as usize)), Box_::into_raw(f))
+                Some(transmute::<_, unsafe extern "C" fn()>(notify_regex_error_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
         }
     }
 }
