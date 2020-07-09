@@ -18,6 +18,7 @@ use gtk_sys;
 use std::boxed::Box as Box_;
 use std::fmt;
 use std::mem::transmute;
+use BracketMatchType;
 use ChangeCaseType;
 use Language;
 use Mark;
@@ -56,11 +57,7 @@ impl Buffer {
 pub const NONE_BUFFER: Option<&Buffer> = None;
 
 pub trait BufferExt: 'static {
-    fn backward_iter_to_source_mark(
-        &self,
-        iter: &mut gtk::TextIter,
-        category: Option<&str>,
-    ) -> bool;
+    //fn backward_iter_to_source_mark(&self, iter: /*Unimplemented*/gtk::TextIter, category: Option<&str>) -> bool;
 
     fn begin_not_undoable_action(&self);
 
@@ -88,8 +85,7 @@ pub trait BufferExt: 'static {
 
     fn ensure_highlight(&self, start: &gtk::TextIter, end: &gtk::TextIter);
 
-    fn forward_iter_to_source_mark(&self, iter: &mut gtk::TextIter, category: Option<&str>)
-        -> bool;
+    //fn forward_iter_to_source_mark(&self, iter: /*Unimplemented*/gtk::TextIter, category: Option<&str>) -> bool;
 
     fn get_context_classes_at_iter(&self, iter: &gtk::TextIter) -> Vec<GString>;
 
@@ -115,17 +111,9 @@ pub trait BufferExt: 'static {
 
     fn get_undo_manager(&self) -> Option<UndoManager>;
 
-    fn iter_backward_to_context_class_toggle(
-        &self,
-        iter: &mut gtk::TextIter,
-        context_class: &str,
-    ) -> bool;
+    //fn iter_backward_to_context_class_toggle(&self, iter: /*Unimplemented*/gtk::TextIter, context_class: &str) -> bool;
 
-    fn iter_forward_to_context_class_toggle(
-        &self,
-        iter: &mut gtk::TextIter,
-        context_class: &str,
-    ) -> bool;
+    //fn iter_forward_to_context_class_toggle(&self, iter: /*Unimplemented*/gtk::TextIter, context_class: &str) -> bool;
 
     fn iter_has_context_class(&self, iter: &gtk::TextIter, context_class: &str) -> bool;
 
@@ -167,6 +155,11 @@ pub trait BufferExt: 'static {
     fn get_property_can_redo(&self) -> bool;
 
     fn get_property_can_undo(&self) -> bool;
+
+    fn connect_bracket_matched<F: Fn(&Self, Option<&gtk::TextIter>, BracketMatchType) + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId;
 
     fn connect_highlight_updated<F: Fn(&Self, &gtk::TextIter, &gtk::TextIter) + 'static>(
         &self,
@@ -216,21 +209,9 @@ pub trait BufferExt: 'static {
 }
 
 impl<O: IsA<Buffer>> BufferExt for O {
-    fn backward_iter_to_source_mark(
-        &self,
-        iter: &mut gtk::TextIter,
-        category: Option<&str>,
-    ) -> bool {
-        unsafe {
-            from_glib(
-                gtk_source_sys::gtk_source_buffer_backward_iter_to_source_mark(
-                    self.as_ref().to_glib_none().0,
-                    iter.to_glib_none_mut().0,
-                    category.to_glib_none().0,
-                ),
-            )
-        }
-    }
+    //fn backward_iter_to_source_mark(&self, iter: /*Unimplemented*/gtk::TextIter, category: Option<&str>) -> bool {
+    //    unsafe { TODO: call gtk_source_sys:gtk_source_buffer_backward_iter_to_source_mark() }
+    //}
 
     fn begin_not_undoable_action(&self) {
         unsafe {
@@ -310,21 +291,9 @@ impl<O: IsA<Buffer>> BufferExt for O {
         }
     }
 
-    fn forward_iter_to_source_mark(
-        &self,
-        iter: &mut gtk::TextIter,
-        category: Option<&str>,
-    ) -> bool {
-        unsafe {
-            from_glib(
-                gtk_source_sys::gtk_source_buffer_forward_iter_to_source_mark(
-                    self.as_ref().to_glib_none().0,
-                    iter.to_glib_none_mut().0,
-                    category.to_glib_none().0,
-                ),
-            )
-        }
-    }
+    //fn forward_iter_to_source_mark(&self, iter: /*Unimplemented*/gtk::TextIter, category: Option<&str>) -> bool {
+    //    unsafe { TODO: call gtk_source_sys:gtk_source_buffer_forward_iter_to_source_mark() }
+    //}
 
     fn get_context_classes_at_iter(&self, iter: &gtk::TextIter) -> Vec<GString> {
         unsafe {
@@ -423,37 +392,13 @@ impl<O: IsA<Buffer>> BufferExt for O {
         }
     }
 
-    fn iter_backward_to_context_class_toggle(
-        &self,
-        iter: &mut gtk::TextIter,
-        context_class: &str,
-    ) -> bool {
-        unsafe {
-            from_glib(
-                gtk_source_sys::gtk_source_buffer_iter_backward_to_context_class_toggle(
-                    self.as_ref().to_glib_none().0,
-                    iter.to_glib_none_mut().0,
-                    context_class.to_glib_none().0,
-                ),
-            )
-        }
-    }
+    //fn iter_backward_to_context_class_toggle(&self, iter: /*Unimplemented*/gtk::TextIter, context_class: &str) -> bool {
+    //    unsafe { TODO: call gtk_source_sys:gtk_source_buffer_iter_backward_to_context_class_toggle() }
+    //}
 
-    fn iter_forward_to_context_class_toggle(
-        &self,
-        iter: &mut gtk::TextIter,
-        context_class: &str,
-    ) -> bool {
-        unsafe {
-            from_glib(
-                gtk_source_sys::gtk_source_buffer_iter_forward_to_context_class_toggle(
-                    self.as_ref().to_glib_none().0,
-                    iter.to_glib_none_mut().0,
-                    context_class.to_glib_none().0,
-                ),
-            )
-        }
-    }
+    //fn iter_forward_to_context_class_toggle(&self, iter: /*Unimplemented*/gtk::TextIter, context_class: &str) -> bool {
+    //    unsafe { TODO: call gtk_source_sys:gtk_source_buffer_iter_forward_to_context_class_toggle() }
+    //}
 
     fn iter_has_context_class(&self, iter: &gtk::TextIter, context_class: &str) -> bool {
         unsafe {
@@ -611,6 +556,43 @@ impl<O: IsA<Buffer>> BufferExt for O {
                 .get()
                 .expect("Return Value for property `can-undo` getter")
                 .unwrap()
+        }
+    }
+
+    fn connect_bracket_matched<F: Fn(&Self, Option<&gtk::TextIter>, BracketMatchType) + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn bracket_matched_trampoline<
+            P,
+            F: Fn(&P, Option<&gtk::TextIter>, BracketMatchType) + 'static,
+        >(
+            this: *mut gtk_source_sys::GtkSourceBuffer,
+            iter: *mut gtk_sys::GtkTextIter,
+            state: gtk_source_sys::GtkSourceBracketMatchType,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<Buffer>,
+        {
+            let f: &F = &*(f as *const F);
+            f(
+                &Buffer::from_glib_borrow(this).unsafe_cast_ref(),
+                Option::<gtk::TextIter>::from_glib_borrow(iter)
+                    .as_ref()
+                    .as_ref(),
+                from_glib(state),
+            )
+        }
+        unsafe {
+            let f: Box_<F> = Box_::new(f);
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"bracket-matched\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    bracket_matched_trampoline::<Self, F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 

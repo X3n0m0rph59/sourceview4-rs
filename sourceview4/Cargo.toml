@@ -10,23 +10,23 @@ documentation = "https://world.pages.gitlab.gnome.org/Rust/sourceview4-rs/source
 exclude = ["gir-files/*", "gir/"]
 
 [dependencies]
-libc = "0.2.66"
-bitflags = "1.2.1"
-cairo-rs = "0.8.1"
-glib = "0.9.3"
-gio = "0.8.1"
-gdk = "0.12.1"
-gdk-pixbuf = "0.8.0"
-pango = "0.8.0"
-glib-sys = "0.9.1"
-gtk-sys = "0.9.2"
-gobject-sys = "0.9.1"
-gio-sys = "0.9.1"
-gdk-sys = "0.9.1"
+libc = "0.2"
+bitflags = "1.2"
+cairo-rs = "0.9"
+glib = "0.10"
+gio = "0.9"
+gdk = "0.13"
+gdk-pixbuf = "0.9"
+pango = "0.9"
+glib-sys = "0.10"
+gtk-sys = "0.10"
+gobject-sys = "0.10"
+gio-sys = "0.10"
+gdk-sys = "0.10"
 
 
 [dependencies.gtk]
-version = "0.8.1"
+version = "0.9"
 features = [ "v3_22" ]
 
 [dependencies.sourceview4-sys]
