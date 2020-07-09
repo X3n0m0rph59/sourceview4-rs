@@ -33,7 +33,7 @@ use SmartHomeEndType;
 use SpaceDrawer;
 
 glib_wrapper! {
-    pub struct View(Object<gtk_source_sys::GtkSourceView, gtk_source_sys::GtkSourceViewClass, ViewClass>) @extends gtk::TextView, gtk::Container, gtk::Widget;
+    pub struct View(Object<gtk_source_sys::GtkSourceView, gtk_source_sys::GtkSourceViewClass, ViewClass>) @extends gtk::TextView, gtk::Container, gtk::Widget, @implements gtk::Buildable, gtk::Scrollable;
 
     match fn {
         get_type => || gtk_source_sys::gtk_source_view_get_type(),
@@ -135,6 +135,10 @@ pub struct ViewBuilder {
     vexpand_set: Option<bool>,
     visible: Option<bool>,
     width_request: Option<i32>,
+    hadjustment: Option<gtk::Adjustment>,
+    hscroll_policy: Option<gtk::ScrollablePolicy>,
+    vadjustment: Option<gtk::Adjustment>,
+    vscroll_policy: Option<gtk::ScrollablePolicy>,
 }
 
 impl ViewBuilder {
@@ -353,6 +357,18 @@ impl ViewBuilder {
         }
         if let Some(ref width_request) = self.width_request {
             properties.push(("width-request", width_request));
+        }
+        if let Some(ref hadjustment) = self.hadjustment {
+            properties.push(("hadjustment", hadjustment));
+        }
+        if let Some(ref hscroll_policy) = self.hscroll_policy {
+            properties.push(("hscroll-policy", hscroll_policy));
+        }
+        if let Some(ref vadjustment) = self.vadjustment {
+            properties.push(("vadjustment", vadjustment));
+        }
+        if let Some(ref vscroll_policy) = self.vscroll_policy {
+            properties.push(("vscroll-policy", vscroll_policy));
         }
         let ret = glib::Object::new(View::static_type(), &properties)
             .expect("object new")
@@ -703,6 +719,26 @@ impl ViewBuilder {
 
     pub fn width_request(mut self, width_request: i32) -> Self {
         self.width_request = Some(width_request);
+        self
+    }
+
+    pub fn hadjustment<P: IsA<gtk::Adjustment>>(mut self, hadjustment: &P) -> Self {
+        self.hadjustment = Some(hadjustment.clone().upcast());
+        self
+    }
+
+    pub fn hscroll_policy(mut self, hscroll_policy: gtk::ScrollablePolicy) -> Self {
+        self.hscroll_policy = Some(hscroll_policy);
+        self
+    }
+
+    pub fn vadjustment<P: IsA<gtk::Adjustment>>(mut self, vadjustment: &P) -> Self {
+        self.vadjustment = Some(vadjustment.clone().upcast());
+        self
+    }
+
+    pub fn vscroll_policy(mut self, vscroll_policy: gtk::ScrollablePolicy) -> Self {
+        self.vscroll_policy = Some(vscroll_policy);
         self
     }
 }

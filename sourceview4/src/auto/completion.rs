@@ -14,6 +14,7 @@ use glib::ToValue;
 use glib::Value;
 use glib_sys;
 use gobject_sys;
+use gtk;
 use gtk_source_sys;
 use std::boxed::Box as Box_;
 use std::fmt;
@@ -25,7 +26,7 @@ use CompletionProvider;
 use View;
 
 glib_wrapper! {
-    pub struct Completion(Object<gtk_source_sys::GtkSourceCompletion, gtk_source_sys::GtkSourceCompletionClass, CompletionClass>);
+    pub struct Completion(Object<gtk_source_sys::GtkSourceCompletion, gtk_source_sys::GtkSourceCompletionClass, CompletionClass>) @implements gtk::Buildable;
 
     match fn {
         get_type => || gtk_source_sys::gtk_source_completion_get_type(),

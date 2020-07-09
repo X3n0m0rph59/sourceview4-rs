@@ -51,7 +51,10 @@ generate = [
 
 manual = [
     "cairo.Context",
+    "Gtk.Actionable",
+    "Gtk.Adjustment",
     "Gtk.Align",
+    "Gtk.Buildable",
     "Gtk.TextBuffer",
     "Gtk.Window",
     "Gtk.Button",
@@ -62,6 +65,8 @@ manual = [
     "Gtk.Justification",
     "Gtk.PrintContext",
     "Gtk.ResizeMode",
+    "Gtk.Scrollable",
+    "Gtk.ScrollablePolicy",
     "Gtk.TextDirection",
     "Gtk.TextView",
     "Gtk.TextIter",
@@ -74,6 +79,7 @@ manual = [
     "Gtk.Widget",
     "Gtk.WrapMode",
     "GLib.Error",
+    "GLib.Quark",
     "GdkPixbuf.Pixbuf",
     "Gio.Icon",
     "Gio.File",

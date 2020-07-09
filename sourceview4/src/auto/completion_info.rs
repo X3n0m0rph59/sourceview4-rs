@@ -8,7 +8,7 @@ use gtk_source_sys;
 use std::fmt;
 
 glib_wrapper! {
-    pub struct CompletionInfo(Object<gtk_source_sys::GtkSourceCompletionInfo, gtk_source_sys::GtkSourceCompletionInfoClass, CompletionInfoClass>) @extends gtk::Window, gtk::Bin, gtk::Container, gtk::Widget;
+    pub struct CompletionInfo(Object<gtk_source_sys::GtkSourceCompletionInfo, gtk_source_sys::GtkSourceCompletionInfoClass, CompletionInfoClass>) @extends gtk::Window, gtk::Bin, gtk::Container, gtk::Widget, @implements gtk::Buildable;
 
     match fn {
         get_type => || gtk_source_sys::gtk_source_completion_info_get_type(),
