@@ -64,6 +64,8 @@ generate = [
     "GtkSource.SpaceTypeFlags",
     "GtkSource.BackgroundPatternType",
     "GtkSource.SmartHomeEndType",
+    "GtkSource.StyleSchemeChooser",
+    "GtkSource.ViewGutterPosition",
 ]
 
 manual = [

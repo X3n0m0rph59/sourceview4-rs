@@ -114,6 +114,10 @@ mod style_scheme;
 pub use self::style_scheme::StyleSchemeExt;
 pub use self::style_scheme::{StyleScheme, StyleSchemeClass, NONE_STYLE_SCHEME};
 
+mod style_scheme_chooser;
+pub use self::style_scheme_chooser::StyleSchemeChooserExt;
+pub use self::style_scheme_chooser::{StyleSchemeChooser, NONE_STYLE_SCHEME_CHOOSER};
+
 mod style_scheme_chooser_button;
 pub use self::style_scheme_chooser_button::{
     StyleSchemeChooserButton, StyleSchemeChooserButtonClass, NONE_STYLE_SCHEME_CHOOSER_BUTTON,
@@ -153,6 +157,7 @@ pub use self::enums::CompressionType;
 pub use self::enums::GutterRendererAlignmentMode;
 pub use self::enums::NewlineType;
 pub use self::enums::SmartHomeEndType;
+pub use self::enums::ViewGutterPosition;
 
 mod flags;
 pub use self::flags::CompletionActivation;
@@ -188,6 +193,7 @@ pub mod traits {
     pub use super::SearchContextExt;
     pub use super::SearchSettingsExt;
     pub use super::SpaceDrawerExt;
+    pub use super::StyleSchemeChooserExt;
     pub use super::StyleSchemeExt;
     pub use super::StyleSchemeManagerExt;
     pub use super::TagExt;
