@@ -1,3 +1,5 @@
+image: 'registry.fedoraproject.org/fedora:32'
+
 before_script:
   - dnf update -y --nogpgcheck
   - dnf install -y --nogpgcheck rust cargo git gtksourceview4-devel xorg-x11-server-Xvfb
@@ -14,7 +16,6 @@ build:
     - xvfb-run -a -s "-screen 0 1024x768x24" cargo test
 
 pages:
-  image: fedora:rawhide
   stage: deploy
   script:
     - cp ./GtkSource-4.gir ./gir-files/
