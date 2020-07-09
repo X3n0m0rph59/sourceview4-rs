@@ -10,10 +10,14 @@ use glib::signal::connect_raw;
 use glib::signal::SignalHandlerId;
 use glib::translate::*;
 use glib::StaticType;
+use glib::ToValue;
 use glib::Value;
 use glib_sys;
 use gobject_sys;
+use gtk;
 use gtk_source_sys;
+use gtk_sys;
+use libc;
 use std::boxed::Box as Box_;
 use std::fmt;
 use std::mem::transmute;
@@ -24,10 +28,110 @@ use CompletionProvider;
 use View;
 
 glib_wrapper! {
-    pub struct Completion(Object<gtk_source_sys::GtkSourceCompletion, gtk_source_sys::GtkSourceCompletionClass, CompletionClass>);
+    pub struct Completion(Object<gtk_source_sys::GtkSourceCompletion, gtk_source_sys::GtkSourceCompletionClass, CompletionClass>) @implements gtk::Buildable;
 
     match fn {
         get_type => || gtk_source_sys::gtk_source_completion_get_type(),
+    }
+}
+
+#[derive(Clone, Default)]
+pub struct CompletionBuilder {
+    accelerators: Option<u32>,
+    auto_complete_delay: Option<u32>,
+    proposal_page_size: Option<u32>,
+    provider_page_size: Option<u32>,
+    remember_info_visibility: Option<bool>,
+    select_on_show: Option<bool>,
+    show_headers: Option<bool>,
+    show_icons: Option<bool>,
+    view: Option<View>,
+}
+
+impl CompletionBuilder {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn build(self) -> Completion {
+        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
+        if let Some(ref accelerators) = self.accelerators {
+            properties.push(("accelerators", accelerators));
+        }
+        if let Some(ref auto_complete_delay) = self.auto_complete_delay {
+            properties.push(("auto-complete-delay", auto_complete_delay));
+        }
+        if let Some(ref proposal_page_size) = self.proposal_page_size {
+            properties.push(("proposal-page-size", proposal_page_size));
+        }
+        if let Some(ref provider_page_size) = self.provider_page_size {
+            properties.push(("provider-page-size", provider_page_size));
+        }
+        if let Some(ref remember_info_visibility) = self.remember_info_visibility {
+            properties.push(("remember-info-visibility", remember_info_visibility));
+        }
+        if let Some(ref select_on_show) = self.select_on_show {
+            properties.push(("select-on-show", select_on_show));
+        }
+        if let Some(ref show_headers) = self.show_headers {
+            properties.push(("show-headers", show_headers));
+        }
+        if let Some(ref show_icons) = self.show_icons {
+            properties.push(("show-icons", show_icons));
+        }
+        if let Some(ref view) = self.view {
+            properties.push(("view", view));
+        }
+        let ret = glib::Object::new(Completion::static_type(), &properties)
+            .expect("object new")
+            .downcast::<Completion>()
+            .expect("downcast");
+        ret
+    }
+
+    pub fn accelerators(mut self, accelerators: u32) -> Self {
+        self.accelerators = Some(accelerators);
+        self
+    }
+
+    pub fn auto_complete_delay(mut self, auto_complete_delay: u32) -> Self {
+        self.auto_complete_delay = Some(auto_complete_delay);
+        self
+    }
+
+    pub fn proposal_page_size(mut self, proposal_page_size: u32) -> Self {
+        self.proposal_page_size = Some(proposal_page_size);
+        self
+    }
+
+    pub fn provider_page_size(mut self, provider_page_size: u32) -> Self {
+        self.provider_page_size = Some(provider_page_size);
+        self
+    }
+
+    pub fn remember_info_visibility(mut self, remember_info_visibility: bool) -> Self {
+        self.remember_info_visibility = Some(remember_info_visibility);
+        self
+    }
+
+    pub fn select_on_show(mut self, select_on_show: bool) -> Self {
+        self.select_on_show = Some(select_on_show);
+        self
+    }
+
+    pub fn show_headers(mut self, show_headers: bool) -> Self {
+        self.show_headers = Some(show_headers);
+        self
+    }
+
+    pub fn show_icons(mut self, show_icons: bool) -> Self {
+        self.show_icons = Some(show_icons);
+        self
+    }
+
+    pub fn view<P: IsA<View>>(mut self, view: &P) -> Self {
+        self.view = Some(view.clone().upcast());
+        self
     }
 }
 
@@ -96,9 +200,19 @@ pub trait CompletionExt: 'static {
 
     fn emit_hide(&self);
 
-    //fn connect_move_cursor<Unsupported or ignored types>(&self, f: F) -> SignalHandlerId;
+    fn connect_move_cursor<F: Fn(&Self, gtk::ScrollStep, i32) + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId;
 
-    //fn connect_move_page<Unsupported or ignored types>(&self, f: F) -> SignalHandlerId;
+    fn emit_move_cursor(&self, step: gtk::ScrollStep, num: i32);
+
+    fn connect_move_page<F: Fn(&Self, gtk::ScrollStep, i32) + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId;
+
+    fn emit_move_page(&self, step: gtk::ScrollStep, num: i32);
 
     fn connect_populate_context<F: Fn(&Self, &CompletionContext) + 'static>(
         &self,
@@ -498,13 +612,85 @@ impl<O: IsA<Completion>> CompletionExt for O {
         };
     }
 
-    //fn connect_move_cursor<Unsupported or ignored types>(&self, f: F) -> SignalHandlerId {
-    //    Ignored step: Gtk.ScrollStep
-    //}
+    fn connect_move_cursor<F: Fn(&Self, gtk::ScrollStep, i32) + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn move_cursor_trampoline<P, F: Fn(&P, gtk::ScrollStep, i32) + 'static>(
+            this: *mut gtk_source_sys::GtkSourceCompletion,
+            step: gtk_sys::GtkScrollStep,
+            num: libc::c_int,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<Completion>,
+        {
+            let f: &F = &*(f as *const F);
+            f(
+                &Completion::from_glib_borrow(this).unsafe_cast_ref(),
+                from_glib(step),
+                num,
+            )
+        }
+        unsafe {
+            let f: Box_<F> = Box_::new(f);
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"move-cursor\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    move_cursor_trampoline::<Self, F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
+        }
+    }
 
-    //fn connect_move_page<Unsupported or ignored types>(&self, f: F) -> SignalHandlerId {
-    //    Ignored step: Gtk.ScrollStep
-    //}
+    fn emit_move_cursor(&self, step: gtk::ScrollStep, num: i32) {
+        let _ = unsafe {
+            glib::Object::from_glib_borrow(self.as_ptr() as *mut gobject_sys::GObject)
+                .emit("move-cursor", &[&step, &num])
+                .unwrap()
+        };
+    }
+
+    fn connect_move_page<F: Fn(&Self, gtk::ScrollStep, i32) + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn move_page_trampoline<P, F: Fn(&P, gtk::ScrollStep, i32) + 'static>(
+            this: *mut gtk_source_sys::GtkSourceCompletion,
+            step: gtk_sys::GtkScrollStep,
+            num: libc::c_int,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<Completion>,
+        {
+            let f: &F = &*(f as *const F);
+            f(
+                &Completion::from_glib_borrow(this).unsafe_cast_ref(),
+                from_glib(step),
+                num,
+            )
+        }
+        unsafe {
+            let f: Box_<F> = Box_::new(f);
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"move-page\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    move_page_trampoline::<Self, F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
+        }
+    }
+
+    fn emit_move_page(&self, step: gtk::ScrollStep, num: i32) {
+        let _ = unsafe {
+            glib::Object::from_glib_borrow(self.as_ptr() as *mut gobject_sys::GObject)
+                .emit("move-page", &[&step, &num])
+                .unwrap()
+        };
+    }
 
     fn connect_populate_context<F: Fn(&Self, &CompletionContext) + 'static>(
         &self,

@@ -8,6 +8,8 @@ use glib::signal::connect_raw;
 use glib::signal::SignalHandlerId;
 use glib::translate::*;
 use glib::GString;
+use glib::StaticType;
+use glib::ToValue;
 use glib_sys;
 use gtk_source_sys;
 use std::boxed::Box as Box_;
@@ -32,6 +34,70 @@ impl SearchSettings {
 impl Default for SearchSettings {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+#[derive(Clone, Default)]
+pub struct SearchSettingsBuilder {
+    at_word_boundaries: Option<bool>,
+    case_sensitive: Option<bool>,
+    regex_enabled: Option<bool>,
+    search_text: Option<String>,
+    wrap_around: Option<bool>,
+}
+
+impl SearchSettingsBuilder {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn build(self) -> SearchSettings {
+        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
+        if let Some(ref at_word_boundaries) = self.at_word_boundaries {
+            properties.push(("at-word-boundaries", at_word_boundaries));
+        }
+        if let Some(ref case_sensitive) = self.case_sensitive {
+            properties.push(("case-sensitive", case_sensitive));
+        }
+        if let Some(ref regex_enabled) = self.regex_enabled {
+            properties.push(("regex-enabled", regex_enabled));
+        }
+        if let Some(ref search_text) = self.search_text {
+            properties.push(("search-text", search_text));
+        }
+        if let Some(ref wrap_around) = self.wrap_around {
+            properties.push(("wrap-around", wrap_around));
+        }
+        let ret = glib::Object::new(SearchSettings::static_type(), &properties)
+            .expect("object new")
+            .downcast::<SearchSettings>()
+            .expect("downcast");
+        ret
+    }
+
+    pub fn at_word_boundaries(mut self, at_word_boundaries: bool) -> Self {
+        self.at_word_boundaries = Some(at_word_boundaries);
+        self
+    }
+
+    pub fn case_sensitive(mut self, case_sensitive: bool) -> Self {
+        self.case_sensitive = Some(case_sensitive);
+        self
+    }
+
+    pub fn regex_enabled(mut self, regex_enabled: bool) -> Self {
+        self.regex_enabled = Some(regex_enabled);
+        self
+    }
+
+    pub fn search_text(mut self, search_text: &str) -> Self {
+        self.search_text = Some(search_text.to_string());
+        self
+    }
+
+    pub fn wrap_around(mut self, wrap_around: bool) -> Self {
+        self.wrap_around = Some(wrap_around);
+        self
     }
 }
 

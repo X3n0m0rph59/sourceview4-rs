@@ -3,8 +3,11 @@
 // DO NOT EDIT
 
 use gio;
+use glib::object::Cast;
 use glib::object::IsA;
 use glib::translate::*;
+use glib::StaticType;
+use glib::ToValue;
 use gtk_source_sys;
 use std::fmt;
 use Buffer;
@@ -45,6 +48,61 @@ impl FileLoader {
                 stream.as_ref().to_glib_none().0,
             ))
         }
+    }
+}
+
+#[derive(Clone, Default)]
+pub struct FileLoaderBuilder {
+    buffer: Option<Buffer>,
+    file: Option<File>,
+    input_stream: Option<gio::InputStream>,
+    location: Option<gio::File>,
+}
+
+impl FileLoaderBuilder {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn build(self) -> FileLoader {
+        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
+        if let Some(ref buffer) = self.buffer {
+            properties.push(("buffer", buffer));
+        }
+        if let Some(ref file) = self.file {
+            properties.push(("file", file));
+        }
+        if let Some(ref input_stream) = self.input_stream {
+            properties.push(("input-stream", input_stream));
+        }
+        if let Some(ref location) = self.location {
+            properties.push(("location", location));
+        }
+        let ret = glib::Object::new(FileLoader::static_type(), &properties)
+            .expect("object new")
+            .downcast::<FileLoader>()
+            .expect("downcast");
+        ret
+    }
+
+    pub fn buffer<P: IsA<Buffer>>(mut self, buffer: &P) -> Self {
+        self.buffer = Some(buffer.clone().upcast());
+        self
+    }
+
+    pub fn file<P: IsA<File>>(mut self, file: &P) -> Self {
+        self.file = Some(file.clone().upcast());
+        self
+    }
+
+    pub fn input_stream<P: IsA<gio::InputStream>>(mut self, input_stream: &P) -> Self {
+        self.input_stream = Some(input_stream.clone().upcast());
+        self
+    }
+
+    pub fn location<P: IsA<gio::File>>(mut self, location: &P) -> Self {
+        self.location = Some(location.clone().upcast());
+        self
     }
 }
 

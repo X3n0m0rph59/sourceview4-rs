@@ -9,6 +9,8 @@ use glib::object::IsA;
 use glib::signal::connect_raw;
 use glib::signal::SignalHandlerId;
 use glib::translate::*;
+use glib::StaticType;
+use glib::ToValue;
 use glib_sys;
 use gtk_source_sys;
 use std::boxed::Box as Box_;
@@ -35,6 +37,43 @@ impl SpaceDrawer {
 impl Default for SpaceDrawer {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+#[derive(Clone, Default)]
+pub struct SpaceDrawerBuilder {
+    enable_matrix: Option<bool>,
+    matrix: Option<glib::Variant>,
+}
+
+impl SpaceDrawerBuilder {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn build(self) -> SpaceDrawer {
+        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
+        if let Some(ref enable_matrix) = self.enable_matrix {
+            properties.push(("enable-matrix", enable_matrix));
+        }
+        if let Some(ref matrix) = self.matrix {
+            properties.push(("matrix", matrix));
+        }
+        let ret = glib::Object::new(SpaceDrawer::static_type(), &properties)
+            .expect("object new")
+            .downcast::<SpaceDrawer>()
+            .expect("downcast");
+        ret
+    }
+
+    pub fn enable_matrix(mut self, enable_matrix: bool) -> Self {
+        self.enable_matrix = Some(enable_matrix);
+        self
+    }
+
+    pub fn matrix(mut self, matrix: &glib::Variant) -> Self {
+        self.matrix = Some(matrix.clone());
+        self
     }
 }
 

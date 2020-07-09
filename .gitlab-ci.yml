@@ -17,6 +17,7 @@ pages:
   image: fedora:rawhide
   stage: deploy
   script:
+    - cp ./GtkSource-4.gir ./gir-files/
     - cargo run --release -- -c ./sourceview4/Gir.toml -d ./gir-files --doc-target-path docs.md -m doc
     - cargo install rustdoc-stripper
     - /root/.cargo/bin/rustdoc-stripper -g -o ./sourceview4/docs.md

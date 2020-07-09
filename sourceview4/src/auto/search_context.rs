@@ -10,6 +10,8 @@ use glib::object::IsA;
 use glib::signal::connect_raw;
 use glib::signal::SignalHandlerId;
 use glib::translate::*;
+use glib::StaticType;
+use glib::ToValue;
 use glib_sys;
 use gobject_sys;
 use gtk;
@@ -44,6 +46,61 @@ impl SearchContext {
                 settings.map(|p| p.as_ref()).to_glib_none().0,
             ))
         }
+    }
+}
+
+#[derive(Clone, Default)]
+pub struct SearchContextBuilder {
+    buffer: Option<Buffer>,
+    highlight: Option<bool>,
+    match_style: Option<Style>,
+    settings: Option<SearchSettings>,
+}
+
+impl SearchContextBuilder {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn build(self) -> SearchContext {
+        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
+        if let Some(ref buffer) = self.buffer {
+            properties.push(("buffer", buffer));
+        }
+        if let Some(ref highlight) = self.highlight {
+            properties.push(("highlight", highlight));
+        }
+        if let Some(ref match_style) = self.match_style {
+            properties.push(("match-style", match_style));
+        }
+        if let Some(ref settings) = self.settings {
+            properties.push(("settings", settings));
+        }
+        let ret = glib::Object::new(SearchContext::static_type(), &properties)
+            .expect("object new")
+            .downcast::<SearchContext>()
+            .expect("downcast");
+        ret
+    }
+
+    pub fn buffer<P: IsA<Buffer>>(mut self, buffer: &P) -> Self {
+        self.buffer = Some(buffer.clone().upcast());
+        self
+    }
+
+    pub fn highlight(mut self, highlight: bool) -> Self {
+        self.highlight = Some(highlight);
+        self
+    }
+
+    pub fn match_style(mut self, match_style: &Style) -> Self {
+        self.match_style = Some(match_style.clone());
+        self
+    }
+
+    pub fn settings<P: IsA<SearchSettings>>(mut self, settings: &P) -> Self {
+        self.settings = Some(settings.clone().upcast());
+        self
     }
 }
 

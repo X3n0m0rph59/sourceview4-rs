@@ -8,6 +8,8 @@ use glib::object::IsA;
 use glib::signal::connect_raw;
 use glib::signal::SignalHandlerId;
 use glib::translate::*;
+use glib::StaticType;
+use glib::ToValue;
 use glib_sys;
 use gtk_source_sys;
 use std::boxed::Box as Box_;
@@ -52,6 +54,88 @@ impl FileSaver {
                 target_location.as_ref().to_glib_none().0,
             ))
         }
+    }
+}
+
+#[derive(Clone, Default)]
+pub struct FileSaverBuilder {
+    buffer: Option<Buffer>,
+    compression_type: Option<CompressionType>,
+    encoding: Option<Encoding>,
+    file: Option<File>,
+    flags: Option<FileSaverFlags>,
+    location: Option<gio::File>,
+    newline_type: Option<NewlineType>,
+}
+
+impl FileSaverBuilder {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn build(self) -> FileSaver {
+        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
+        if let Some(ref buffer) = self.buffer {
+            properties.push(("buffer", buffer));
+        }
+        if let Some(ref compression_type) = self.compression_type {
+            properties.push(("compression-type", compression_type));
+        }
+        if let Some(ref encoding) = self.encoding {
+            properties.push(("encoding", encoding));
+        }
+        if let Some(ref file) = self.file {
+            properties.push(("file", file));
+        }
+        if let Some(ref flags) = self.flags {
+            properties.push(("flags", flags));
+        }
+        if let Some(ref location) = self.location {
+            properties.push(("location", location));
+        }
+        if let Some(ref newline_type) = self.newline_type {
+            properties.push(("newline-type", newline_type));
+        }
+        let ret = glib::Object::new(FileSaver::static_type(), &properties)
+            .expect("object new")
+            .downcast::<FileSaver>()
+            .expect("downcast");
+        ret
+    }
+
+    pub fn buffer<P: IsA<Buffer>>(mut self, buffer: &P) -> Self {
+        self.buffer = Some(buffer.clone().upcast());
+        self
+    }
+
+    pub fn compression_type(mut self, compression_type: CompressionType) -> Self {
+        self.compression_type = Some(compression_type);
+        self
+    }
+
+    pub fn encoding(mut self, encoding: &Encoding) -> Self {
+        self.encoding = Some(encoding.clone());
+        self
+    }
+
+    pub fn file<P: IsA<File>>(mut self, file: &P) -> Self {
+        self.file = Some(file.clone().upcast());
+        self
+    }
+
+    pub fn flags(mut self, flags: FileSaverFlags) -> Self {
+        self.flags = Some(flags);
+        self
+    }
+
+    pub fn location<P: IsA<gio::File>>(mut self, location: &P) -> Self {
+        self.location = Some(location.clone().upcast());
+        self
+    }
+
+    pub fn newline_type(mut self, newline_type: NewlineType) -> Self {
+        self.newline_type = Some(newline_type);
+        self
     }
 }
 

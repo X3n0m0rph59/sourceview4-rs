@@ -3,14 +3,17 @@
 // DO NOT EDIT
 
 mod buffer;
+pub use self::buffer::BufferBuilder;
 pub use self::buffer::BufferExt;
 pub use self::buffer::{Buffer, BufferClass, NONE_BUFFER};
 
 mod completion;
+pub use self::completion::CompletionBuilder;
 pub use self::completion::CompletionExt;
 pub use self::completion::{Completion, CompletionClass, NONE_COMPLETION};
 
 mod completion_context;
+pub use self::completion_context::CompletionContextBuilder;
 pub use self::completion_context::CompletionContextExt;
 pub use self::completion_context::{
     CompletionContext, CompletionContextClass, NONE_COMPLETION_CONTEXT,
@@ -20,6 +23,7 @@ mod completion_info;
 pub use self::completion_info::{CompletionInfo, CompletionInfoClass, NONE_COMPLETION_INFO};
 
 mod completion_item;
+pub use self::completion_item::CompletionItemBuilder;
 pub use self::completion_item::CompletionItemExt;
 pub use self::completion_item::{CompletionItem, CompletionItemClass, NONE_COMPLETION_ITEM};
 
@@ -32,22 +36,27 @@ pub use self::completion_provider::CompletionProviderExt;
 pub use self::completion_provider::{CompletionProvider, NONE_COMPLETION_PROVIDER};
 
 mod completion_words;
+pub use self::completion_words::CompletionWordsBuilder;
 pub use self::completion_words::CompletionWordsExt;
 pub use self::completion_words::{CompletionWords, CompletionWordsClass, NONE_COMPLETION_WORDS};
 
 mod file;
+pub use self::file::FileBuilder;
 pub use self::file::FileExt;
 pub use self::file::{File, FileClass, NONE_FILE};
 
 mod file_loader;
+pub use self::file_loader::FileLoaderBuilder;
 pub use self::file_loader::FileLoaderExt;
 pub use self::file_loader::{FileLoader, FileLoaderClass, NONE_FILE_LOADER};
 
 mod file_saver;
+pub use self::file_saver::FileSaverBuilder;
 pub use self::file_saver::FileSaverExt;
 pub use self::file_saver::{FileSaver, FileSaverClass, NONE_FILE_SAVER};
 
 mod gutter;
+pub use self::gutter::GutterBuilder;
 pub use self::gutter::GutterExt;
 pub use self::gutter::{Gutter, GutterClass, NONE_GUTTER};
 
@@ -56,12 +65,14 @@ pub use self::gutter_renderer::GutterRendererExt;
 pub use self::gutter_renderer::{GutterRenderer, GutterRendererClass, NONE_GUTTER_RENDERER};
 
 mod gutter_renderer_pixbuf;
+pub use self::gutter_renderer_pixbuf::GutterRendererPixbufBuilder;
 pub use self::gutter_renderer_pixbuf::GutterRendererPixbufExt;
 pub use self::gutter_renderer_pixbuf::{
     GutterRendererPixbuf, GutterRendererPixbufClass, NONE_GUTTER_RENDERER_PIXBUF,
 };
 
 mod gutter_renderer_text;
+pub use self::gutter_renderer_text::GutterRendererTextBuilder;
 pub use self::gutter_renderer_text::GutterRendererTextExt;
 pub use self::gutter_renderer_text::{
     GutterRendererText, GutterRendererTextClass, NONE_GUTTER_RENDERER_TEXT,
@@ -72,47 +83,62 @@ pub use self::language::LanguageExt;
 pub use self::language::{Language, LanguageClass, NONE_LANGUAGE};
 
 mod language_manager;
+pub use self::language_manager::LanguageManagerBuilder;
 pub use self::language_manager::LanguageManagerExt;
 pub use self::language_manager::{LanguageManager, LanguageManagerClass, NONE_LANGUAGE_MANAGER};
 
 mod map;
+pub use self::map::MapBuilder;
 pub use self::map::MapExt;
 pub use self::map::{Map, MapClass, NONE_MAP};
 
 mod mark;
+pub use self::mark::MarkBuilder;
 pub use self::mark::MarkExt;
 pub use self::mark::{Mark, MarkClass, NONE_MARK};
 
 mod mark_attributes;
+pub use self::mark_attributes::MarkAttributesBuilder;
 pub use self::mark_attributes::MarkAttributesExt;
 pub use self::mark_attributes::{MarkAttributes, MarkAttributesClass, NONE_MARK_ATTRIBUTES};
 
 mod print_compositor;
+pub use self::print_compositor::PrintCompositorBuilder;
 pub use self::print_compositor::PrintCompositorExt;
 pub use self::print_compositor::{PrintCompositor, PrintCompositorClass, NONE_PRINT_COMPOSITOR};
 
 mod region;
+pub use self::region::RegionBuilder;
 pub use self::region::RegionExt;
 pub use self::region::{Region, RegionClass, NONE_REGION};
 
 mod search_context;
+pub use self::search_context::SearchContextBuilder;
 pub use self::search_context::SearchContextExt;
 pub use self::search_context::{SearchContext, SearchContextClass, NONE_SEARCH_CONTEXT};
 
 mod search_settings;
+pub use self::search_settings::SearchSettingsBuilder;
 pub use self::search_settings::SearchSettingsExt;
 pub use self::search_settings::{SearchSettings, SearchSettingsClass, NONE_SEARCH_SETTINGS};
 
 mod space_drawer;
+pub use self::space_drawer::SpaceDrawerBuilder;
 pub use self::space_drawer::SpaceDrawerExt;
 pub use self::space_drawer::{SpaceDrawer, SpaceDrawerClass, NONE_SPACE_DRAWER};
 
 mod style;
+pub use self::style::StyleBuilder;
 pub use self::style::{Style, StyleClass};
 
 mod style_scheme;
+pub use self::style_scheme::StyleSchemeBuilder;
 pub use self::style_scheme::StyleSchemeExt;
 pub use self::style_scheme::{StyleScheme, StyleSchemeClass, NONE_STYLE_SCHEME};
+
+mod style_scheme_chooser;
+pub use self::style_scheme_chooser::StyleSchemeChooserExt;
+pub use self::style_scheme_chooser::{StyleSchemeChooser, NONE_STYLE_SCHEME_CHOOSER};
 
 mod style_scheme_chooser_button;
 pub use self::style_scheme_chooser_button::{
@@ -125,12 +151,14 @@ pub use self::style_scheme_chooser_widget::{
 };
 
 mod style_scheme_manager;
+pub use self::style_scheme_manager::StyleSchemeManagerBuilder;
 pub use self::style_scheme_manager::StyleSchemeManagerExt;
 pub use self::style_scheme_manager::{
     StyleSchemeManager, StyleSchemeManagerClass, NONE_STYLE_SCHEME_MANAGER,
 };
 
 mod tag;
+pub use self::tag::TagBuilder;
 pub use self::tag::TagExt;
 pub use self::tag::{Tag, TagClass, NONE_TAG};
 
@@ -139,6 +167,7 @@ pub use self::undo_manager::UndoManagerExt;
 pub use self::undo_manager::{UndoManager, NONE_UNDO_MANAGER};
 
 mod view;
+pub use self::view::ViewBuilder;
 pub use self::view::ViewExt;
 pub use self::view::{View, ViewClass, NONE_VIEW};
 
@@ -149,10 +178,14 @@ mod enums;
 pub use self::enums::BackgroundPatternType;
 pub use self::enums::BracketMatchType;
 pub use self::enums::ChangeCaseType;
+pub use self::enums::CompletionError;
 pub use self::enums::CompressionType;
+pub use self::enums::FileLoaderError;
+pub use self::enums::FileSaverError;
 pub use self::enums::GutterRendererAlignmentMode;
 pub use self::enums::NewlineType;
 pub use self::enums::SmartHomeEndType;
+pub use self::enums::ViewGutterPosition;
 
 mod flags;
 pub use self::flags::CompletionActivation;
@@ -188,6 +221,7 @@ pub mod traits {
     pub use super::SearchContextExt;
     pub use super::SearchSettingsExt;
     pub use super::SpaceDrawerExt;
+    pub use super::StyleSchemeChooserExt;
     pub use super::StyleSchemeExt;
     pub use super::StyleSchemeManagerExt;
     pub use super::TagExt;
