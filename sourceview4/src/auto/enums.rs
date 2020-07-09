@@ -2,11 +2,13 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
+use glib::error::ErrorDomain;
 use glib::translate::*;
 use glib::value::FromValue;
 use glib::value::FromValueOptional;
 use glib::value::SetValue;
 use glib::value::Value;
+use glib::Quark;
 use glib::StaticType;
 use glib::Type;
 use gobject_sys;
@@ -247,6 +249,100 @@ impl SetValue for ChangeCaseType {
 
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
+pub enum CompletionError {
+    AlreadyBound,
+    NotBound,
+    #[doc(hidden)]
+    __Unknown(i32),
+}
+
+impl fmt::Display for CompletionError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "CompletionError::{}",
+            match *self {
+                CompletionError::AlreadyBound => "AlreadyBound",
+                CompletionError::NotBound => "NotBound",
+                _ => "Unknown",
+            }
+        )
+    }
+}
+
+#[doc(hidden)]
+impl ToGlib for CompletionError {
+    type GlibType = gtk_source_sys::GtkSourceCompletionError;
+
+    fn to_glib(&self) -> gtk_source_sys::GtkSourceCompletionError {
+        match *self {
+            CompletionError::AlreadyBound => {
+                gtk_source_sys::GTK_SOURCE_COMPLETION_ERROR_ALREADY_BOUND
+            }
+            CompletionError::NotBound => gtk_source_sys::GTK_SOURCE_COMPLETION_ERROR_NOT_BOUND,
+            CompletionError::__Unknown(value) => value,
+        }
+    }
+}
+
+#[doc(hidden)]
+impl FromGlib<gtk_source_sys::GtkSourceCompletionError> for CompletionError {
+    fn from_glib(value: gtk_source_sys::GtkSourceCompletionError) -> Self {
+        skip_assert_initialized!();
+        match value {
+            0 => CompletionError::AlreadyBound,
+            1 => CompletionError::NotBound,
+            value => CompletionError::__Unknown(value),
+        }
+    }
+}
+
+impl ErrorDomain for CompletionError {
+    fn domain() -> Quark {
+        skip_assert_initialized!();
+        unsafe { from_glib(gtk_source_sys::gtk_source_completion_error_quark()) }
+    }
+
+    fn code(self) -> i32 {
+        self.to_glib()
+    }
+
+    fn from(code: i32) -> Option<Self> {
+        skip_assert_initialized!();
+        match code {
+            0 => Some(CompletionError::AlreadyBound),
+            1 => Some(CompletionError::NotBound),
+            value => Some(CompletionError::__Unknown(value)),
+        }
+    }
+}
+
+impl StaticType for CompletionError {
+    fn static_type() -> Type {
+        unsafe { from_glib(gtk_source_sys::gtk_source_completion_error_get_type()) }
+    }
+}
+
+impl<'a> FromValueOptional<'a> for CompletionError {
+    unsafe fn from_value_optional(value: &Value) -> Option<Self> {
+        Some(FromValue::from_value(value))
+    }
+}
+
+impl<'a> FromValue<'a> for CompletionError {
+    unsafe fn from_value(value: &Value) -> Self {
+        from_glib(gobject_sys::g_value_get_enum(value.to_glib_none().0))
+    }
+}
+
+impl SetValue for CompletionError {
+    unsafe fn set_value(value: &mut Value, this: &Self) {
+        gobject_sys::g_value_set_enum(value.to_glib_none_mut().0, this.to_glib())
+    }
+}
+
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
+#[non_exhaustive]
 pub enum CompressionType {
     None,
     Gzip,
@@ -312,6 +408,203 @@ impl<'a> FromValue<'a> for CompressionType {
 }
 
 impl SetValue for CompressionType {
+    unsafe fn set_value(value: &mut Value, this: &Self) {
+        gobject_sys::g_value_set_enum(value.to_glib_none_mut().0, this.to_glib())
+    }
+}
+
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
+#[non_exhaustive]
+pub enum FileLoaderError {
+    TooBig,
+    EncodingAutoDetectionFailed,
+    ConversionFallback,
+    #[doc(hidden)]
+    __Unknown(i32),
+}
+
+impl fmt::Display for FileLoaderError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "FileLoaderError::{}",
+            match *self {
+                FileLoaderError::TooBig => "TooBig",
+                FileLoaderError::EncodingAutoDetectionFailed => "EncodingAutoDetectionFailed",
+                FileLoaderError::ConversionFallback => "ConversionFallback",
+                _ => "Unknown",
+            }
+        )
+    }
+}
+
+#[doc(hidden)]
+impl ToGlib for FileLoaderError {
+    type GlibType = gtk_source_sys::GtkSourceFileLoaderError;
+
+    fn to_glib(&self) -> gtk_source_sys::GtkSourceFileLoaderError {
+        match *self {
+            FileLoaderError::TooBig => gtk_source_sys::GTK_SOURCE_FILE_LOADER_ERROR_TOO_BIG,
+            FileLoaderError::EncodingAutoDetectionFailed => {
+                gtk_source_sys::GTK_SOURCE_FILE_LOADER_ERROR_ENCODING_AUTO_DETECTION_FAILED
+            }
+            FileLoaderError::ConversionFallback => {
+                gtk_source_sys::GTK_SOURCE_FILE_LOADER_ERROR_CONVERSION_FALLBACK
+            }
+            FileLoaderError::__Unknown(value) => value,
+        }
+    }
+}
+
+#[doc(hidden)]
+impl FromGlib<gtk_source_sys::GtkSourceFileLoaderError> for FileLoaderError {
+    fn from_glib(value: gtk_source_sys::GtkSourceFileLoaderError) -> Self {
+        skip_assert_initialized!();
+        match value {
+            0 => FileLoaderError::TooBig,
+            1 => FileLoaderError::EncodingAutoDetectionFailed,
+            2 => FileLoaderError::ConversionFallback,
+            value => FileLoaderError::__Unknown(value),
+        }
+    }
+}
+
+impl ErrorDomain for FileLoaderError {
+    fn domain() -> Quark {
+        skip_assert_initialized!();
+        unsafe { from_glib(gtk_source_sys::gtk_source_file_loader_error_quark()) }
+    }
+
+    fn code(self) -> i32 {
+        self.to_glib()
+    }
+
+    fn from(code: i32) -> Option<Self> {
+        skip_assert_initialized!();
+        match code {
+            0 => Some(FileLoaderError::TooBig),
+            1 => Some(FileLoaderError::EncodingAutoDetectionFailed),
+            2 => Some(FileLoaderError::ConversionFallback),
+            value => Some(FileLoaderError::__Unknown(value)),
+        }
+    }
+}
+
+impl StaticType for FileLoaderError {
+    fn static_type() -> Type {
+        unsafe { from_glib(gtk_source_sys::gtk_source_file_loader_error_get_type()) }
+    }
+}
+
+impl<'a> FromValueOptional<'a> for FileLoaderError {
+    unsafe fn from_value_optional(value: &Value) -> Option<Self> {
+        Some(FromValue::from_value(value))
+    }
+}
+
+impl<'a> FromValue<'a> for FileLoaderError {
+    unsafe fn from_value(value: &Value) -> Self {
+        from_glib(gobject_sys::g_value_get_enum(value.to_glib_none().0))
+    }
+}
+
+impl SetValue for FileLoaderError {
+    unsafe fn set_value(value: &mut Value, this: &Self) {
+        gobject_sys::g_value_set_enum(value.to_glib_none_mut().0, this.to_glib())
+    }
+}
+
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
+#[non_exhaustive]
+pub enum FileSaverError {
+    InvalidChars,
+    ExternallyModified,
+    #[doc(hidden)]
+    __Unknown(i32),
+}
+
+impl fmt::Display for FileSaverError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "FileSaverError::{}",
+            match *self {
+                FileSaverError::InvalidChars => "InvalidChars",
+                FileSaverError::ExternallyModified => "ExternallyModified",
+                _ => "Unknown",
+            }
+        )
+    }
+}
+
+#[doc(hidden)]
+impl ToGlib for FileSaverError {
+    type GlibType = gtk_source_sys::GtkSourceFileSaverError;
+
+    fn to_glib(&self) -> gtk_source_sys::GtkSourceFileSaverError {
+        match *self {
+            FileSaverError::InvalidChars => {
+                gtk_source_sys::GTK_SOURCE_FILE_SAVER_ERROR_INVALID_CHARS
+            }
+            FileSaverError::ExternallyModified => {
+                gtk_source_sys::GTK_SOURCE_FILE_SAVER_ERROR_EXTERNALLY_MODIFIED
+            }
+            FileSaverError::__Unknown(value) => value,
+        }
+    }
+}
+
+#[doc(hidden)]
+impl FromGlib<gtk_source_sys::GtkSourceFileSaverError> for FileSaverError {
+    fn from_glib(value: gtk_source_sys::GtkSourceFileSaverError) -> Self {
+        skip_assert_initialized!();
+        match value {
+            0 => FileSaverError::InvalidChars,
+            1 => FileSaverError::ExternallyModified,
+            value => FileSaverError::__Unknown(value),
+        }
+    }
+}
+
+impl ErrorDomain for FileSaverError {
+    fn domain() -> Quark {
+        skip_assert_initialized!();
+        unsafe { from_glib(gtk_source_sys::gtk_source_file_saver_error_quark()) }
+    }
+
+    fn code(self) -> i32 {
+        self.to_glib()
+    }
+
+    fn from(code: i32) -> Option<Self> {
+        skip_assert_initialized!();
+        match code {
+            0 => Some(FileSaverError::InvalidChars),
+            1 => Some(FileSaverError::ExternallyModified),
+            value => Some(FileSaverError::__Unknown(value)),
+        }
+    }
+}
+
+impl StaticType for FileSaverError {
+    fn static_type() -> Type {
+        unsafe { from_glib(gtk_source_sys::gtk_source_file_saver_error_get_type()) }
+    }
+}
+
+impl<'a> FromValueOptional<'a> for FileSaverError {
+    unsafe fn from_value_optional(value: &Value) -> Option<Self> {
+        Some(FromValue::from_value(value))
+    }
+}
+
+impl<'a> FromValue<'a> for FileSaverError {
+    unsafe fn from_value(value: &Value) -> Self {
+        from_glib(gobject_sys::g_value_get_enum(value.to_glib_none().0))
+    }
+}
+
+impl SetValue for FileSaverError {
     unsafe fn set_value(value: &mut Value, this: &Self) {
         gobject_sys::g_value_set_enum(value.to_glib_none_mut().0, this.to_glib())
     }

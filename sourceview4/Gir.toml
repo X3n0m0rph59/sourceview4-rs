@@ -24,6 +24,7 @@ external_libraries = [
 generate = [
     "GtkSource.Buffer",
     "GtkSource.CompletionContext",
+    "GtkSource.CompletionError",
     "GtkSource.StyleSchemeChooserButton",
     "GtkSource.StyleSchemeChooserWidget",
     "GtkSource.Map",
@@ -32,7 +33,9 @@ generate = [
     "GtkSource.CompletionItem",
     "GtkSource.CompletionWords",
     "GtkSource.File",
+    "GtkSource.FileLoaderError",
     "GtkSource.FileSaver",
+    "GtkSource.FileSaverError",
     "GtkSource.Gutter",
     "GtkSource.Language",
     "GtkSource.LanguageManager",
