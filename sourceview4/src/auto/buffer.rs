@@ -18,7 +18,6 @@ use gtk_sys;
 use std::boxed::Box as Box_;
 use std::fmt;
 use std::mem::transmute;
-use BracketMatchType;
 use ChangeCaseType;
 use Language;
 use Mark;
@@ -168,11 +167,6 @@ pub trait BufferExt: 'static {
     fn get_property_can_redo(&self) -> bool;
 
     fn get_property_can_undo(&self) -> bool;
-
-    fn connect_bracket_matched<F: Fn(&Self, Option<&gtk::TextIter>, BracketMatchType) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId;
 
     fn connect_highlight_updated<F: Fn(&Self, &gtk::TextIter, &gtk::TextIter) + 'static>(
         &self,
@@ -617,43 +611,6 @@ impl<O: IsA<Buffer>> BufferExt for O {
                 .get()
                 .expect("Return Value for property `can-undo` getter")
                 .unwrap()
-        }
-    }
-
-    fn connect_bracket_matched<F: Fn(&Self, Option<&gtk::TextIter>, BracketMatchType) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
-        unsafe extern "C" fn bracket_matched_trampoline<
-            P,
-            F: Fn(&P, Option<&gtk::TextIter>, BracketMatchType) + 'static,
-        >(
-            this: *mut gtk_source_sys::GtkSourceBuffer,
-            iter: *mut gtk_sys::GtkTextIter,
-            state: gtk_source_sys::GtkSourceBracketMatchType,
-            f: glib_sys::gpointer,
-        ) where
-            P: IsA<Buffer>,
-        {
-            let f: &F = &*(f as *const F);
-            f(
-                &Buffer::from_glib_borrow(this).unsafe_cast_ref(),
-                Option::<gtk::TextIter>::from_glib_borrow(iter)
-                    .as_ref()
-                    .as_ref(),
-                from_glib(state),
-            )
-        }
-        unsafe {
-            let f: Box_<F> = Box_::new(f);
-            connect_raw(
-                self.as_ptr() as *mut _,
-                b"bracket-matched\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(
-                    bracket_matched_trampoline::<Self, F> as *const (),
-                )),
-                Box_::into_raw(f),
-            )
         }
     }
 

@@ -18,6 +18,7 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 pub use auto::traits::*;
+pub use buffer::*;
 pub use completion::*;
 pub use completion_info::*;
 pub use gutter_renderer::*;

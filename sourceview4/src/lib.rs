@@ -45,6 +45,8 @@ pub mod prelude;
 pub use prelude::*;
 mod auto;
 pub use auto::*;
+mod buffer;
+pub use buffer::*;
 mod completion;
 pub use completion::*;
 mod completion_info;
