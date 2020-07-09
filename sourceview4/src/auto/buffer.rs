@@ -57,11 +57,7 @@ impl Buffer {
 pub const NONE_BUFFER: Option<&Buffer> = None;
 
 pub trait BufferExt: 'static {
-    fn backward_iter_to_source_mark(
-        &self,
-        iter: &mut gtk::TextIter,
-        category: Option<&str>,
-    ) -> bool;
+    //fn backward_iter_to_source_mark(&self, iter: /*Unimplemented*/gtk::TextIter, category: Option<&str>) -> bool;
 
     fn begin_not_undoable_action(&self);
 
@@ -89,8 +85,7 @@ pub trait BufferExt: 'static {
 
     fn ensure_highlight(&self, start: &gtk::TextIter, end: &gtk::TextIter);
 
-    fn forward_iter_to_source_mark(&self, iter: &mut gtk::TextIter, category: Option<&str>)
-        -> bool;
+    //fn forward_iter_to_source_mark(&self, iter: /*Unimplemented*/gtk::TextIter, category: Option<&str>) -> bool;
 
     fn get_context_classes_at_iter(&self, iter: &gtk::TextIter) -> Vec<GString>;
 
@@ -116,17 +111,9 @@ pub trait BufferExt: 'static {
 
     fn get_undo_manager(&self) -> Option<UndoManager>;
 
-    fn iter_backward_to_context_class_toggle(
-        &self,
-        iter: &mut gtk::TextIter,
-        context_class: &str,
-    ) -> bool;
+    //fn iter_backward_to_context_class_toggle(&self, iter: /*Unimplemented*/gtk::TextIter, context_class: &str) -> bool;
 
-    fn iter_forward_to_context_class_toggle(
-        &self,
-        iter: &mut gtk::TextIter,
-        context_class: &str,
-    ) -> bool;
+    //fn iter_forward_to_context_class_toggle(&self, iter: /*Unimplemented*/gtk::TextIter, context_class: &str) -> bool;
 
     fn iter_has_context_class(&self, iter: &gtk::TextIter, context_class: &str) -> bool;
 
@@ -222,21 +209,9 @@ pub trait BufferExt: 'static {
 }
 
 impl<O: IsA<Buffer>> BufferExt for O {
-    fn backward_iter_to_source_mark(
-        &self,
-        iter: &mut gtk::TextIter,
-        category: Option<&str>,
-    ) -> bool {
-        unsafe {
-            from_glib(
-                gtk_source_sys::gtk_source_buffer_backward_iter_to_source_mark(
-                    self.as_ref().to_glib_none().0,
-                    iter.to_glib_none_mut().0,
-                    category.to_glib_none().0,
-                ),
-            )
-        }
-    }
+    //fn backward_iter_to_source_mark(&self, iter: /*Unimplemented*/gtk::TextIter, category: Option<&str>) -> bool {
+    //    unsafe { TODO: call gtk_source_sys:gtk_source_buffer_backward_iter_to_source_mark() }
+    //}
 
     fn begin_not_undoable_action(&self) {
         unsafe {
@@ -316,21 +291,9 @@ impl<O: IsA<Buffer>> BufferExt for O {
         }
     }
 
-    fn forward_iter_to_source_mark(
-        &self,
-        iter: &mut gtk::TextIter,
-        category: Option<&str>,
-    ) -> bool {
-        unsafe {
-            from_glib(
-                gtk_source_sys::gtk_source_buffer_forward_iter_to_source_mark(
-                    self.as_ref().to_glib_none().0,
-                    iter.to_glib_none_mut().0,
-                    category.to_glib_none().0,
-                ),
-            )
-        }
-    }
+    //fn forward_iter_to_source_mark(&self, iter: /*Unimplemented*/gtk::TextIter, category: Option<&str>) -> bool {
+    //    unsafe { TODO: call gtk_source_sys:gtk_source_buffer_forward_iter_to_source_mark() }
+    //}
 
     fn get_context_classes_at_iter(&self, iter: &gtk::TextIter) -> Vec<GString> {
         unsafe {
@@ -429,37 +392,13 @@ impl<O: IsA<Buffer>> BufferExt for O {
         }
     }
 
-    fn iter_backward_to_context_class_toggle(
-        &self,
-        iter: &mut gtk::TextIter,
-        context_class: &str,
-    ) -> bool {
-        unsafe {
-            from_glib(
-                gtk_source_sys::gtk_source_buffer_iter_backward_to_context_class_toggle(
-                    self.as_ref().to_glib_none().0,
-                    iter.to_glib_none_mut().0,
-                    context_class.to_glib_none().0,
-                ),
-            )
-        }
-    }
+    //fn iter_backward_to_context_class_toggle(&self, iter: /*Unimplemented*/gtk::TextIter, context_class: &str) -> bool {
+    //    unsafe { TODO: call gtk_source_sys:gtk_source_buffer_iter_backward_to_context_class_toggle() }
+    //}
 
-    fn iter_forward_to_context_class_toggle(
-        &self,
-        iter: &mut gtk::TextIter,
-        context_class: &str,
-    ) -> bool {
-        unsafe {
-            from_glib(
-                gtk_source_sys::gtk_source_buffer_iter_forward_to_context_class_toggle(
-                    self.as_ref().to_glib_none().0,
-                    iter.to_glib_none_mut().0,
-                    context_class.to_glib_none().0,
-                ),
-            )
-        }
-    }
+    //fn iter_forward_to_context_class_toggle(&self, iter: /*Unimplemented*/gtk::TextIter, context_class: &str) -> bool {
+    //    unsafe { TODO: call gtk_source_sys:gtk_source_buffer_iter_forward_to_context_class_toggle() }
+    //}
 
     fn iter_has_context_class(&self, iter: &gtk::TextIter, context_class: &str) -> bool {
         unsafe {
