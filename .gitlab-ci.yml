@@ -17,7 +17,10 @@ pages:
   image: fedora:rawhide
   stage: deploy
   script:
-    - cargo doc -p sourceview4
+    - cargo run --release -- -c ./sourceview4/Gir.toml -d ./gir-files --doc-target-path docs.md -m doc
+    - cargo install rustdoc-stripper
+    - /root/.cargo/bin/rustdoc-stripper -g -o ./sourceview4/docs.md
+    - cargo doc -p sourceview4 --all-features
     - mv target/doc/ public
   artifacts:
     paths:
