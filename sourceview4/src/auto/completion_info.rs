@@ -18,9 +18,7 @@ glib_wrapper! {
 impl CompletionInfo {
     pub fn new() -> CompletionInfo {
         assert_initialized_main_thread!();
-        unsafe {
-            from_glib_none(gtk_source_sys::gtk_source_completion_info_new())
-        }
+        unsafe { from_glib_none(gtk_source_sys::gtk_source_completion_info_new()) }
     }
 }
 

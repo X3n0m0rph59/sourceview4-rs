@@ -20,5 +20,5 @@
 pub use auto::traits::*;
 pub use completion::*;
 pub use completion_info::*;
-pub use view::*;
 pub use gutter_renderer::*;
+pub use view::*;

@@ -17,30 +17,75 @@
 //
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+use cairo;
 use glib::object::IsA;
 use glib::translate::*;
-use gtk_source_sys;
-use cairo;
 use gtk;
+use gtk_source_sys;
 
 use GutterRenderer;
 use GutterRendererState;
 
 pub trait GutterRendererExtManual: 'static {
-    fn begin(&self, cr: &mut cairo::Context, background_area: &mut gdk::Rectangle, cell_area: &mut gdk::Rectangle, start: &mut gtk::TextIter, end: &mut gtk::TextIter);
-    fn draw(&self, cr: &mut cairo::Context, background_area: &mut gdk::Rectangle, cell_area: &mut gdk::Rectangle, start: &mut gtk::TextIter, end: &mut gtk::TextIter, state: GutterRendererState);
+    fn begin(
+        &self,
+        cr: &mut cairo::Context,
+        background_area: &mut gdk::Rectangle,
+        cell_area: &mut gdk::Rectangle,
+        start: &mut gtk::TextIter,
+        end: &mut gtk::TextIter,
+    );
+    fn draw(
+        &self,
+        cr: &mut cairo::Context,
+        background_area: &mut gdk::Rectangle,
+        cell_area: &mut gdk::Rectangle,
+        start: &mut gtk::TextIter,
+        end: &mut gtk::TextIter,
+        state: GutterRendererState,
+    );
 }
 
 impl<O: IsA<GutterRenderer>> GutterRendererExtManual for O {
-    fn begin(&self, cr: &mut cairo::Context, background_area: &mut gdk::Rectangle, cell_area: &mut gdk::Rectangle, start: &mut gtk::TextIter, end: &mut gtk::TextIter) {
+    fn begin(
+        &self,
+        cr: &mut cairo::Context,
+        background_area: &mut gdk::Rectangle,
+        cell_area: &mut gdk::Rectangle,
+        start: &mut gtk::TextIter,
+        end: &mut gtk::TextIter,
+    ) {
         unsafe {
-            gtk_source_sys::gtk_source_gutter_renderer_begin(self.as_ref().to_glib_none().0, cr.to_raw_none(), background_area.to_glib_none_mut().0, cell_area.to_glib_none_mut().0, start.to_glib_none_mut().0, end.to_glib_none_mut().0);
+            gtk_source_sys::gtk_source_gutter_renderer_begin(
+                self.as_ref().to_glib_none().0,
+                cr.to_raw_none(),
+                background_area.to_glib_none_mut().0,
+                cell_area.to_glib_none_mut().0,
+                start.to_glib_none_mut().0,
+                end.to_glib_none_mut().0,
+            );
         }
     }
 
-    fn draw(&self, cr: &mut cairo::Context, background_area: &mut gdk::Rectangle, cell_area: &mut gdk::Rectangle, start: &mut gtk::TextIter, end: &mut gtk::TextIter, state: GutterRendererState) {
+    fn draw(
+        &self,
+        cr: &mut cairo::Context,
+        background_area: &mut gdk::Rectangle,
+        cell_area: &mut gdk::Rectangle,
+        start: &mut gtk::TextIter,
+        end: &mut gtk::TextIter,
+        state: GutterRendererState,
+    ) {
         unsafe {
-            gtk_source_sys::gtk_source_gutter_renderer_draw(self.as_ref().to_glib_none().0, cr.to_raw_none(), background_area.to_glib_none_mut().0, cell_area.to_glib_none_mut().0, start.to_glib_none_mut().0, end.to_glib_none_mut().0, state.to_glib());
+            gtk_source_sys::gtk_source_gutter_renderer_draw(
+                self.as_ref().to_glib_none().0,
+                cr.to_raw_none(),
+                background_area.to_glib_none_mut().0,
+                cell_area.to_glib_none_mut().0,
+                start.to_glib_none_mut().0,
+                end.to_glib_none_mut().0,
+                state.to_glib(),
+            );
         }
     }
 }

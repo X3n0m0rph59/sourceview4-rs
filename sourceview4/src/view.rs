@@ -21,8 +21,8 @@ use glib::object::IsA;
 use glib::translate::*;
 use gtk_source_sys;
 
-use View;
 use MarkAttributes;
+use View;
 
 pub trait ViewExtManual: 'static {
     fn get_mark_attributes(&self, category: &str, priority: &mut i32) -> Option<MarkAttributes>;
@@ -31,7 +31,11 @@ pub trait ViewExtManual: 'static {
 impl<O: IsA<View>> ViewExtManual for O {
     fn get_mark_attributes(&self, category: &str, priority: &mut i32) -> Option<MarkAttributes> {
         unsafe {
-            from_glib_none(gtk_source_sys::gtk_source_view_get_mark_attributes(self.as_ref().to_glib_none().0, category.to_glib_none().0, priority))
+            from_glib_none(gtk_source_sys::gtk_source_view_get_mark_attributes(
+                self.as_ref().to_glib_none().0,
+                category.to_glib_none().0,
+                priority,
+            ))
         }
     }
 }

@@ -34,7 +34,12 @@ glib_wrapper! {
 pub const NONE_COMPLETION_CONTEXT: Option<&CompletionContext> = None;
 
 pub trait CompletionContextExt: 'static {
-    fn add_proposals<P: IsA<CompletionProvider>>(&self, provider: &P, proposals: &[CompletionProposal], finished: bool);
+    fn add_proposals<P: IsA<CompletionProvider>>(
+        &self,
+        provider: &P,
+        proposals: &[CompletionProposal],
+        finished: bool,
+    );
 
     fn get_activation(&self) -> CompletionActivation;
 
@@ -56,89 +61,157 @@ pub trait CompletionContextExt: 'static {
 }
 
 impl<O: IsA<CompletionContext>> CompletionContextExt for O {
-    fn add_proposals<P: IsA<CompletionProvider>>(&self, provider: &P, proposals: &[CompletionProposal], finished: bool) {
+    fn add_proposals<P: IsA<CompletionProvider>>(
+        &self,
+        provider: &P,
+        proposals: &[CompletionProposal],
+        finished: bool,
+    ) {
         unsafe {
-            gtk_source_sys::gtk_source_completion_context_add_proposals(self.as_ref().to_glib_none().0, provider.as_ref().to_glib_none().0, proposals.to_glib_none().0, finished.to_glib());
+            gtk_source_sys::gtk_source_completion_context_add_proposals(
+                self.as_ref().to_glib_none().0,
+                provider.as_ref().to_glib_none().0,
+                proposals.to_glib_none().0,
+                finished.to_glib(),
+            );
         }
     }
 
     fn get_activation(&self) -> CompletionActivation {
         unsafe {
-            from_glib(gtk_source_sys::gtk_source_completion_context_get_activation(self.as_ref().to_glib_none().0))
+            from_glib(
+                gtk_source_sys::gtk_source_completion_context_get_activation(
+                    self.as_ref().to_glib_none().0,
+                ),
+            )
         }
     }
 
     fn get_iter(&self) -> Option<gtk::TextIter> {
         unsafe {
             let mut iter = gtk::TextIter::uninitialized();
-            let ret = from_glib(gtk_source_sys::gtk_source_completion_context_get_iter(self.as_ref().to_glib_none().0, iter.to_glib_none_mut().0));
-            if ret { Some(iter) } else { None }
+            let ret = from_glib(gtk_source_sys::gtk_source_completion_context_get_iter(
+                self.as_ref().to_glib_none().0,
+                iter.to_glib_none_mut().0,
+            ));
+            if ret {
+                Some(iter)
+            } else {
+                None
+            }
         }
     }
 
     fn set_property_activation(&self, activation: CompletionActivation) {
         unsafe {
-            gobject_sys::g_object_set_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"activation\0".as_ptr() as *const _, Value::from(&activation).to_glib_none().0);
+            gobject_sys::g_object_set_property(
+                self.to_glib_none().0 as *mut gobject_sys::GObject,
+                b"activation\0".as_ptr() as *const _,
+                Value::from(&activation).to_glib_none().0,
+            );
         }
     }
 
     fn get_property_completion(&self) -> Option<Completion> {
         unsafe {
             let mut value = Value::from_type(<Completion as StaticType>::static_type());
-            gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"completion\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `completion` getter")
+            gobject_sys::g_object_get_property(
+                self.to_glib_none().0 as *mut gobject_sys::GObject,
+                b"completion\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `completion` getter")
         }
     }
 
     fn set_property_iter(&self, iter: Option<&gtk::TextIter>) {
         unsafe {
-            gobject_sys::g_object_set_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"iter\0".as_ptr() as *const _, Value::from(iter).to_glib_none().0);
+            gobject_sys::g_object_set_property(
+                self.to_glib_none().0 as *mut gobject_sys::GObject,
+                b"iter\0".as_ptr() as *const _,
+                Value::from(iter).to_glib_none().0,
+            );
         }
     }
 
     fn connect_cancelled<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn cancelled_trampoline<P, F: Fn(&P) + 'static>(this: *mut gtk_source_sys::GtkSourceCompletionContext, f: glib_sys::gpointer)
-            where P: IsA<CompletionContext>
+        unsafe extern "C" fn cancelled_trampoline<P, F: Fn(&P) + 'static>(
+            this: *mut gtk_source_sys::GtkSourceCompletionContext,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<CompletionContext>,
         {
             let f: &F = &*(f as *const F);
             f(&CompletionContext::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"cancelled\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(cancelled_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"cancelled\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    cancelled_trampoline::<Self, F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     fn emit_cancelled(&self) {
-        let _ = unsafe { glib::Object::from_glib_borrow(self.as_ptr() as *mut gobject_sys::GObject).emit("cancelled", &[]).unwrap() };
+        let _ = unsafe {
+            glib::Object::from_glib_borrow(self.as_ptr() as *mut gobject_sys::GObject)
+                .emit("cancelled", &[])
+                .unwrap()
+        };
     }
 
     fn connect_property_activation_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_activation_trampoline<P, F: Fn(&P) + 'static>(this: *mut gtk_source_sys::GtkSourceCompletionContext, _param_spec: glib_sys::gpointer, f: glib_sys::gpointer)
-            where P: IsA<CompletionContext>
+        unsafe extern "C" fn notify_activation_trampoline<P, F: Fn(&P) + 'static>(
+            this: *mut gtk_source_sys::GtkSourceCompletionContext,
+            _param_spec: glib_sys::gpointer,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<CompletionContext>,
         {
             let f: &F = &*(f as *const F);
             f(&CompletionContext::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::activation\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_activation_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::activation\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_activation_trampoline::<Self, F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     fn connect_property_iter_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_iter_trampoline<P, F: Fn(&P) + 'static>(this: *mut gtk_source_sys::GtkSourceCompletionContext, _param_spec: glib_sys::gpointer, f: glib_sys::gpointer)
-            where P: IsA<CompletionContext>
+        unsafe extern "C" fn notify_iter_trampoline<P, F: Fn(&P) + 'static>(
+            this: *mut gtk_source_sys::GtkSourceCompletionContext,
+            _param_spec: glib_sys::gpointer,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<CompletionContext>,
         {
             let f: &F = &*(f as *const F);
             f(&CompletionContext::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::iter\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_iter_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::iter\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_iter_trampoline::<Self, F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 }

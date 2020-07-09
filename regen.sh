@@ -29,4 +29,5 @@ ${GIR} -c ${CONFIG_SYS} -d gir-files -o ${CRATE_SYS}
 rm -rf ${CRATE_API}/src/auto
 ${GIR} -c ${CONFIG_API} -d gir-files -o ${CRATE_API}
 
+cargo fmt --all
 rm gir-files/${GIR_DEF}

@@ -39,25 +39,37 @@ pub trait GutterExt: 'static {
 impl<O: IsA<Gutter>> GutterExt for O {
     fn get_renderer_at_pos(&self, x: i32, y: i32) -> Option<GutterRenderer> {
         unsafe {
-            from_glib_none(gtk_source_sys::gtk_source_gutter_get_renderer_at_pos(self.as_ref().to_glib_none().0, x, y))
+            from_glib_none(gtk_source_sys::gtk_source_gutter_get_renderer_at_pos(
+                self.as_ref().to_glib_none().0,
+                x,
+                y,
+            ))
         }
     }
 
     fn get_view(&self) -> Option<View> {
         unsafe {
-            from_glib_none(gtk_source_sys::gtk_source_gutter_get_view(self.as_ref().to_glib_none().0))
+            from_glib_none(gtk_source_sys::gtk_source_gutter_get_view(
+                self.as_ref().to_glib_none().0,
+            ))
         }
     }
 
     fn get_window_type(&self) -> gtk::TextWindowType {
         unsafe {
-            from_glib(gtk_source_sys::gtk_source_gutter_get_window_type(self.as_ref().to_glib_none().0))
+            from_glib(gtk_source_sys::gtk_source_gutter_get_window_type(
+                self.as_ref().to_glib_none().0,
+            ))
         }
     }
 
     fn insert<P: IsA<GutterRenderer>>(&self, renderer: &P, position: i32) -> bool {
         unsafe {
-            from_glib(gtk_source_sys::gtk_source_gutter_insert(self.as_ref().to_glib_none().0, renderer.as_ref().to_glib_none().0, position))
+            from_glib(gtk_source_sys::gtk_source_gutter_insert(
+                self.as_ref().to_glib_none().0,
+                renderer.as_ref().to_glib_none().0,
+                position,
+            ))
         }
     }
 
@@ -69,13 +81,20 @@ impl<O: IsA<Gutter>> GutterExt for O {
 
     fn remove<P: IsA<GutterRenderer>>(&self, renderer: &P) {
         unsafe {
-            gtk_source_sys::gtk_source_gutter_remove(self.as_ref().to_glib_none().0, renderer.as_ref().to_glib_none().0);
+            gtk_source_sys::gtk_source_gutter_remove(
+                self.as_ref().to_glib_none().0,
+                renderer.as_ref().to_glib_none().0,
+            );
         }
     }
 
     fn reorder<P: IsA<GutterRenderer>>(&self, renderer: &P, position: i32) {
         unsafe {
-            gtk_source_sys::gtk_source_gutter_reorder(self.as_ref().to_glib_none().0, renderer.as_ref().to_glib_none().0, position);
+            gtk_source_sys::gtk_source_gutter_reorder(
+                self.as_ref().to_glib_none().0,
+                renderer.as_ref().to_glib_none().0,
+                position,
+            );
         }
     }
 }

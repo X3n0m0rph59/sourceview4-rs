@@ -18,15 +18,18 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 use glib::translate::*;
-use gtk_source_sys;
 use gtk;
+use gtk_source_sys;
 
 use Completion;
 use CompletionContext;
 
 impl Completion {
     #[allow(unused)]
-    fn create_context(&self, mut position: Option<&mut gtk::TextIter>) -> Option<CompletionContext> {
+    fn create_context(
+        &self,
+        mut position: Option<&mut gtk::TextIter>,
+    ) -> Option<CompletionContext> {
         unsafe {
             from_glib_none(gtk_source_sys::gtk_source_completion_create_context(
                 self.to_glib_none().0,
