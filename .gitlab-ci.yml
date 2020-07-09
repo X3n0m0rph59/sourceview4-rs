@@ -1,14 +1,22 @@
-variables:
-  FEDORA_DEPS: rust cargo git gtksourceview4-devel
+before_script:
+  - dnf update -y --nogpgcheck
+  - dnf install -y --nogpgcheck rust cargo git gtksourceview4-devel xorg-x11-server-Xvfb
+  - git submodule update --init
+
+stages:
+  - test
+  - deploy
+
+build:
+  stage: test
+  script:
+    - cargo build --all-features
+    - xvfb-run -a -s "-screen 0 1024x768x24" cargo test
 
 pages:
   image: fedora:rawhide
   stage: deploy
-  before_script:
-    - dnf update -y --nogpgcheck
-    - dnf install -y --nogpgcheck $FEDORA_DEPS
   script:
-    - git submodule update --init
     - cargo doc -p sourceview4
     - mv target/doc/ public
   artifacts:
