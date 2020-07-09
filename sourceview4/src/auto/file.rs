@@ -9,6 +9,7 @@ use glib::signal::connect_raw;
 use glib::signal::SignalHandlerId;
 use glib::translate::*;
 use glib::StaticType;
+use glib::ToValue;
 use glib::Value;
 use glib_sys;
 use gobject_sys;
@@ -38,6 +39,34 @@ impl File {
 impl Default for File {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+#[derive(Clone, Default)]
+pub struct FileBuilder {
+    location: Option<gio::File>,
+}
+
+impl FileBuilder {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn build(self) -> File {
+        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
+        if let Some(ref location) = self.location {
+            properties.push(("location", location));
+        }
+        let ret = glib::Object::new(File::static_type(), &properties)
+            .expect("object new")
+            .downcast::<File>()
+            .expect("downcast");
+        ret
+    }
+
+    pub fn location<P: IsA<gio::File>>(mut self, location: &P) -> Self {
+        self.location = Some(location.clone().upcast());
+        self
     }
 }
 

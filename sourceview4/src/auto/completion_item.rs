@@ -9,6 +9,8 @@ use glib::object::IsA;
 use glib::signal::connect_raw;
 use glib::signal::SignalHandlerId;
 use glib::translate::*;
+use glib::StaticType;
+use glib::ToValue;
 use glib_sys;
 use gtk_source_sys;
 use std::boxed::Box as Box_;
@@ -34,6 +36,88 @@ impl CompletionItem {
 impl Default for CompletionItem {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+#[derive(Clone, Default)]
+pub struct CompletionItemBuilder {
+    gicon: Option<gio::Icon>,
+    icon: Option<gdk_pixbuf::Pixbuf>,
+    icon_name: Option<String>,
+    info: Option<String>,
+    label: Option<String>,
+    markup: Option<String>,
+    text: Option<String>,
+}
+
+impl CompletionItemBuilder {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn build(self) -> CompletionItem {
+        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
+        if let Some(ref gicon) = self.gicon {
+            properties.push(("gicon", gicon));
+        }
+        if let Some(ref icon) = self.icon {
+            properties.push(("icon", icon));
+        }
+        if let Some(ref icon_name) = self.icon_name {
+            properties.push(("icon-name", icon_name));
+        }
+        if let Some(ref info) = self.info {
+            properties.push(("info", info));
+        }
+        if let Some(ref label) = self.label {
+            properties.push(("label", label));
+        }
+        if let Some(ref markup) = self.markup {
+            properties.push(("markup", markup));
+        }
+        if let Some(ref text) = self.text {
+            properties.push(("text", text));
+        }
+        let ret = glib::Object::new(CompletionItem::static_type(), &properties)
+            .expect("object new")
+            .downcast::<CompletionItem>()
+            .expect("downcast");
+        ret
+    }
+
+    pub fn gicon<P: IsA<gio::Icon>>(mut self, gicon: &P) -> Self {
+        self.gicon = Some(gicon.clone().upcast());
+        self
+    }
+
+    pub fn icon(mut self, icon: &gdk_pixbuf::Pixbuf) -> Self {
+        self.icon = Some(icon.clone());
+        self
+    }
+
+    pub fn icon_name(mut self, icon_name: &str) -> Self {
+        self.icon_name = Some(icon_name.to_string());
+        self
+    }
+
+    pub fn info(mut self, info: &str) -> Self {
+        self.info = Some(info.to_string());
+        self
+    }
+
+    pub fn label(mut self, label: &str) -> Self {
+        self.label = Some(label.to_string());
+        self
+    }
+
+    pub fn markup(mut self, markup: &str) -> Self {
+        self.markup = Some(markup.to_string());
+        self
+    }
+
+    pub fn text(mut self, text: &str) -> Self {
+        self.text = Some(text.to_string());
+        self
     }
 }
 

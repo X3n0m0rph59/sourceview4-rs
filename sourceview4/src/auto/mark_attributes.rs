@@ -11,6 +11,8 @@ use glib::signal::connect_raw;
 use glib::signal::SignalHandlerId;
 use glib::translate::*;
 use glib::GString;
+use glib::StaticType;
+use glib::ToValue;
 use glib_sys;
 use gtk;
 use gtk_source_sys;
@@ -38,6 +40,61 @@ impl MarkAttributes {
 impl Default for MarkAttributes {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+#[derive(Clone, Default)]
+pub struct MarkAttributesBuilder {
+    background: Option<gdk::RGBA>,
+    gicon: Option<gio::Icon>,
+    icon_name: Option<String>,
+    pixbuf: Option<gdk_pixbuf::Pixbuf>,
+}
+
+impl MarkAttributesBuilder {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn build(self) -> MarkAttributes {
+        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
+        if let Some(ref background) = self.background {
+            properties.push(("background", background));
+        }
+        if let Some(ref gicon) = self.gicon {
+            properties.push(("gicon", gicon));
+        }
+        if let Some(ref icon_name) = self.icon_name {
+            properties.push(("icon-name", icon_name));
+        }
+        if let Some(ref pixbuf) = self.pixbuf {
+            properties.push(("pixbuf", pixbuf));
+        }
+        let ret = glib::Object::new(MarkAttributes::static_type(), &properties)
+            .expect("object new")
+            .downcast::<MarkAttributes>()
+            .expect("downcast");
+        ret
+    }
+
+    pub fn background(mut self, background: &gdk::RGBA) -> Self {
+        self.background = Some(background.clone());
+        self
+    }
+
+    pub fn gicon<P: IsA<gio::Icon>>(mut self, gicon: &P) -> Self {
+        self.gicon = Some(gicon.clone().upcast());
+        self
+    }
+
+    pub fn icon_name(mut self, icon_name: &str) -> Self {
+        self.icon_name = Some(icon_name.to_string());
+        self
+    }
+
+    pub fn pixbuf(mut self, pixbuf: &gdk_pixbuf::Pixbuf) -> Self {
+        self.pixbuf = Some(pixbuf.clone());
+        self
     }
 }
 

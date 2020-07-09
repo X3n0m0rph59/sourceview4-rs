@@ -2,8 +2,11 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
+use glib::object::Cast;
 use glib::object::IsA;
 use glib::translate::*;
+use glib::StaticType;
+use glib::ToValue;
 use gtk;
 use gtk_source_sys;
 use std::fmt;
@@ -15,6 +18,43 @@ glib_wrapper! {
 
     match fn {
         get_type => || gtk_source_sys::gtk_source_gutter_get_type(),
+    }
+}
+
+#[derive(Clone, Default)]
+pub struct GutterBuilder {
+    view: Option<View>,
+    window_type: Option<gtk::TextWindowType>,
+}
+
+impl GutterBuilder {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn build(self) -> Gutter {
+        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
+        if let Some(ref view) = self.view {
+            properties.push(("view", view));
+        }
+        if let Some(ref window_type) = self.window_type {
+            properties.push(("window-type", window_type));
+        }
+        let ret = glib::Object::new(Gutter::static_type(), &properties)
+            .expect("object new")
+            .downcast::<Gutter>()
+            .expect("downcast");
+        ret
+    }
+
+    pub fn view<P: IsA<View>>(mut self, view: &P) -> Self {
+        self.view = Some(view.clone().upcast());
+        self
+    }
+
+    pub fn window_type(mut self, window_type: gtk::TextWindowType) -> Self {
+        self.window_type = Some(window_type);
+        self
     }
 }
 
