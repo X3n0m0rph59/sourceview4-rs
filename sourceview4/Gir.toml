@@ -22,7 +22,6 @@ external_libraries = [
 ]
 
 generate = [
-    "GtkSource.Buffer",
     "GtkSource.CompletionContext",
     "GtkSource.StyleSchemeChooserButton",
     "GtkSource.StyleSchemeChooserWidget",
@@ -124,6 +123,16 @@ name = "GtkSource.FileLoader"
 status = "generate"
     [[object.function]]
     name = "set_candidate_encodings"
+    ignore = true
+
+[[object]]
+name = "GtkSource.Buffer"
+status = "generate"
+manual_traits = ["BufferExtManual"]
+    [[object.signal]]
+    name = "bracket-matched"
+    # generated manually as gir fails to do so for now.
+    # https://github.com/gtk-rs/gir/issues/949
     ignore = true
 
 [[object]]

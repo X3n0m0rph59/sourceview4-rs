@@ -25,14 +25,25 @@ impl FileLoader {
     pub fn new<P: IsA<Buffer>, Q: IsA<File>>(buffer: &P, file: &Q) -> FileLoader {
         skip_assert_initialized!();
         unsafe {
-            from_glib_full(gtk_source_sys::gtk_source_file_loader_new(buffer.as_ref().to_glib_none().0, file.as_ref().to_glib_none().0))
+            from_glib_full(gtk_source_sys::gtk_source_file_loader_new(
+                buffer.as_ref().to_glib_none().0,
+                file.as_ref().to_glib_none().0,
+            ))
         }
     }
 
-    pub fn new_from_stream<P: IsA<Buffer>, Q: IsA<File>, R: IsA<gio::InputStream>>(buffer: &P, file: &Q, stream: &R) -> FileLoader {
+    pub fn from_stream<P: IsA<Buffer>, Q: IsA<File>, R: IsA<gio::InputStream>>(
+        buffer: &P,
+        file: &Q,
+        stream: &R,
+    ) -> FileLoader {
         skip_assert_initialized!();
         unsafe {
-            from_glib_full(gtk_source_sys::gtk_source_file_loader_new_from_stream(buffer.as_ref().to_glib_none().0, file.as_ref().to_glib_none().0, stream.as_ref().to_glib_none().0))
+            from_glib_full(gtk_source_sys::gtk_source_file_loader_new_from_stream(
+                buffer.as_ref().to_glib_none().0,
+                file.as_ref().to_glib_none().0,
+                stream.as_ref().to_glib_none().0,
+            ))
         }
     }
 }
@@ -63,43 +74,57 @@ pub trait FileLoaderExt: 'static {
 impl<O: IsA<FileLoader>> FileLoaderExt for O {
     fn get_buffer(&self) -> Option<Buffer> {
         unsafe {
-            from_glib_none(gtk_source_sys::gtk_source_file_loader_get_buffer(self.as_ref().to_glib_none().0))
+            from_glib_none(gtk_source_sys::gtk_source_file_loader_get_buffer(
+                self.as_ref().to_glib_none().0,
+            ))
         }
     }
 
     fn get_compression_type(&self) -> CompressionType {
         unsafe {
-            from_glib(gtk_source_sys::gtk_source_file_loader_get_compression_type(self.as_ref().to_glib_none().0))
+            from_glib(gtk_source_sys::gtk_source_file_loader_get_compression_type(
+                self.as_ref().to_glib_none().0,
+            ))
         }
     }
 
     fn get_encoding(&self) -> Option<Encoding> {
         unsafe {
-            from_glib_none(gtk_source_sys::gtk_source_file_loader_get_encoding(self.as_ref().to_glib_none().0))
+            from_glib_none(gtk_source_sys::gtk_source_file_loader_get_encoding(
+                self.as_ref().to_glib_none().0,
+            ))
         }
     }
 
     fn get_file(&self) -> Option<File> {
         unsafe {
-            from_glib_none(gtk_source_sys::gtk_source_file_loader_get_file(self.as_ref().to_glib_none().0))
+            from_glib_none(gtk_source_sys::gtk_source_file_loader_get_file(
+                self.as_ref().to_glib_none().0,
+            ))
         }
     }
 
     fn get_input_stream(&self) -> Option<gio::InputStream> {
         unsafe {
-            from_glib_none(gtk_source_sys::gtk_source_file_loader_get_input_stream(self.as_ref().to_glib_none().0))
+            from_glib_none(gtk_source_sys::gtk_source_file_loader_get_input_stream(
+                self.as_ref().to_glib_none().0,
+            ))
         }
     }
 
     fn get_location(&self) -> Option<gio::File> {
         unsafe {
-            from_glib_none(gtk_source_sys::gtk_source_file_loader_get_location(self.as_ref().to_glib_none().0))
+            from_glib_none(gtk_source_sys::gtk_source_file_loader_get_location(
+                self.as_ref().to_glib_none().0,
+            ))
         }
     }
 
     fn get_newline_type(&self) -> NewlineType {
         unsafe {
-            from_glib(gtk_source_sys::gtk_source_file_loader_get_newline_type(self.as_ref().to_glib_none().0))
+            from_glib(gtk_source_sys::gtk_source_file_loader_get_newline_type(
+                self.as_ref().to_glib_none().0,
+            ))
         }
     }
 
@@ -110,22 +135,22 @@ impl<O: IsA<FileLoader>> FileLoaderExt for O {
     //
     //fn load_async_future<Q: FnOnce(Result<(), glib::Error>) + Send + 'static>(&self, io_priority: glib::Priority, progress_callback: Q, progress_callback_notify: Fn() + 'static) -> Pin<Box_<dyn std::future::Future<Output = Result<(), glib::Error>> + 'static>> {
 
-        //let progress_callback = progress_callback.map(ToOwned::to_owned);
-        //let progress_callback_notify = progress_callback_notify.map(ToOwned::to_owned);
-        //Box_::pin(gio::GioFuture::new(self, move |obj, send| {
-        //    let cancellable = gio::Cancellable::new();
-        //    obj.load_async(
-        //        io_priority,
-        //        Some(&cancellable),
-        //        progress_callback.as_ref().map(::std::borrow::Borrow::borrow),
-        //        progress_callback_notify.as_ref().map(::std::borrow::Borrow::borrow),
-        //        move |res| {
-        //            send.resolve(res);
-        //        },
-        //    );
+    //let progress_callback = progress_callback.map(ToOwned::to_owned);
+    //let progress_callback_notify = progress_callback_notify.map(ToOwned::to_owned);
+    //Box_::pin(gio::GioFuture::new(self, move |obj, send| {
+    //    let cancellable = gio::Cancellable::new();
+    //    obj.load_async(
+    //        io_priority,
+    //        Some(&cancellable),
+    //        progress_callback.as_ref().map(::std::borrow::Borrow::borrow),
+    //        progress_callback_notify.as_ref().map(::std::borrow::Borrow::borrow),
+    //        move |res| {
+    //            send.resolve(res);
+    //        },
+    //    );
 
-        //    cancellable
-        //}))
+    //    cancellable
+    //}))
     //}
 }
 

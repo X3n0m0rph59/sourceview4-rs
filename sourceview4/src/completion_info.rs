@@ -19,8 +19,8 @@
 
 use glib::object::IsA;
 use glib::translate::*;
-use gtk_source_sys;
 use gtk;
+use gtk_source_sys;
 
 use CompletionInfo;
 
@@ -31,7 +31,11 @@ pub trait CompletionInfoExtManual: 'static {
 impl<O: IsA<CompletionInfo>> CompletionInfoExtManual for O {
     fn move_to_iter<P: IsA<gtk::TextView>>(&self, view: &P, mut iter: Option<&mut gtk::TextIter>) {
         unsafe {
-            gtk_source_sys::gtk_source_completion_info_move_to_iter(self.as_ref().to_glib_none().0, view.as_ref().to_glib_none().0, iter.to_glib_none_mut().0);
+            gtk_source_sys::gtk_source_completion_info_move_to_iter(
+                self.as_ref().to_glib_none().0,
+                view.as_ref().to_glib_none().0,
+                iter.to_glib_none_mut().0,
+            );
         }
     }
 }
