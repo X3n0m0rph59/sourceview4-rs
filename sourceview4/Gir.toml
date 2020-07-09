@@ -67,6 +67,7 @@ manual = [
     "Gtk.ResizeMode",
     "Gtk.Scrollable",
     "Gtk.ScrollablePolicy",
+    "Gtk.ScrollStep",
     "Gtk.TextDirection",
     "Gtk.TextView",
     "Gtk.TextIter",

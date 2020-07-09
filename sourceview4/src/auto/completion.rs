@@ -16,6 +16,8 @@ use glib_sys;
 use gobject_sys;
 use gtk;
 use gtk_source_sys;
+use gtk_sys;
+use libc;
 use std::boxed::Box as Box_;
 use std::fmt;
 use std::mem::transmute;
@@ -198,9 +200,19 @@ pub trait CompletionExt: 'static {
 
     fn emit_hide(&self);
 
-    //fn connect_move_cursor<Unsupported or ignored types>(&self, f: F) -> SignalHandlerId;
+    fn connect_move_cursor<F: Fn(&Self, gtk::ScrollStep, i32) + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId;
 
-    //fn connect_move_page<Unsupported or ignored types>(&self, f: F) -> SignalHandlerId;
+    fn emit_move_cursor(&self, step: gtk::ScrollStep, num: i32);
+
+    fn connect_move_page<F: Fn(&Self, gtk::ScrollStep, i32) + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId;
+
+    fn emit_move_page(&self, step: gtk::ScrollStep, num: i32);
 
     fn connect_populate_context<F: Fn(&Self, &CompletionContext) + 'static>(
         &self,
@@ -600,13 +612,85 @@ impl<O: IsA<Completion>> CompletionExt for O {
         };
     }
 
-    //fn connect_move_cursor<Unsupported or ignored types>(&self, f: F) -> SignalHandlerId {
-    //    Ignored step: Gtk.ScrollStep
-    //}
+    fn connect_move_cursor<F: Fn(&Self, gtk::ScrollStep, i32) + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn move_cursor_trampoline<P, F: Fn(&P, gtk::ScrollStep, i32) + 'static>(
+            this: *mut gtk_source_sys::GtkSourceCompletion,
+            step: gtk_sys::GtkScrollStep,
+            num: libc::c_int,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<Completion>,
+        {
+            let f: &F = &*(f as *const F);
+            f(
+                &Completion::from_glib_borrow(this).unsafe_cast_ref(),
+                from_glib(step),
+                num,
+            )
+        }
+        unsafe {
+            let f: Box_<F> = Box_::new(f);
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"move-cursor\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    move_cursor_trampoline::<Self, F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
+        }
+    }
 
-    //fn connect_move_page<Unsupported or ignored types>(&self, f: F) -> SignalHandlerId {
-    //    Ignored step: Gtk.ScrollStep
-    //}
+    fn emit_move_cursor(&self, step: gtk::ScrollStep, num: i32) {
+        let _ = unsafe {
+            glib::Object::from_glib_borrow(self.as_ptr() as *mut gobject_sys::GObject)
+                .emit("move-cursor", &[&step, &num])
+                .unwrap()
+        };
+    }
+
+    fn connect_move_page<F: Fn(&Self, gtk::ScrollStep, i32) + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn move_page_trampoline<P, F: Fn(&P, gtk::ScrollStep, i32) + 'static>(
+            this: *mut gtk_source_sys::GtkSourceCompletion,
+            step: gtk_sys::GtkScrollStep,
+            num: libc::c_int,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<Completion>,
+        {
+            let f: &F = &*(f as *const F);
+            f(
+                &Completion::from_glib_borrow(this).unsafe_cast_ref(),
+                from_glib(step),
+                num,
+            )
+        }
+        unsafe {
+            let f: Box_<F> = Box_::new(f);
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"move-page\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    move_page_trampoline::<Self, F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
+        }
+    }
+
+    fn emit_move_page(&self, step: gtk::ScrollStep, num: i32) {
+        let _ = unsafe {
+            glib::Object::from_glib_borrow(self.as_ptr() as *mut gobject_sys::GObject)
+                .emit("move-page", &[&step, &num])
+                .unwrap()
+        };
+    }
 
     fn connect_populate_context<F: Fn(&Self, &CompletionContext) + 'static>(
         &self,
