@@ -17,12 +17,9 @@
 //
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+use crate::Completion;
+use crate::CompletionContext;
 use glib::translate::*;
-use gtk;
-use gtk_source_sys;
-
-use Completion;
-use CompletionContext;
 
 impl Completion {
     #[allow(unused)]
@@ -31,7 +28,7 @@ impl Completion {
         mut position: Option<&mut gtk::TextIter>,
     ) -> Option<CompletionContext> {
         unsafe {
-            from_glib_none(gtk_source_sys::gtk_source_completion_create_context(
+            from_glib_none(ffi::gtk_source_completion_create_context(
                 self.to_glib_none().0,
                 position.to_glib_none_mut().0,
             ))

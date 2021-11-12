@@ -16,14 +16,30 @@ version = "4"
 
 [dependencies]
 libc = "0.2"
-cairo-sys-rs = {git = "https://github.com/gtk-rs/gtk-rs-core"}
-glib-sys = {git = "https://github.com/gtk-rs/gtk-rs-core"}
-gobject-sys = {git = "https://github.com/gtk-rs/gtk-rs-core"}
-gio-sys = {git = "https://github.com/gtk-rs/gtk-rs-core"}
-gdk-sys = {git = "https://github.com/gtk-rs/gtk3-rs"}
-gtk-sys = {git = "https://github.com/gtk-rs/gtk3-rs"}
-gdk-pixbuf-sys = {git = "https://github.com/gtk-rs/gtk-rs-core"}
-pango-sys = {git = "https://github.com/gtk-rs/gtk-rs-core"}
+
+[dependencies.cairo-sys-rs]
+git = "https://github.com/gtk-rs/gtk-rs-core"
+
+[dependencies.glib-sys]
+git = "https://github.com/gtk-rs/gtk-rs-core"
+
+[dependencies.gobject-sys]
+git = "https://github.com/gtk-rs/gtk-rs-core"
+
+[dependencies.gio-sys]
+git = "https://github.com/gtk-rs/gtk-rs-core"
+
+[dependencies.gdk-sys]
+git = "https://github.com/gtk-rs/gtk3-rs"
+
+[dependencies.gtk-sys]
+git = "https://github.com/gtk-rs/gtk3-rs"
+
+[dependencies.gdk-pixbuf-sys]
+git = "https://github.com/gtk-rs/gtk-rs-core"
+
+[dependencies.pango-sys]
+git = "https://github.com/gtk-rs/gtk-rs-core"
 
 [build-dependencies]
 pkg-config = "0.3"

@@ -54,7 +54,6 @@ generate = [
 manual = [
     "cairo.Context",
     "Gtk.Actionable",
-    "Gtk.Activatable",
     "Gtk.Adjustment",
     "Gtk.Align",
     "Gtk.Buildable",

@@ -22,9 +22,10 @@ gdk-pixbuf = {git = "https://github.com/gtk-rs/gtk-rs-core"}
 pango = {git = "https://github.com/gtk-rs/gtk-rs-core"}
 
 
-[dependencies.sourceview4-sys]
+[dependencies.ffi]
+package = "sourceview4-sys"
 version = "0.2.0"
 path = "../sourceview4-sys"
 
 [features]
-dox = ["sourceview4-sys/dox"]
+dox = ["ffi/dox"]

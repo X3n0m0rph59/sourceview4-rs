@@ -10,7 +10,7 @@ use std::fmt;
 
 glib::wrapper! {
     #[doc(alias = "GtkSourceStyleSchemeChooserButton")]
-    pub struct StyleSchemeChooserButton(Object<ffi::GtkSourceStyleSchemeChooserButton, ffi::GtkSourceStyleSchemeChooserButtonClass>) @extends gtk::Button, gtk::Bin, gtk::Container, gtk::Widget, @implements gtk::Buildable, gtk::Actionable, gtk::Activatable, StyleSchemeChooser;
+    pub struct StyleSchemeChooserButton(Object<ffi::GtkSourceStyleSchemeChooserButton, ffi::GtkSourceStyleSchemeChooserButtonClass>) @extends gtk::Button, gtk::Bin, gtk::Container, gtk::Widget, @implements gtk::Buildable, gtk::Actionable, StyleSchemeChooser;
 
     match fn {
         type_ => || ffi::gtk_source_style_scheme_chooser_button_get_type(),
