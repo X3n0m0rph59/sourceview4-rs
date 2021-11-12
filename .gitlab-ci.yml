@@ -7,29 +7,42 @@ before_script:
   - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain none -y
   - source $HOME/.cargo/env
   - rustup toolchain install nightly --profile minimal --allow-downgrade -c rustfmt
-
-stages:
-  - test
-  - deploy
+  - curl --proto '=https' --tlsv1.2 -sSf -o gir-rustdoc.py
+    https://gitlab.gnome.org/World/Rust/gir-rustdoc/-/raw/main/gir-rustdoc.py
+  - chmod +x gir-rustdoc.py
 
 build:
-  stage: test
   script:
     - cargo build --all-features
     - xvfb-run -a -s "-screen 0 1024x768x24" cargo test
 
+docs:
+  stage: test
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+  script:
+    # generate the docs
+    - cargo install rustdoc-stripper
+    - ./generator.py --embed-docs
+    - rustup default nightly
+    - eval $(./gir-rustdoc.py pre-docs)
+    - cargo doc --features dox --no-deps
+    - mv target/doc/ docs
+  artifacts:
+    paths:
+      - docs
+
 pages:
   stage: deploy
   script:
-    - cp ./GtkSource-4.gir ./gir-files/
-    - cargo run --release -- -c ./sourceview4/Gir.toml -d ./gir-files --doc-target-path docs.md -m doc
-    - cargo install rustdoc-stripper
-    - /root/.cargo/bin/rustdoc-stripper -g -o ./sourceview4/docs.md
-    - cargo doc -p sourceview4 --all-features
-    - mv target/doc/ public
+    - ./gir-rustdoc.py html-index
+    # main docs
+    - mkdir public/git
+    - mv docs public/git/docs
+    # stable docs
+    - ./gir-rustdoc.py docs-from-artifacts
   artifacts:
     paths:
       - public
-  only:
-    refs:
-      - master
+  rules:
+    - if: $CI_DEFAULT_BRANCH == $CI_COMMIT_BRANCH
