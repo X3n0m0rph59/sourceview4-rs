@@ -8,21 +8,9 @@ use glib::object::Cast;
 use glib::translate::*;
 use std::fmt;
 
-#[cfg(any(feature = "gtk_v3_4", feature = "dox"))]
-#[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_4")))]
 glib::wrapper! {
     #[doc(alias = "GtkSourceStyleSchemeChooserButton")]
-    pub struct StyleSchemeChooserButton(Object<ffi::GtkSourceStyleSchemeChooserButton, ffi::GtkSourceStyleSchemeChooserButtonClass>) @extends gtk::Button, gtk::Bin, gtk::Container, gtk::Widget, @implements gtk::Buildable, gtk::Actionable, StyleSchemeChooser;
-
-    match fn {
-        type_ => || ffi::gtk_source_style_scheme_chooser_button_get_type(),
-    }
-}
-
-#[cfg(not(any(feature = "gtk_v3_4", feature = "dox")))]
-glib::wrapper! {
-    #[doc(alias = "GtkSourceStyleSchemeChooserButton")]
-    pub struct StyleSchemeChooserButton(Object<ffi::GtkSourceStyleSchemeChooserButton, ffi::GtkSourceStyleSchemeChooserButtonClass>) @extends gtk::Button, gtk::Bin, gtk::Container, gtk::Widget, @implements gtk::Buildable, StyleSchemeChooser;
+    pub struct StyleSchemeChooserButton(Object<ffi::GtkSourceStyleSchemeChooserButton, ffi::GtkSourceStyleSchemeChooserButtonClass>) @extends gtk::Button, gtk::Bin, gtk::Container, gtk::Widget, @implements gtk::Buildable, gtk::Actionable, gtk::Activatable, StyleSchemeChooser;
 
     match fn {
         type_ => || ffi::gtk_source_style_scheme_chooser_button_get_type(),

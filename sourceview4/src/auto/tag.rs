@@ -57,40 +57,28 @@ impl Default for Tag {
 pub struct TagBuilder {
     draw_spaces: Option<bool>,
     draw_spaces_set: Option<bool>,
-    #[cfg(any(feature = "gtk_v2_12", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v2_12")))]
     accumulative_margin: Option<bool>,
     background: Option<String>,
     background_full_height: Option<bool>,
     background_full_height_set: Option<bool>,
-    #[cfg(any(feature = "gtk_v3_2", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_2")))]
     background_rgba: Option<gdk::RGBA>,
     background_set: Option<bool>,
     direction: Option<gtk::TextDirection>,
     editable: Option<bool>,
     editable_set: Option<bool>,
-    #[cfg(any(feature = "gtk_v3_16", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_16")))]
     fallback: Option<bool>,
     fallback_set: Option<bool>,
     family: Option<String>,
     family_set: Option<bool>,
     font: Option<String>,
     font_desc: Option<pango::FontDescription>,
-    #[cfg(any(feature = "gtk_v3_18", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_18")))]
     font_features: Option<String>,
     font_features_set: Option<bool>,
     foreground: Option<String>,
-    #[cfg(any(feature = "gtk_v3_2", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_2")))]
     foreground_rgba: Option<gdk::RGBA>,
     foreground_set: Option<bool>,
     indent: Option<i32>,
     indent_set: Option<bool>,
-    #[cfg(any(feature = "gtk_v2_8", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v2_8")))]
     invisible: Option<bool>,
     invisible_set: Option<bool>,
     justification: Option<gtk::Justification>,
@@ -99,16 +87,10 @@ pub struct TagBuilder {
     language_set: Option<bool>,
     left_margin: Option<i32>,
     left_margin_set: Option<bool>,
-    #[cfg(any(feature = "gtk_v3_16", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_16")))]
     letter_spacing: Option<i32>,
     letter_spacing_set: Option<bool>,
     name: Option<String>,
-    #[cfg(any(feature = "gtk_v2_8", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v2_8")))]
     paragraph_background: Option<String>,
-    #[cfg(any(feature = "gtk_v3_2", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_2")))]
     paragraph_background_rgba: Option<gdk::RGBA>,
     paragraph_background_set: Option<bool>,
     pixels_above_lines: Option<i32>,
@@ -129,11 +111,7 @@ pub struct TagBuilder {
     stretch: Option<pango::Stretch>,
     stretch_set: Option<bool>,
     strikethrough: Option<bool>,
-    #[cfg(any(feature = "gtk_v3_16", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_16")))]
     strikethrough_rgba: Option<gdk::RGBA>,
-    #[cfg(any(feature = "gtk_v3_16", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_16")))]
     strikethrough_rgba_set: Option<bool>,
     strikethrough_set: Option<bool>,
     style: Option<pango::Style>,
@@ -141,11 +119,7 @@ pub struct TagBuilder {
     tabs: Option<pango::TabArray>,
     tabs_set: Option<bool>,
     underline: Option<pango::Underline>,
-    #[cfg(any(feature = "gtk_v3_16", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_16")))]
     underline_rgba: Option<gdk::RGBA>,
-    #[cfg(any(feature = "gtk_v3_16", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_16")))]
     underline_rgba_set: Option<bool>,
     underline_set: Option<bool>,
     variant: Option<pango::Variant>,
@@ -173,7 +147,6 @@ impl TagBuilder {
         if let Some(ref draw_spaces_set) = self.draw_spaces_set {
             properties.push(("draw-spaces-set", draw_spaces_set));
         }
-        #[cfg(any(feature = "gtk_v2_12", feature = "dox"))]
         if let Some(ref accumulative_margin) = self.accumulative_margin {
             properties.push(("accumulative-margin", accumulative_margin));
         }
@@ -186,7 +159,6 @@ impl TagBuilder {
         if let Some(ref background_full_height_set) = self.background_full_height_set {
             properties.push(("background-full-height-set", background_full_height_set));
         }
-        #[cfg(any(feature = "gtk_v3_2", feature = "dox"))]
         if let Some(ref background_rgba) = self.background_rgba {
             properties.push(("background-rgba", background_rgba));
         }
@@ -202,7 +174,6 @@ impl TagBuilder {
         if let Some(ref editable_set) = self.editable_set {
             properties.push(("editable-set", editable_set));
         }
-        #[cfg(any(feature = "gtk_v3_16", feature = "dox"))]
         if let Some(ref fallback) = self.fallback {
             properties.push(("fallback", fallback));
         }
@@ -221,7 +192,6 @@ impl TagBuilder {
         if let Some(ref font_desc) = self.font_desc {
             properties.push(("font-desc", font_desc));
         }
-        #[cfg(any(feature = "gtk_v3_18", feature = "dox"))]
         if let Some(ref font_features) = self.font_features {
             properties.push(("font-features", font_features));
         }
@@ -231,7 +201,6 @@ impl TagBuilder {
         if let Some(ref foreground) = self.foreground {
             properties.push(("foreground", foreground));
         }
-        #[cfg(any(feature = "gtk_v3_2", feature = "dox"))]
         if let Some(ref foreground_rgba) = self.foreground_rgba {
             properties.push(("foreground-rgba", foreground_rgba));
         }
@@ -244,7 +213,6 @@ impl TagBuilder {
         if let Some(ref indent_set) = self.indent_set {
             properties.push(("indent-set", indent_set));
         }
-        #[cfg(any(feature = "gtk_v2_8", feature = "dox"))]
         if let Some(ref invisible) = self.invisible {
             properties.push(("invisible", invisible));
         }
@@ -269,7 +237,6 @@ impl TagBuilder {
         if let Some(ref left_margin_set) = self.left_margin_set {
             properties.push(("left-margin-set", left_margin_set));
         }
-        #[cfg(any(feature = "gtk_v3_16", feature = "dox"))]
         if let Some(ref letter_spacing) = self.letter_spacing {
             properties.push(("letter-spacing", letter_spacing));
         }
@@ -279,11 +246,9 @@ impl TagBuilder {
         if let Some(ref name) = self.name {
             properties.push(("name", name));
         }
-        #[cfg(any(feature = "gtk_v2_8", feature = "dox"))]
         if let Some(ref paragraph_background) = self.paragraph_background {
             properties.push(("paragraph-background", paragraph_background));
         }
-        #[cfg(any(feature = "gtk_v3_2", feature = "dox"))]
         if let Some(ref paragraph_background_rgba) = self.paragraph_background_rgba {
             properties.push(("paragraph-background-rgba", paragraph_background_rgba));
         }
@@ -344,11 +309,9 @@ impl TagBuilder {
         if let Some(ref strikethrough) = self.strikethrough {
             properties.push(("strikethrough", strikethrough));
         }
-        #[cfg(any(feature = "gtk_v3_16", feature = "dox"))]
         if let Some(ref strikethrough_rgba) = self.strikethrough_rgba {
             properties.push(("strikethrough-rgba", strikethrough_rgba));
         }
-        #[cfg(any(feature = "gtk_v3_16", feature = "dox"))]
         if let Some(ref strikethrough_rgba_set) = self.strikethrough_rgba_set {
             properties.push(("strikethrough-rgba-set", strikethrough_rgba_set));
         }
@@ -370,11 +333,9 @@ impl TagBuilder {
         if let Some(ref underline) = self.underline {
             properties.push(("underline", underline));
         }
-        #[cfg(any(feature = "gtk_v3_16", feature = "dox"))]
         if let Some(ref underline_rgba) = self.underline_rgba {
             properties.push(("underline-rgba", underline_rgba));
         }
-        #[cfg(any(feature = "gtk_v3_16", feature = "dox"))]
         if let Some(ref underline_rgba_set) = self.underline_rgba_set {
             properties.push(("underline-rgba-set", underline_rgba_set));
         }
@@ -412,8 +373,6 @@ impl TagBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v2_12", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v2_12")))]
     pub fn accumulative_margin(mut self, accumulative_margin: bool) -> Self {
         self.accumulative_margin = Some(accumulative_margin);
         self
@@ -434,8 +393,6 @@ impl TagBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v3_2", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_2")))]
     pub fn background_rgba(mut self, background_rgba: &gdk::RGBA) -> Self {
         self.background_rgba = Some(background_rgba.clone());
         self
@@ -461,8 +418,6 @@ impl TagBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v3_16", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_16")))]
     pub fn fallback(mut self, fallback: bool) -> Self {
         self.fallback = Some(fallback);
         self
@@ -493,8 +448,6 @@ impl TagBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v3_18", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_18")))]
     pub fn font_features(mut self, font_features: &str) -> Self {
         self.font_features = Some(font_features.to_string());
         self
@@ -510,8 +463,6 @@ impl TagBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v3_2", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_2")))]
     pub fn foreground_rgba(mut self, foreground_rgba: &gdk::RGBA) -> Self {
         self.foreground_rgba = Some(foreground_rgba.clone());
         self
@@ -532,8 +483,6 @@ impl TagBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v2_8", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v2_8")))]
     pub fn invisible(mut self, invisible: bool) -> Self {
         self.invisible = Some(invisible);
         self
@@ -574,8 +523,6 @@ impl TagBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v3_16", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_16")))]
     pub fn letter_spacing(mut self, letter_spacing: i32) -> Self {
         self.letter_spacing = Some(letter_spacing);
         self
@@ -591,15 +538,11 @@ impl TagBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v2_8", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v2_8")))]
     pub fn paragraph_background(mut self, paragraph_background: &str) -> Self {
         self.paragraph_background = Some(paragraph_background.to_string());
         self
     }
 
-    #[cfg(any(feature = "gtk_v3_2", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_2")))]
     pub fn paragraph_background_rgba(mut self, paragraph_background_rgba: &gdk::RGBA) -> Self {
         self.paragraph_background_rgba = Some(paragraph_background_rgba.clone());
         self
@@ -700,15 +643,11 @@ impl TagBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v3_16", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_16")))]
     pub fn strikethrough_rgba(mut self, strikethrough_rgba: &gdk::RGBA) -> Self {
         self.strikethrough_rgba = Some(strikethrough_rgba.clone());
         self
     }
 
-    #[cfg(any(feature = "gtk_v3_16", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_16")))]
     pub fn strikethrough_rgba_set(mut self, strikethrough_rgba_set: bool) -> Self {
         self.strikethrough_rgba_set = Some(strikethrough_rgba_set);
         self
@@ -744,15 +683,11 @@ impl TagBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v3_16", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_16")))]
     pub fn underline_rgba(mut self, underline_rgba: &gdk::RGBA) -> Self {
         self.underline_rgba = Some(underline_rgba.clone());
         self
     }
 
-    #[cfg(any(feature = "gtk_v3_16", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_16")))]
     pub fn underline_rgba_set(mut self, underline_rgba_set: bool) -> Self {
         self.underline_rgba_set = Some(underline_rgba_set);
         self

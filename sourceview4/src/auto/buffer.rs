@@ -82,8 +82,6 @@ pub struct BufferBuilder {
     style_scheme: Option<StyleScheme>,
     undo_manager: Option<UndoManager>,
     tag_table: Option<gtk::TextTagTable>,
-    #[cfg(any(feature = "gtk_v2_8", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v2_8")))]
     text: Option<String>,
 }
 
@@ -122,7 +120,6 @@ impl BufferBuilder {
         if let Some(ref tag_table) = self.tag_table {
             properties.push(("tag-table", tag_table));
         }
-        #[cfg(any(feature = "gtk_v2_8", feature = "dox"))]
         if let Some(ref text) = self.text {
             properties.push(("text", text));
         }
@@ -169,8 +166,6 @@ impl BufferBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v2_8", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v2_8")))]
     pub fn text(mut self, text: &str) -> Self {
         self.text = Some(text.to_string());
         self

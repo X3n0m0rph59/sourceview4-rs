@@ -70,21 +70,13 @@ pub struct MapBuilder {
     smart_home_end: Option<SmartHomeEndType>,
     tab_width: Option<u32>,
     accepts_tab: Option<bool>,
-    #[cfg(any(feature = "gtk_v3_18", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_18")))]
     bottom_margin: Option<i32>,
     buffer: Option<gtk::TextBuffer>,
     cursor_visible: Option<bool>,
     editable: Option<bool>,
-    #[cfg(any(feature = "gtk_v2_16", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v2_16")))]
     im_module: Option<String>,
     indent: Option<i32>,
-    #[cfg(any(feature = "gtk_v3_6", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_6")))]
     input_hints: Option<gtk::InputHints>,
-    #[cfg(any(feature = "gtk_v3_6", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_6")))]
     input_purpose: Option<gtk::InputPurpose>,
     justification: Option<gtk::Justification>,
     left_margin: Option<i32>,
@@ -93,13 +85,9 @@ pub struct MapBuilder {
     pixels_above_lines: Option<i32>,
     pixels_below_lines: Option<i32>,
     pixels_inside_wrap: Option<i32>,
-    #[cfg(any(feature = "gtk_v3_8", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_8")))]
     populate_all: Option<bool>,
     right_margin: Option<i32>,
     tabs: Option<pango::TabArray>,
-    #[cfg(any(feature = "gtk_v3_18", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_18")))]
     top_margin: Option<i32>,
     wrap_mode: Option<gtk::WrapMode>,
     border_width: Option<u32>,
@@ -109,80 +97,40 @@ pub struct MapBuilder {
     can_default: Option<bool>,
     can_focus: Option<bool>,
     events: Option<gdk::EventMask>,
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     expand: Option<bool>,
     #[cfg(any(feature = "gtk_v3_20", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_20")))]
     focus_on_click: Option<bool>,
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     halign: Option<gtk::Align>,
     has_default: Option<bool>,
     has_focus: Option<bool>,
-    #[cfg(any(feature = "gtk_v2_12", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v2_12")))]
     has_tooltip: Option<bool>,
     height_request: Option<i32>,
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     hexpand: Option<bool>,
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     hexpand_set: Option<bool>,
     is_focus: Option<bool>,
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     margin: Option<i32>,
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     margin_bottom: Option<i32>,
-    #[cfg(any(feature = "gtk_v3_12", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_12")))]
     margin_end: Option<i32>,
-    #[cfg(any(feature = "gtk_v3_12", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_12")))]
     margin_start: Option<i32>,
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     margin_top: Option<i32>,
     name: Option<String>,
     no_show_all: Option<bool>,
-    #[cfg(any(feature = "gtk_v3_8", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_8")))]
     opacity: Option<f64>,
     parent: Option<gtk::Container>,
     receives_default: Option<bool>,
     sensitive: Option<bool>,
     //style: /*Unknown type*/,
-    #[cfg(any(feature = "gtk_v2_12", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v2_12")))]
     tooltip_markup: Option<String>,
-    #[cfg(any(feature = "gtk_v2_12", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v2_12")))]
     tooltip_text: Option<String>,
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     valign: Option<gtk::Align>,
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     vexpand: Option<bool>,
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     vexpand_set: Option<bool>,
     visible: Option<bool>,
     width_request: Option<i32>,
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     hadjustment: Option<gtk::Adjustment>,
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     hscroll_policy: Option<gtk::ScrollablePolicy>,
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     vadjustment: Option<gtk::Adjustment>,
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     vscroll_policy: Option<gtk::ScrollablePolicy>,
 }
 
@@ -248,7 +196,6 @@ impl MapBuilder {
         if let Some(ref accepts_tab) = self.accepts_tab {
             properties.push(("accepts-tab", accepts_tab));
         }
-        #[cfg(any(feature = "gtk_v3_18", feature = "dox"))]
         if let Some(ref bottom_margin) = self.bottom_margin {
             properties.push(("bottom-margin", bottom_margin));
         }
@@ -261,18 +208,15 @@ impl MapBuilder {
         if let Some(ref editable) = self.editable {
             properties.push(("editable", editable));
         }
-        #[cfg(any(feature = "gtk_v2_16", feature = "dox"))]
         if let Some(ref im_module) = self.im_module {
             properties.push(("im-module", im_module));
         }
         if let Some(ref indent) = self.indent {
             properties.push(("indent", indent));
         }
-        #[cfg(any(feature = "gtk_v3_6", feature = "dox"))]
         if let Some(ref input_hints) = self.input_hints {
             properties.push(("input-hints", input_hints));
         }
-        #[cfg(any(feature = "gtk_v3_6", feature = "dox"))]
         if let Some(ref input_purpose) = self.input_purpose {
             properties.push(("input-purpose", input_purpose));
         }
@@ -297,7 +241,6 @@ impl MapBuilder {
         if let Some(ref pixels_inside_wrap) = self.pixels_inside_wrap {
             properties.push(("pixels-inside-wrap", pixels_inside_wrap));
         }
-        #[cfg(any(feature = "gtk_v3_8", feature = "dox"))]
         if let Some(ref populate_all) = self.populate_all {
             properties.push(("populate-all", populate_all));
         }
@@ -307,7 +250,6 @@ impl MapBuilder {
         if let Some(ref tabs) = self.tabs {
             properties.push(("tabs", tabs));
         }
-        #[cfg(any(feature = "gtk_v3_18", feature = "dox"))]
         if let Some(ref top_margin) = self.top_margin {
             properties.push(("top-margin", top_margin));
         }
@@ -335,7 +277,6 @@ impl MapBuilder {
         if let Some(ref events) = self.events {
             properties.push(("events", events));
         }
-        #[cfg(any(feature = "gtk_v3", feature = "dox"))]
         if let Some(ref expand) = self.expand {
             properties.push(("expand", expand));
         }
@@ -343,7 +284,6 @@ impl MapBuilder {
         if let Some(ref focus_on_click) = self.focus_on_click {
             properties.push(("focus-on-click", focus_on_click));
         }
-        #[cfg(any(feature = "gtk_v3", feature = "dox"))]
         if let Some(ref halign) = self.halign {
             properties.push(("halign", halign));
         }
@@ -353,41 +293,33 @@ impl MapBuilder {
         if let Some(ref has_focus) = self.has_focus {
             properties.push(("has-focus", has_focus));
         }
-        #[cfg(any(feature = "gtk_v2_12", feature = "dox"))]
         if let Some(ref has_tooltip) = self.has_tooltip {
             properties.push(("has-tooltip", has_tooltip));
         }
         if let Some(ref height_request) = self.height_request {
             properties.push(("height-request", height_request));
         }
-        #[cfg(any(feature = "gtk_v3", feature = "dox"))]
         if let Some(ref hexpand) = self.hexpand {
             properties.push(("hexpand", hexpand));
         }
-        #[cfg(any(feature = "gtk_v3", feature = "dox"))]
         if let Some(ref hexpand_set) = self.hexpand_set {
             properties.push(("hexpand-set", hexpand_set));
         }
         if let Some(ref is_focus) = self.is_focus {
             properties.push(("is-focus", is_focus));
         }
-        #[cfg(any(feature = "gtk_v3", feature = "dox"))]
         if let Some(ref margin) = self.margin {
             properties.push(("margin", margin));
         }
-        #[cfg(any(feature = "gtk_v3", feature = "dox"))]
         if let Some(ref margin_bottom) = self.margin_bottom {
             properties.push(("margin-bottom", margin_bottom));
         }
-        #[cfg(any(feature = "gtk_v3_12", feature = "dox"))]
         if let Some(ref margin_end) = self.margin_end {
             properties.push(("margin-end", margin_end));
         }
-        #[cfg(any(feature = "gtk_v3_12", feature = "dox"))]
         if let Some(ref margin_start) = self.margin_start {
             properties.push(("margin-start", margin_start));
         }
-        #[cfg(any(feature = "gtk_v3", feature = "dox"))]
         if let Some(ref margin_top) = self.margin_top {
             properties.push(("margin-top", margin_top));
         }
@@ -397,7 +329,6 @@ impl MapBuilder {
         if let Some(ref no_show_all) = self.no_show_all {
             properties.push(("no-show-all", no_show_all));
         }
-        #[cfg(any(feature = "gtk_v3_8", feature = "dox"))]
         if let Some(ref opacity) = self.opacity {
             properties.push(("opacity", opacity));
         }
@@ -410,23 +341,18 @@ impl MapBuilder {
         if let Some(ref sensitive) = self.sensitive {
             properties.push(("sensitive", sensitive));
         }
-        #[cfg(any(feature = "gtk_v2_12", feature = "dox"))]
         if let Some(ref tooltip_markup) = self.tooltip_markup {
             properties.push(("tooltip-markup", tooltip_markup));
         }
-        #[cfg(any(feature = "gtk_v2_12", feature = "dox"))]
         if let Some(ref tooltip_text) = self.tooltip_text {
             properties.push(("tooltip-text", tooltip_text));
         }
-        #[cfg(any(feature = "gtk_v3", feature = "dox"))]
         if let Some(ref valign) = self.valign {
             properties.push(("valign", valign));
         }
-        #[cfg(any(feature = "gtk_v3", feature = "dox"))]
         if let Some(ref vexpand) = self.vexpand {
             properties.push(("vexpand", vexpand));
         }
-        #[cfg(any(feature = "gtk_v3", feature = "dox"))]
         if let Some(ref vexpand_set) = self.vexpand_set {
             properties.push(("vexpand-set", vexpand_set));
         }
@@ -436,19 +362,15 @@ impl MapBuilder {
         if let Some(ref width_request) = self.width_request {
             properties.push(("width-request", width_request));
         }
-        #[cfg(any(feature = "gtk_v3", feature = "dox"))]
         if let Some(ref hadjustment) = self.hadjustment {
             properties.push(("hadjustment", hadjustment));
         }
-        #[cfg(any(feature = "gtk_v3", feature = "dox"))]
         if let Some(ref hscroll_policy) = self.hscroll_policy {
             properties.push(("hscroll-policy", hscroll_policy));
         }
-        #[cfg(any(feature = "gtk_v3", feature = "dox"))]
         if let Some(ref vadjustment) = self.vadjustment {
             properties.push(("vadjustment", vadjustment));
         }
-        #[cfg(any(feature = "gtk_v3", feature = "dox"))]
         if let Some(ref vscroll_policy) = self.vscroll_policy {
             properties.push(("vscroll-policy", vscroll_policy));
         }
@@ -535,8 +457,6 @@ impl MapBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v3_18", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_18")))]
     pub fn bottom_margin(mut self, bottom_margin: i32) -> Self {
         self.bottom_margin = Some(bottom_margin);
         self
@@ -557,8 +477,6 @@ impl MapBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v2_16", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v2_16")))]
     pub fn im_module(mut self, im_module: &str) -> Self {
         self.im_module = Some(im_module.to_string());
         self
@@ -569,15 +487,11 @@ impl MapBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v3_6", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_6")))]
     pub fn input_hints(mut self, input_hints: gtk::InputHints) -> Self {
         self.input_hints = Some(input_hints);
         self
     }
 
-    #[cfg(any(feature = "gtk_v3_6", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_6")))]
     pub fn input_purpose(mut self, input_purpose: gtk::InputPurpose) -> Self {
         self.input_purpose = Some(input_purpose);
         self
@@ -618,8 +532,6 @@ impl MapBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v3_8", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_8")))]
     pub fn populate_all(mut self, populate_all: bool) -> Self {
         self.populate_all = Some(populate_all);
         self
@@ -635,8 +547,6 @@ impl MapBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v3_18", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_18")))]
     pub fn top_margin(mut self, top_margin: i32) -> Self {
         self.top_margin = Some(top_margin);
         self
@@ -682,8 +592,6 @@ impl MapBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     pub fn expand(mut self, expand: bool) -> Self {
         self.expand = Some(expand);
         self
@@ -696,8 +604,6 @@ impl MapBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     pub fn halign(mut self, halign: gtk::Align) -> Self {
         self.halign = Some(halign);
         self
@@ -713,8 +619,6 @@ impl MapBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v2_12", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v2_12")))]
     pub fn has_tooltip(mut self, has_tooltip: bool) -> Self {
         self.has_tooltip = Some(has_tooltip);
         self
@@ -725,15 +629,11 @@ impl MapBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     pub fn hexpand(mut self, hexpand: bool) -> Self {
         self.hexpand = Some(hexpand);
         self
     }
 
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     pub fn hexpand_set(mut self, hexpand_set: bool) -> Self {
         self.hexpand_set = Some(hexpand_set);
         self
@@ -744,36 +644,26 @@ impl MapBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     pub fn margin(mut self, margin: i32) -> Self {
         self.margin = Some(margin);
         self
     }
 
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     pub fn margin_bottom(mut self, margin_bottom: i32) -> Self {
         self.margin_bottom = Some(margin_bottom);
         self
     }
 
-    #[cfg(any(feature = "gtk_v3_12", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_12")))]
     pub fn margin_end(mut self, margin_end: i32) -> Self {
         self.margin_end = Some(margin_end);
         self
     }
 
-    #[cfg(any(feature = "gtk_v3_12", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_12")))]
     pub fn margin_start(mut self, margin_start: i32) -> Self {
         self.margin_start = Some(margin_start);
         self
     }
 
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     pub fn margin_top(mut self, margin_top: i32) -> Self {
         self.margin_top = Some(margin_top);
         self
@@ -789,8 +679,6 @@ impl MapBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v3_8", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3_8")))]
     pub fn opacity(mut self, opacity: f64) -> Self {
         self.opacity = Some(opacity);
         self
@@ -811,36 +699,26 @@ impl MapBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v2_12", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v2_12")))]
     pub fn tooltip_markup(mut self, tooltip_markup: &str) -> Self {
         self.tooltip_markup = Some(tooltip_markup.to_string());
         self
     }
 
-    #[cfg(any(feature = "gtk_v2_12", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v2_12")))]
     pub fn tooltip_text(mut self, tooltip_text: &str) -> Self {
         self.tooltip_text = Some(tooltip_text.to_string());
         self
     }
 
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     pub fn valign(mut self, valign: gtk::Align) -> Self {
         self.valign = Some(valign);
         self
     }
 
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     pub fn vexpand(mut self, vexpand: bool) -> Self {
         self.vexpand = Some(vexpand);
         self
     }
 
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     pub fn vexpand_set(mut self, vexpand_set: bool) -> Self {
         self.vexpand_set = Some(vexpand_set);
         self
@@ -856,29 +734,21 @@ impl MapBuilder {
         self
     }
 
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     pub fn hadjustment(mut self, hadjustment: &impl IsA<gtk::Adjustment>) -> Self {
         self.hadjustment = Some(hadjustment.clone().upcast());
         self
     }
 
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     pub fn hscroll_policy(mut self, hscroll_policy: gtk::ScrollablePolicy) -> Self {
         self.hscroll_policy = Some(hscroll_policy);
         self
     }
 
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     pub fn vadjustment(mut self, vadjustment: &impl IsA<gtk::Adjustment>) -> Self {
         self.vadjustment = Some(vadjustment.clone().upcast());
         self
     }
 
-    #[cfg(any(feature = "gtk_v3", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "gtk_v3")))]
     pub fn vscroll_policy(mut self, vscroll_policy: gtk::ScrollablePolicy) -> Self {
         self.vscroll_policy = Some(vscroll_policy);
         self
