@@ -2,5 +2,8 @@
 members = [
     "sourceview4",
     "sourceview4-sys",
-    "gir"
+]
+exclude = [
+  "checker",
+  "gir"
 ]
