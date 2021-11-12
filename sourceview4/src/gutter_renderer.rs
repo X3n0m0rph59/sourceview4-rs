@@ -17,14 +17,10 @@
 //
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-use cairo;
+use crate::GutterRenderer;
+use crate::GutterRendererState;
 use glib::object::IsA;
 use glib::translate::*;
-use gtk;
-use gtk_source_sys;
-
-use GutterRenderer;
-use GutterRendererState;
 
 pub trait GutterRendererExtManual: 'static {
     fn begin(
@@ -56,7 +52,7 @@ impl<O: IsA<GutterRenderer>> GutterRendererExtManual for O {
         end: &mut gtk::TextIter,
     ) {
         unsafe {
-            gtk_source_sys::gtk_source_gutter_renderer_begin(
+            ffi::gtk_source_gutter_renderer_begin(
                 self.as_ref().to_glib_none().0,
                 cr.to_raw_none(),
                 background_area.to_glib_none_mut().0,
@@ -77,14 +73,14 @@ impl<O: IsA<GutterRenderer>> GutterRendererExtManual for O {
         state: GutterRendererState,
     ) {
         unsafe {
-            gtk_source_sys::gtk_source_gutter_renderer_draw(
+            ffi::gtk_source_gutter_renderer_draw(
                 self.as_ref().to_glib_none().0,
                 cr.to_raw_none(),
                 background_area.to_glib_none_mut().0,
                 cell_area.to_glib_none_mut().0,
                 start.to_glib_none_mut().0,
                 end.to_glib_none_mut().0,
-                state.to_glib(),
+                state.into_glib(),
             );
         }
     }

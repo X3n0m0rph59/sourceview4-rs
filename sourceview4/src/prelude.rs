@@ -17,8 +17,7 @@
 //
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-pub use auto::traits::*;
-pub use completion::*;
-pub use completion_info::*;
-pub use gutter_renderer::*;
-pub use view::*;
+pub use crate::auto::traits::*;
+pub use crate::completion_info::CompletionInfoExtManual;
+pub use crate::gutter_renderer::GutterRendererExtManual;
+pub use crate::view::ViewExtManual;

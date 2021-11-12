@@ -1,5 +1,8 @@
+[external_libraries]
+Gtk = {min_version = "3.22"} # we have that feature enabled by default
+
 [options]
-girs_dir = "gir-files"
+girs_directories = ["../gir-files", "../"]
 library = "GtkSource"
 version = "4"
 min_cfg_version = "4"
@@ -15,7 +18,6 @@ external_libraries = [
     "GLib",
     "GObject",
     "Gio",
-    "Gtk",
     "Gdk",
     "GdkPixbuf",
     "Pango",

@@ -8,30 +8,24 @@ keywords = ["gtksourceview", "sourceview", "gtk-rs", "gnome"]
 repository = "https://gitlab.gnome.org/World/Rust/sourceview4-rs"
 documentation = "https://world.pages.gitlab.gnome.org/Rust/sourceview4-rs/sourceview4/"
 exclude = ["gir-files/*", "gir/"]
+edition = "2021"
 
 [dependencies]
 libc = "0.2"
 bitflags = "1.2"
-cairo-rs = "0.9"
-glib = "0.10"
-gio = "0.9"
-gdk = "0.13"
-gdk-pixbuf = "0.9"
-pango = "0.9"
-glib-sys = "0.10"
-gtk-sys = "0.10"
-gobject-sys = "0.10"
-gio-sys = "0.10"
-gdk-sys = "0.10"
+cairo-rs = {git = "https://github.com/gtk-rs/gtk-rs-core"}
+glib = {git = "https://github.com/gtk-rs/gtk-rs-core"}
+gio = {git = "https://github.com/gtk-rs/gtk-rs-core"}
+gdk = {git = "https://github.com/gtk-rs/gtk3-rs"}
+gtk = {git = "https://github.com/gtk-rs/gtk3-rs", features = ["v3_20"]}
+gdk-pixbuf = {git = "https://github.com/gtk-rs/gtk-rs-core"}
+pango = {git = "https://github.com/gtk-rs/gtk-rs-core"}
 
 
-[dependencies.gtk]
-version = "0.9"
-features = [ "v3_22" ]
-
-[dependencies.sourceview4-sys]
+[dependencies.ffi]
+package = "sourceview4-sys"
 version = "0.2.0"
 path = "../sourceview4-sys"
 
 [features]
-dox = ["sourceview4-sys/dox"]
+dox = ["ffi/dox"]

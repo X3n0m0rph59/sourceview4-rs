@@ -1,9 +1,12 @@
-image: 'registry.fedoraproject.org/fedora:32'
+image: "registry.fedoraproject.org/fedora:35"
 
 before_script:
   - dnf update -y --nogpgcheck
-  - dnf install -y --nogpgcheck rust cargo git gtksourceview4-devel xorg-x11-server-Xvfb
+  - dnf install -y --nogpgcheck git gcc gtksourceview4-devel xorg-x11-server-Xvfb
   - git submodule update --init
+  - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain none -y
+  - source $HOME/.cargo/env
+  - rustup toolchain install nightly --profile minimal --allow-downgrade -c rustfmt
 
 stages:
   - test
