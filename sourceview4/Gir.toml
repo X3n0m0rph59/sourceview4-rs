@@ -236,6 +236,10 @@ generate_builder = true
 name = "GtkSource.SearchContext"
 status = "generate"
 generate_builder = true
+manual_traits = ["SearchContextExtManual"]
+    [[object.function]]
+    name = "replace_all"
+    manual = true # wrong is_ok assertion
 
 [[object]]
 name = "GtkSource.SearchSettings"

@@ -28,4 +28,5 @@ pub use auto::*;
 mod completion;
 mod completion_info;
 mod gutter_renderer;
+mod search_context;
 mod view;

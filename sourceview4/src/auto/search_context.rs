@@ -209,9 +209,6 @@ pub trait SearchContextExt: 'static {
         replace: &str,
     ) -> Result<(), glib::Error>;
 
-    #[doc(alias = "gtk_source_search_context_replace_all")]
-    fn replace_all(&self, replace: &str) -> Result<(), glib::Error>;
-
     #[doc(alias = "gtk_source_search_context_set_highlight")]
     fn set_highlight(&self, highlight: bool);
 
@@ -477,25 +474,6 @@ impl<O: IsA<SearchContext>> SearchContextExt for O {
                 self.as_ref().to_glib_none().0,
                 match_start.to_glib_none_mut().0,
                 match_end.to_glib_none_mut().0,
-                replace.to_glib_none().0,
-                replace_length,
-                &mut error,
-            );
-            assert_eq!(is_ok == glib::ffi::GFALSE, !error.is_null());
-            if error.is_null() {
-                Ok(())
-            } else {
-                Err(from_glib_full(error))
-            }
-        }
-    }
-
-    fn replace_all(&self, replace: &str) -> Result<(), glib::Error> {
-        let replace_length = replace.len() as i32;
-        unsafe {
-            let mut error = ptr::null_mut();
-            let is_ok = ffi::gtk_source_search_context_replace_all(
-                self.as_ref().to_glib_none().0,
                 replace.to_glib_none().0,
                 replace_length,
                 &mut error,

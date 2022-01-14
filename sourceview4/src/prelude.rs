@@ -20,4 +20,5 @@
 pub use crate::auto::traits::*;
 pub use crate::completion_info::CompletionInfoExtManual;
 pub use crate::gutter_renderer::GutterRendererExtManual;
+pub use crate::search_context::SearchContextExtManual;
 pub use crate::view::ViewExtManual;
