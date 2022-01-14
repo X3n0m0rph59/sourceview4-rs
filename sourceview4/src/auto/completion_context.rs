@@ -29,10 +29,12 @@ glib::wrapper! {
 }
 
 impl CompletionContext {
+    pub const NONE: Option<&'static CompletionContext> = None;
+
     // rustdoc-stripper-ignore-next
     /// Creates a new builder-pattern struct instance to construct [`CompletionContext`] objects.
     ///
-    /// This method returns an instance of [`CompletionContextBuilder`] which can be used to create [`CompletionContext`] objects.
+    /// This method returns an instance of [`CompletionContextBuilder`](crate::builders::CompletionContextBuilder) which can be used to create [`CompletionContext`] objects.
     pub fn builder() -> CompletionContextBuilder {
         CompletionContextBuilder::default()
     }
@@ -43,6 +45,7 @@ impl CompletionContext {
 /// A [builder-pattern] type to construct [`CompletionContext`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+#[must_use = "The builder must be built to be used"]
 pub struct CompletionContextBuilder {
     activation: Option<CompletionActivation>,
     completion: Option<Completion>,
@@ -58,6 +61,7 @@ impl CompletionContextBuilder {
 
     // rustdoc-stripper-ignore-next
     /// Build the [`CompletionContext`].
+    #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> CompletionContext {
         let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
         if let Some(ref activation) = self.activation {
@@ -87,10 +91,6 @@ impl CompletionContextBuilder {
         self.iter = Some(iter.clone());
         self
     }
-}
-
-impl CompletionContext {
-    pub const NONE: Option<&'static CompletionContext> = None;
 }
 
 pub trait CompletionContextExt: 'static {
@@ -205,7 +205,7 @@ impl<O: IsA<CompletionContext>> CompletionContextExt for O {
     }
 
     fn emit_cancelled(&self) {
-        let _ = self.emit_by_name("cancelled", &[]);
+        self.emit_by_name::<()>("cancelled", &[]);
     }
 
     fn connect_activation_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {

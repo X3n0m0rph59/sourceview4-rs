@@ -16,6 +16,8 @@ glib::wrapper! {
 }
 
 impl CompletionInfo {
+    pub const NONE: Option<&'static CompletionInfo> = None;
+
     #[doc(alias = "gtk_source_completion_info_new")]
     pub fn new() -> CompletionInfo {
         assert_initialized_main_thread!();
@@ -27,10 +29,6 @@ impl Default for CompletionInfo {
     fn default() -> Self {
         Self::new()
     }
-}
-
-impl CompletionInfo {
-    pub const NONE: Option<&'static CompletionInfo> = None;
 }
 
 impl fmt::Display for CompletionInfo {

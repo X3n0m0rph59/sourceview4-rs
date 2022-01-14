@@ -27,6 +27,8 @@ glib::wrapper! {
 }
 
 impl File {
+    pub const NONE: Option<&'static File> = None;
+
     #[doc(alias = "gtk_source_file_new")]
     pub fn new() -> File {
         assert_initialized_main_thread!();
@@ -36,7 +38,7 @@ impl File {
     // rustdoc-stripper-ignore-next
     /// Creates a new builder-pattern struct instance to construct [`File`] objects.
     ///
-    /// This method returns an instance of [`FileBuilder`] which can be used to create [`File`] objects.
+    /// This method returns an instance of [`FileBuilder`](crate::builders::FileBuilder) which can be used to create [`File`] objects.
     pub fn builder() -> FileBuilder {
         FileBuilder::default()
     }
@@ -53,6 +55,7 @@ impl Default for File {
 /// A [builder-pattern] type to construct [`File`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+#[must_use = "The builder must be built to be used"]
 pub struct FileBuilder {
     location: Option<gio::File>,
 }
@@ -66,6 +69,7 @@ impl FileBuilder {
 
     // rustdoc-stripper-ignore-next
     /// Build the [`File`].
+    #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> File {
         let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
         if let Some(ref location) = self.location {
@@ -78,10 +82,6 @@ impl FileBuilder {
         self.location = Some(location.clone().upcast());
         self
     }
-}
-
-impl File {
-    pub const NONE: Option<&'static File> = None;
 }
 
 pub trait FileExt: 'static {

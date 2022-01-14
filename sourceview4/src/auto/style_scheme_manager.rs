@@ -25,6 +25,8 @@ glib::wrapper! {
 }
 
 impl StyleSchemeManager {
+    pub const NONE: Option<&'static StyleSchemeManager> = None;
+
     #[doc(alias = "gtk_source_style_scheme_manager_new")]
     pub fn new() -> StyleSchemeManager {
         assert_initialized_main_thread!();
@@ -34,7 +36,7 @@ impl StyleSchemeManager {
     // rustdoc-stripper-ignore-next
     /// Creates a new builder-pattern struct instance to construct [`StyleSchemeManager`] objects.
     ///
-    /// This method returns an instance of [`StyleSchemeManagerBuilder`] which can be used to create [`StyleSchemeManager`] objects.
+    /// This method returns an instance of [`StyleSchemeManagerBuilder`](crate::builders::StyleSchemeManagerBuilder) which can be used to create [`StyleSchemeManager`] objects.
     pub fn builder() -> StyleSchemeManagerBuilder {
         StyleSchemeManagerBuilder::default()
     }
@@ -58,6 +60,7 @@ impl Default for StyleSchemeManager {
 /// A [builder-pattern] type to construct [`StyleSchemeManager`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+#[must_use = "The builder must be built to be used"]
 pub struct StyleSchemeManagerBuilder {
     search_path: Option<Vec<String>>,
 }
@@ -71,6 +74,7 @@ impl StyleSchemeManagerBuilder {
 
     // rustdoc-stripper-ignore-next
     /// Build the [`StyleSchemeManager`].
+    #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> StyleSchemeManager {
         let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
         if let Some(ref search_path) = self.search_path {
@@ -84,10 +88,6 @@ impl StyleSchemeManagerBuilder {
         self.search_path = Some(search_path);
         self
     }
-}
-
-impl StyleSchemeManager {
-    pub const NONE: Option<&'static StyleSchemeManager> = None;
 }
 
 pub trait StyleSchemeManagerExt: 'static {

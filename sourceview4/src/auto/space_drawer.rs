@@ -26,6 +26,8 @@ glib::wrapper! {
 }
 
 impl SpaceDrawer {
+    pub const NONE: Option<&'static SpaceDrawer> = None;
+
     #[doc(alias = "gtk_source_space_drawer_new")]
     pub fn new() -> SpaceDrawer {
         assert_initialized_main_thread!();
@@ -35,7 +37,7 @@ impl SpaceDrawer {
     // rustdoc-stripper-ignore-next
     /// Creates a new builder-pattern struct instance to construct [`SpaceDrawer`] objects.
     ///
-    /// This method returns an instance of [`SpaceDrawerBuilder`] which can be used to create [`SpaceDrawer`] objects.
+    /// This method returns an instance of [`SpaceDrawerBuilder`](crate::builders::SpaceDrawerBuilder) which can be used to create [`SpaceDrawer`] objects.
     pub fn builder() -> SpaceDrawerBuilder {
         SpaceDrawerBuilder::default()
     }
@@ -52,6 +54,7 @@ impl Default for SpaceDrawer {
 /// A [builder-pattern] type to construct [`SpaceDrawer`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+#[must_use = "The builder must be built to be used"]
 pub struct SpaceDrawerBuilder {
     enable_matrix: Option<bool>,
     matrix: Option<glib::Variant>,
@@ -66,6 +69,7 @@ impl SpaceDrawerBuilder {
 
     // rustdoc-stripper-ignore-next
     /// Build the [`SpaceDrawer`].
+    #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> SpaceDrawer {
         let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
         if let Some(ref enable_matrix) = self.enable_matrix {
@@ -87,10 +91,6 @@ impl SpaceDrawerBuilder {
         self.matrix = Some(matrix.clone());
         self
     }
-}
-
-impl SpaceDrawer {
-    pub const NONE: Option<&'static SpaceDrawer> = None;
 }
 
 pub trait SpaceDrawerExt: 'static {

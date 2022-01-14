@@ -26,6 +26,8 @@ glib::wrapper! {
 }
 
 impl PrintCompositor {
+    pub const NONE: Option<&'static PrintCompositor> = None;
+
     #[doc(alias = "gtk_source_print_compositor_new")]
     pub fn new(buffer: &impl IsA<Buffer>) -> PrintCompositor {
         skip_assert_initialized!();
@@ -50,7 +52,7 @@ impl PrintCompositor {
     // rustdoc-stripper-ignore-next
     /// Creates a new builder-pattern struct instance to construct [`PrintCompositor`] objects.
     ///
-    /// This method returns an instance of [`PrintCompositorBuilder`] which can be used to create [`PrintCompositor`] objects.
+    /// This method returns an instance of [`PrintCompositorBuilder`](crate::builders::PrintCompositorBuilder) which can be used to create [`PrintCompositor`] objects.
     pub fn builder() -> PrintCompositorBuilder {
         PrintCompositorBuilder::default()
     }
@@ -68,6 +70,7 @@ impl Default for PrintCompositor {
 /// A [builder-pattern] type to construct [`PrintCompositor`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+#[must_use = "The builder must be built to be used"]
 pub struct PrintCompositorBuilder {
     body_font_name: Option<String>,
     buffer: Option<Buffer>,
@@ -91,6 +94,7 @@ impl PrintCompositorBuilder {
 
     // rustdoc-stripper-ignore-next
     /// Build the [`PrintCompositor`].
+    #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> PrintCompositor {
         let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
         if let Some(ref body_font_name) = self.body_font_name {
@@ -184,10 +188,6 @@ impl PrintCompositorBuilder {
         self.wrap_mode = Some(wrap_mode);
         self
     }
-}
-
-impl PrintCompositor {
-    pub const NONE: Option<&'static PrintCompositor> = None;
 }
 
 pub trait PrintCompositorExt: 'static {

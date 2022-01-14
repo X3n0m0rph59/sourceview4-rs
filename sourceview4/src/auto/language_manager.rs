@@ -25,6 +25,8 @@ glib::wrapper! {
 }
 
 impl LanguageManager {
+    pub const NONE: Option<&'static LanguageManager> = None;
+
     #[doc(alias = "gtk_source_language_manager_new")]
     pub fn new() -> LanguageManager {
         assert_initialized_main_thread!();
@@ -34,7 +36,7 @@ impl LanguageManager {
     // rustdoc-stripper-ignore-next
     /// Creates a new builder-pattern struct instance to construct [`LanguageManager`] objects.
     ///
-    /// This method returns an instance of [`LanguageManagerBuilder`] which can be used to create [`LanguageManager`] objects.
+    /// This method returns an instance of [`LanguageManagerBuilder`](crate::builders::LanguageManagerBuilder) which can be used to create [`LanguageManager`] objects.
     pub fn builder() -> LanguageManagerBuilder {
         LanguageManagerBuilder::default()
     }
@@ -58,6 +60,7 @@ impl Default for LanguageManager {
 /// A [builder-pattern] type to construct [`LanguageManager`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+#[must_use = "The builder must be built to be used"]
 pub struct LanguageManagerBuilder {
     search_path: Option<Vec<String>>,
 }
@@ -71,6 +74,7 @@ impl LanguageManagerBuilder {
 
     // rustdoc-stripper-ignore-next
     /// Build the [`LanguageManager`].
+    #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> LanguageManager {
         let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
         if let Some(ref search_path) = self.search_path {
@@ -84,10 +88,6 @@ impl LanguageManagerBuilder {
         self.search_path = Some(search_path);
         self
     }
-}
-
-impl LanguageManager {
-    pub const NONE: Option<&'static LanguageManager> = None;
 }
 
 pub trait LanguageManagerExt: 'static {
@@ -106,7 +106,7 @@ pub trait LanguageManagerExt: 'static {
     #[doc(alias = "gtk_source_language_manager_guess_language")]
     fn guess_language(
         &self,
-        filename: Option<&str>,
+        filename: Option<impl AsRef<std::path::Path>>,
         content_type: Option<&str>,
     ) -> Option<Language>;
 
@@ -148,13 +148,13 @@ impl<O: IsA<LanguageManager>> LanguageManagerExt for O {
 
     fn guess_language(
         &self,
-        filename: Option<&str>,
+        filename: Option<impl AsRef<std::path::Path>>,
         content_type: Option<&str>,
     ) -> Option<Language> {
         unsafe {
             from_glib_none(ffi::gtk_source_language_manager_guess_language(
                 self.as_ref().to_glib_none().0,
-                filename.to_glib_none().0,
+                filename.as_ref().map(|p| p.as_ref()).to_glib_none().0,
                 content_type.to_glib_none().0,
             ))
         }

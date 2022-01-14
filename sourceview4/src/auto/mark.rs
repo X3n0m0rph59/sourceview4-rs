@@ -20,6 +20,8 @@ glib::wrapper! {
 }
 
 impl Mark {
+    pub const NONE: Option<&'static Mark> = None;
+
     #[doc(alias = "gtk_source_mark_new")]
     pub fn new(name: Option<&str>, category: &str) -> Mark {
         assert_initialized_main_thread!();
@@ -34,7 +36,7 @@ impl Mark {
     // rustdoc-stripper-ignore-next
     /// Creates a new builder-pattern struct instance to construct [`Mark`] objects.
     ///
-    /// This method returns an instance of [`MarkBuilder`] which can be used to create [`Mark`] objects.
+    /// This method returns an instance of [`MarkBuilder`](crate::builders::MarkBuilder) which can be used to create [`Mark`] objects.
     pub fn builder() -> MarkBuilder {
         MarkBuilder::default()
     }
@@ -52,6 +54,7 @@ impl Default for Mark {
 /// A [builder-pattern] type to construct [`Mark`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+#[must_use = "The builder must be built to be used"]
 pub struct MarkBuilder {
     category: Option<String>,
     left_gravity: Option<bool>,
@@ -67,6 +70,7 @@ impl MarkBuilder {
 
     // rustdoc-stripper-ignore-next
     /// Build the [`Mark`].
+    #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> Mark {
         let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
         if let Some(ref category) = self.category {
@@ -97,19 +101,17 @@ impl MarkBuilder {
     }
 }
 
-impl Mark {
-    pub const NONE: Option<&'static Mark> = None;
-}
-
 pub trait MarkExt: 'static {
     #[doc(alias = "gtk_source_mark_get_category")]
     #[doc(alias = "get_category")]
     fn category(&self) -> Option<glib::GString>;
 
     #[doc(alias = "gtk_source_mark_next")]
+    #[must_use]
     fn next(&self, category: Option<&str>) -> Option<Mark>;
 
     #[doc(alias = "gtk_source_mark_prev")]
+    #[must_use]
     fn prev(&self, category: &str) -> Option<Mark>;
 }
 

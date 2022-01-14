@@ -27,6 +27,8 @@ glib::wrapper! {
 }
 
 impl Map {
+    pub const NONE: Option<&'static Map> = None;
+
     #[doc(alias = "gtk_source_map_new")]
     pub fn new() -> Map {
         assert_initialized_main_thread!();
@@ -36,7 +38,7 @@ impl Map {
     // rustdoc-stripper-ignore-next
     /// Creates a new builder-pattern struct instance to construct [`Map`] objects.
     ///
-    /// This method returns an instance of [`MapBuilder`] which can be used to create [`Map`] objects.
+    /// This method returns an instance of [`MapBuilder`](crate::builders::MapBuilder) which can be used to create [`Map`] objects.
     pub fn builder() -> MapBuilder {
         MapBuilder::default()
     }
@@ -53,6 +55,7 @@ impl Default for Map {
 /// A [builder-pattern] type to construct [`Map`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+#[must_use = "The builder must be built to be used"]
 pub struct MapBuilder {
     font_desc: Option<pango::FontDescription>,
     view: Option<View>,
@@ -141,6 +144,7 @@ impl MapBuilder {
 
     // rustdoc-stripper-ignore-next
     /// Build the [`Map`].
+    #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> Map {
         let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
         if let Some(ref font_desc) = self.font_desc {
@@ -748,10 +752,6 @@ impl MapBuilder {
         self.vscroll_policy = Some(vscroll_policy);
         self
     }
-}
-
-impl Map {
-    pub const NONE: Option<&'static Map> = None;
 }
 
 pub trait MapExt: 'static {

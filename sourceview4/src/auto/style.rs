@@ -24,7 +24,7 @@ impl Style {
     // rustdoc-stripper-ignore-next
     /// Creates a new builder-pattern struct instance to construct [`Style`] objects.
     ///
-    /// This method returns an instance of [`StyleBuilder`] which can be used to create [`Style`] objects.
+    /// This method returns an instance of [`StyleBuilder`](crate::builders::StyleBuilder) which can be used to create [`Style`] objects.
     pub fn builder() -> StyleBuilder {
         StyleBuilder::default()
     }
@@ -37,6 +37,7 @@ impl Style {
     }
 
     #[doc(alias = "gtk_source_style_copy")]
+    #[must_use]
     pub fn copy(&self) -> Option<Style> {
         unsafe { from_glib_full(ffi::gtk_source_style_copy(self.to_glib_none().0)) }
     }
@@ -131,6 +132,7 @@ impl Style {
 /// A [builder-pattern] type to construct [`Style`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+#[must_use = "The builder must be built to be used"]
 pub struct StyleBuilder {
     background: Option<String>,
     background_set: Option<bool>,
@@ -161,6 +163,7 @@ impl StyleBuilder {
 
     // rustdoc-stripper-ignore-next
     /// Build the [`Style`].
+    #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> Style {
         let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
         if let Some(ref background) = self.background {

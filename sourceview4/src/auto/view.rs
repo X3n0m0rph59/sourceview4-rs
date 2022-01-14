@@ -33,6 +33,8 @@ glib::wrapper! {
 }
 
 impl View {
+    pub const NONE: Option<&'static View> = None;
+
     #[doc(alias = "gtk_source_view_new")]
     pub fn new() -> View {
         assert_initialized_main_thread!();
@@ -54,7 +56,7 @@ impl View {
     // rustdoc-stripper-ignore-next
     /// Creates a new builder-pattern struct instance to construct [`View`] objects.
     ///
-    /// This method returns an instance of [`ViewBuilder`] which can be used to create [`View`] objects.
+    /// This method returns an instance of [`ViewBuilder`](crate::builders::ViewBuilder) which can be used to create [`View`] objects.
     pub fn builder() -> ViewBuilder {
         ViewBuilder::default()
     }
@@ -71,6 +73,7 @@ impl Default for View {
 /// A [builder-pattern] type to construct [`View`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+#[must_use = "The builder must be built to be used"]
 pub struct ViewBuilder {
     auto_indent: Option<bool>,
     background_pattern: Option<BackgroundPatternType>,
@@ -157,6 +160,7 @@ impl ViewBuilder {
 
     // rustdoc-stripper-ignore-next
     /// Build the [`View`].
+    #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> View {
         let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
         if let Some(ref auto_indent) = self.auto_indent {
@@ -750,10 +754,6 @@ impl ViewBuilder {
     }
 }
 
-impl View {
-    pub const NONE: Option<&'static View> = None;
-}
-
 pub trait ViewExt: 'static {
     #[doc(alias = "gtk_source_view_get_auto_indent")]
     #[doc(alias = "get_auto_indent")]
@@ -1289,7 +1289,7 @@ impl<O: IsA<View>> ViewExt for O {
     }
 
     fn emit_change_case(&self, case_type: ChangeCaseType) {
-        let _ = self.emit_by_name("change-case", &[&case_type]);
+        self.emit_by_name::<()>("change-case", &[&case_type]);
     }
 
     fn connect_change_number<F: Fn(&Self, i32) + 'static>(&self, f: F) -> SignalHandlerId {
@@ -1315,7 +1315,7 @@ impl<O: IsA<View>> ViewExt for O {
     }
 
     fn emit_change_number(&self, count: i32) {
-        let _ = self.emit_by_name("change-number", &[&count]);
+        self.emit_by_name::<()>("change-number", &[&count]);
     }
 
     fn connect_join_lines<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
@@ -1340,7 +1340,7 @@ impl<O: IsA<View>> ViewExt for O {
     }
 
     fn emit_join_lines(&self) {
-        let _ = self.emit_by_name("join-lines", &[]);
+        self.emit_by_name::<()>("join-lines", &[]);
     }
 
     fn connect_line_mark_activated<F: Fn(&Self, &gtk::TextIter, &gdk::Event) + 'static>(
@@ -1402,7 +1402,7 @@ impl<O: IsA<View>> ViewExt for O {
     }
 
     fn emit_move_lines(&self, down: bool) {
-        let _ = self.emit_by_name("move-lines", &[&down]);
+        self.emit_by_name::<()>("move-lines", &[&down]);
     }
 
     fn connect_move_to_matching_bracket<F: Fn(&Self, bool) + 'static>(
@@ -1437,7 +1437,7 @@ impl<O: IsA<View>> ViewExt for O {
     }
 
     fn emit_move_to_matching_bracket(&self, extend_selection: bool) {
-        let _ = self.emit_by_name("move-to-matching-bracket", &[&extend_selection]);
+        self.emit_by_name::<()>("move-to-matching-bracket", &[&extend_selection]);
     }
 
     fn connect_move_words<F: Fn(&Self, i32) + 'static>(&self, f: F) -> SignalHandlerId {
@@ -1463,7 +1463,7 @@ impl<O: IsA<View>> ViewExt for O {
     }
 
     fn emit_move_words(&self, count: i32) {
-        let _ = self.emit_by_name("move-words", &[&count]);
+        self.emit_by_name::<()>("move-words", &[&count]);
     }
 
     fn connect_redo<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
@@ -1488,7 +1488,7 @@ impl<O: IsA<View>> ViewExt for O {
     }
 
     fn emit_redo(&self) {
-        let _ = self.emit_by_name("redo", &[]);
+        self.emit_by_name::<()>("redo", &[]);
     }
 
     fn connect_show_completion<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
@@ -1513,7 +1513,7 @@ impl<O: IsA<View>> ViewExt for O {
     }
 
     fn emit_show_completion(&self) {
-        let _ = self.emit_by_name("show-completion", &[]);
+        self.emit_by_name::<()>("show-completion", &[]);
     }
 
     fn connect_smart_home_end<F: Fn(&Self, &gtk::TextIter, i32) + 'static>(
@@ -1571,7 +1571,7 @@ impl<O: IsA<View>> ViewExt for O {
     }
 
     fn emit_undo(&self) {
-        let _ = self.emit_by_name("undo", &[]);
+        self.emit_by_name::<()>("undo", &[]);
     }
 
     fn connect_auto_indent_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {

@@ -22,10 +22,12 @@ glib::wrapper! {
 }
 
 impl Gutter {
+    pub const NONE: Option<&'static Gutter> = None;
+
     // rustdoc-stripper-ignore-next
     /// Creates a new builder-pattern struct instance to construct [`Gutter`] objects.
     ///
-    /// This method returns an instance of [`GutterBuilder`] which can be used to create [`Gutter`] objects.
+    /// This method returns an instance of [`GutterBuilder`](crate::builders::GutterBuilder) which can be used to create [`Gutter`] objects.
     pub fn builder() -> GutterBuilder {
         GutterBuilder::default()
     }
@@ -36,6 +38,7 @@ impl Gutter {
 /// A [builder-pattern] type to construct [`Gutter`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+#[must_use = "The builder must be built to be used"]
 pub struct GutterBuilder {
     view: Option<View>,
     window_type: Option<gtk::TextWindowType>,
@@ -50,6 +53,7 @@ impl GutterBuilder {
 
     // rustdoc-stripper-ignore-next
     /// Build the [`Gutter`].
+    #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> Gutter {
         let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
         if let Some(ref view) = self.view {
@@ -70,10 +74,6 @@ impl GutterBuilder {
         self.window_type = Some(window_type);
         self
     }
-}
-
-impl Gutter {
-    pub const NONE: Option<&'static Gutter> = None;
 }
 
 pub trait GutterExt: 'static {

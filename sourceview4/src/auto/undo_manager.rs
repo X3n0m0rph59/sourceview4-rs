@@ -140,7 +140,7 @@ impl<O: IsA<UndoManager>> UndoManagerExt for O {
     }
 
     fn emit_can_redo_changed(&self) {
-        let _ = self.emit_by_name("can-redo-changed", &[]);
+        self.emit_by_name::<()>("can-redo-changed", &[]);
     }
 
     fn connect_can_undo_changed<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
@@ -168,7 +168,7 @@ impl<O: IsA<UndoManager>> UndoManagerExt for O {
     }
 
     fn emit_can_undo_changed(&self) {
-        let _ = self.emit_by_name("can-undo-changed", &[]);
+        self.emit_by_name::<()>("can-undo-changed", &[]);
     }
 }
 

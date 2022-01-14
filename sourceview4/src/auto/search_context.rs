@@ -30,6 +30,8 @@ glib::wrapper! {
 }
 
 impl SearchContext {
+    pub const NONE: Option<&'static SearchContext> = None;
+
     #[doc(alias = "gtk_source_search_context_new")]
     pub fn new(
         buffer: &impl IsA<Buffer>,
@@ -47,7 +49,7 @@ impl SearchContext {
     // rustdoc-stripper-ignore-next
     /// Creates a new builder-pattern struct instance to construct [`SearchContext`] objects.
     ///
-    /// This method returns an instance of [`SearchContextBuilder`] which can be used to create [`SearchContext`] objects.
+    /// This method returns an instance of [`SearchContextBuilder`](crate::builders::SearchContextBuilder) which can be used to create [`SearchContext`] objects.
     pub fn builder() -> SearchContextBuilder {
         SearchContextBuilder::default()
     }
@@ -65,6 +67,7 @@ impl Default for SearchContext {
 /// A [builder-pattern] type to construct [`SearchContext`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+#[must_use = "The builder must be built to be used"]
 pub struct SearchContextBuilder {
     buffer: Option<Buffer>,
     highlight: Option<bool>,
@@ -81,6 +84,7 @@ impl SearchContextBuilder {
 
     // rustdoc-stripper-ignore-next
     /// Build the [`SearchContext`].
+    #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> SearchContext {
         let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
         if let Some(ref buffer) = self.buffer {
@@ -120,10 +124,6 @@ impl SearchContextBuilder {
     }
 }
 
-impl SearchContext {
-    pub const NONE: Option<&'static SearchContext> = None;
-}
-
 pub trait SearchContextExt: 'static {
     #[doc(alias = "gtk_source_search_context_backward")]
     fn backward(&self, iter: &gtk::TextIter) -> Option<(gtk::TextIter, gtk::TextIter, bool)>;
@@ -138,7 +138,7 @@ pub trait SearchContextExt: 'static {
         callback: P,
     );
 
-    fn backward_async_future(
+    fn backward_future(
         &self,
         iter: &gtk::TextIter,
     ) -> Pin<
@@ -162,7 +162,7 @@ pub trait SearchContextExt: 'static {
         callback: P,
     );
 
-    fn forward_async_future(
+    fn forward_future(
         &self,
         iter: &gtk::TextIter,
     ) -> Pin<
@@ -302,7 +302,7 @@ impl<O: IsA<SearchContext>> SearchContextExt for O {
         }
     }
 
-    fn backward_async_future(
+    fn backward_future(
         &self,
         iter: &gtk::TextIter,
     ) -> Pin<
@@ -390,7 +390,7 @@ impl<O: IsA<SearchContext>> SearchContextExt for O {
         }
     }
 
-    fn forward_async_future(
+    fn forward_future(
         &self,
         iter: &gtk::TextIter,
     ) -> Pin<
@@ -473,7 +473,7 @@ impl<O: IsA<SearchContext>> SearchContextExt for O {
         let replace_length = replace.len() as i32;
         unsafe {
             let mut error = ptr::null_mut();
-            let _ = ffi::gtk_source_search_context_replace(
+            let is_ok = ffi::gtk_source_search_context_replace(
                 self.as_ref().to_glib_none().0,
                 match_start.to_glib_none_mut().0,
                 match_end.to_glib_none_mut().0,
@@ -481,6 +481,7 @@ impl<O: IsA<SearchContext>> SearchContextExt for O {
                 replace_length,
                 &mut error,
             );
+            assert_eq!(is_ok == glib::ffi::GFALSE, !error.is_null());
             if error.is_null() {
                 Ok(())
             } else {
@@ -493,12 +494,13 @@ impl<O: IsA<SearchContext>> SearchContextExt for O {
         let replace_length = replace.len() as i32;
         unsafe {
             let mut error = ptr::null_mut();
-            let _ = ffi::gtk_source_search_context_replace_all(
+            let is_ok = ffi::gtk_source_search_context_replace_all(
                 self.as_ref().to_glib_none().0,
                 replace.to_glib_none().0,
                 replace_length,
                 &mut error,
             );
+            assert_eq!(is_ok == glib::ffi::GFALSE, !error.is_null());
             if error.is_null() {
                 Ok(())
             } else {

@@ -26,6 +26,8 @@ glib::wrapper! {
 }
 
 impl GutterRendererPixbuf {
+    pub const NONE: Option<&'static GutterRendererPixbuf> = None;
+
     #[doc(alias = "gtk_source_gutter_renderer_pixbuf_new")]
     pub fn new() -> GutterRendererPixbuf {
         assert_initialized_main_thread!();
@@ -38,7 +40,7 @@ impl GutterRendererPixbuf {
     // rustdoc-stripper-ignore-next
     /// Creates a new builder-pattern struct instance to construct [`GutterRendererPixbuf`] objects.
     ///
-    /// This method returns an instance of [`GutterRendererPixbufBuilder`] which can be used to create [`GutterRendererPixbuf`] objects.
+    /// This method returns an instance of [`GutterRendererPixbufBuilder`](crate::builders::GutterRendererPixbufBuilder) which can be used to create [`GutterRendererPixbuf`] objects.
     pub fn builder() -> GutterRendererPixbufBuilder {
         GutterRendererPixbufBuilder::default()
     }
@@ -55,6 +57,7 @@ impl Default for GutterRendererPixbuf {
 /// A [builder-pattern] type to construct [`GutterRendererPixbuf`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+#[must_use = "The builder must be built to be used"]
 pub struct GutterRendererPixbufBuilder {
     gicon: Option<gio::Icon>,
     icon_name: Option<String>,
@@ -79,6 +82,7 @@ impl GutterRendererPixbufBuilder {
 
     // rustdoc-stripper-ignore-next
     /// Build the [`GutterRendererPixbuf`].
+    #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> GutterRendererPixbuf {
         let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
         if let Some(ref gicon) = self.gicon {
@@ -180,10 +184,6 @@ impl GutterRendererPixbufBuilder {
         self.ypad = Some(ypad);
         self
     }
-}
-
-impl GutterRendererPixbuf {
-    pub const NONE: Option<&'static GutterRendererPixbuf> = None;
 }
 
 pub trait GutterRendererPixbufExt: 'static {

@@ -25,10 +25,12 @@ glib::wrapper! {
 }
 
 impl StyleScheme {
+    pub const NONE: Option<&'static StyleScheme> = None;
+
     // rustdoc-stripper-ignore-next
     /// Creates a new builder-pattern struct instance to construct [`StyleScheme`] objects.
     ///
-    /// This method returns an instance of [`StyleSchemeBuilder`] which can be used to create [`StyleScheme`] objects.
+    /// This method returns an instance of [`StyleSchemeBuilder`](crate::builders::StyleSchemeBuilder) which can be used to create [`StyleScheme`] objects.
     pub fn builder() -> StyleSchemeBuilder {
         StyleSchemeBuilder::default()
     }
@@ -39,6 +41,7 @@ impl StyleScheme {
 /// A [builder-pattern] type to construct [`StyleScheme`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+#[must_use = "The builder must be built to be used"]
 pub struct StyleSchemeBuilder {
     id: Option<String>,
 }
@@ -52,6 +55,7 @@ impl StyleSchemeBuilder {
 
     // rustdoc-stripper-ignore-next
     /// Build the [`StyleScheme`].
+    #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> StyleScheme {
         let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
         if let Some(ref id) = self.id {
@@ -65,10 +69,6 @@ impl StyleSchemeBuilder {
         self.id = Some(id.to_string());
         self
     }
-}
-
-impl StyleScheme {
-    pub const NONE: Option<&'static StyleScheme> = None;
 }
 
 pub trait StyleSchemeExt: 'static {

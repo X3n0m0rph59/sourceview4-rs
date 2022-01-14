@@ -30,10 +30,12 @@ glib::wrapper! {
 }
 
 impl Completion {
+    pub const NONE: Option<&'static Completion> = None;
+
     // rustdoc-stripper-ignore-next
     /// Creates a new builder-pattern struct instance to construct [`Completion`] objects.
     ///
-    /// This method returns an instance of [`CompletionBuilder`] which can be used to create [`Completion`] objects.
+    /// This method returns an instance of [`CompletionBuilder`](crate::builders::CompletionBuilder) which can be used to create [`Completion`] objects.
     pub fn builder() -> CompletionBuilder {
         CompletionBuilder::default()
     }
@@ -44,6 +46,7 @@ impl Completion {
 /// A [builder-pattern] type to construct [`Completion`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+#[must_use = "The builder must be built to be used"]
 pub struct CompletionBuilder {
     accelerators: Option<u32>,
     auto_complete_delay: Option<u32>,
@@ -65,6 +68,7 @@ impl CompletionBuilder {
 
     // rustdoc-stripper-ignore-next
     /// Build the [`Completion`].
+    #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> Completion {
         let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
         if let Some(ref accelerators) = self.accelerators {
@@ -142,10 +146,6 @@ impl CompletionBuilder {
         self.view = Some(view.clone().upcast());
         self
     }
-}
-
-impl Completion {
-    pub const NONE: Option<&'static Completion> = None;
 }
 
 pub trait CompletionExt: 'static {
@@ -300,11 +300,12 @@ impl<O: IsA<Completion>> CompletionExt for O {
     fn add_provider(&self, provider: &impl IsA<CompletionProvider>) -> Result<(), glib::Error> {
         unsafe {
             let mut error = ptr::null_mut();
-            let _ = ffi::gtk_source_completion_add_provider(
+            let is_ok = ffi::gtk_source_completion_add_provider(
                 self.as_ref().to_glib_none().0,
                 provider.as_ref().to_glib_none().0,
                 &mut error,
             );
+            assert_eq!(is_ok == glib::ffi::GFALSE, !error.is_null());
             if error.is_null() {
                 Ok(())
             } else {
@@ -352,11 +353,12 @@ impl<O: IsA<Completion>> CompletionExt for O {
     fn remove_provider(&self, provider: &impl IsA<CompletionProvider>) -> Result<(), glib::Error> {
         unsafe {
             let mut error = ptr::null_mut();
-            let _ = ffi::gtk_source_completion_remove_provider(
+            let is_ok = ffi::gtk_source_completion_remove_provider(
                 self.as_ref().to_glib_none().0,
                 provider.as_ref().to_glib_none().0,
                 &mut error,
             );
+            assert_eq!(is_ok == glib::ffi::GFALSE, !error.is_null());
             if error.is_null() {
                 Ok(())
             } else {
@@ -478,7 +480,7 @@ impl<O: IsA<Completion>> CompletionExt for O {
     }
 
     fn emit_activate_proposal(&self) {
-        let _ = self.emit_by_name("activate-proposal", &[]);
+        self.emit_by_name::<()>("activate-proposal", &[]);
     }
 
     fn connect_hide<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
@@ -503,7 +505,7 @@ impl<O: IsA<Completion>> CompletionExt for O {
     }
 
     fn emit_hide(&self) {
-        let _ = self.emit_by_name("hide", &[]);
+        self.emit_by_name::<()>("hide", &[]);
     }
 
     fn connect_move_cursor<F: Fn(&Self, gtk::ScrollStep, i32) + 'static>(
@@ -540,7 +542,7 @@ impl<O: IsA<Completion>> CompletionExt for O {
     }
 
     fn emit_move_cursor(&self, step: gtk::ScrollStep, num: i32) {
-        let _ = self.emit_by_name("move-cursor", &[&step, &num]);
+        self.emit_by_name::<()>("move-cursor", &[&step, &num]);
     }
 
     fn connect_move_page<F: Fn(&Self, gtk::ScrollStep, i32) + 'static>(
@@ -577,7 +579,7 @@ impl<O: IsA<Completion>> CompletionExt for O {
     }
 
     fn emit_move_page(&self, step: gtk::ScrollStep, num: i32) {
-        let _ = self.emit_by_name("move-page", &[&step, &num]);
+        self.emit_by_name::<()>("move-page", &[&step, &num]);
     }
 
     fn connect_populate_context<F: Fn(&Self, &CompletionContext) + 'static>(
@@ -612,7 +614,7 @@ impl<O: IsA<Completion>> CompletionExt for O {
     }
 
     fn emit_populate_context(&self, context: &CompletionContext) {
-        let _ = self.emit_by_name("populate-context", &[&context]);
+        self.emit_by_name::<()>("populate-context", &[&context]);
     }
 
     fn connect_show<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
@@ -637,7 +639,7 @@ impl<O: IsA<Completion>> CompletionExt for O {
     }
 
     fn emit_show(&self) {
-        let _ = self.emit_by_name("show", &[]);
+        self.emit_by_name::<()>("show", &[]);
     }
 
     fn connect_accelerators_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {

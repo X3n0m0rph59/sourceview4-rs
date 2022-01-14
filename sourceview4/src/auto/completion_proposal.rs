@@ -168,7 +168,7 @@ impl<O: IsA<CompletionProposal>> CompletionProposalExt for O {
     }
 
     fn emit_changed(&self) {
-        let _ = self.emit_by_name("changed", &[]);
+        self.emit_by_name::<()>("changed", &[]);
     }
 }
 

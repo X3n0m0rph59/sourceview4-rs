@@ -31,6 +31,8 @@ glib::wrapper! {
 }
 
 impl Buffer {
+    pub const NONE: Option<&'static Buffer> = None;
+
     #[doc(alias = "gtk_source_buffer_new")]
     pub fn new(table: Option<&impl IsA<gtk::TextTagTable>>) -> Buffer {
         assert_initialized_main_thread!();
@@ -55,7 +57,7 @@ impl Buffer {
     // rustdoc-stripper-ignore-next
     /// Creates a new builder-pattern struct instance to construct [`Buffer`] objects.
     ///
-    /// This method returns an instance of [`BufferBuilder`] which can be used to create [`Buffer`] objects.
+    /// This method returns an instance of [`BufferBuilder`](crate::builders::BufferBuilder) which can be used to create [`Buffer`] objects.
     pub fn builder() -> BufferBuilder {
         BufferBuilder::default()
     }
@@ -73,6 +75,7 @@ impl Default for Buffer {
 /// A [builder-pattern] type to construct [`Buffer`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+#[must_use = "The builder must be built to be used"]
 pub struct BufferBuilder {
     highlight_matching_brackets: Option<bool>,
     highlight_syntax: Option<bool>,
@@ -94,6 +97,7 @@ impl BufferBuilder {
 
     // rustdoc-stripper-ignore-next
     /// Build the [`Buffer`].
+    #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> Buffer {
         let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
         if let Some(ref highlight_matching_brackets) = self.highlight_matching_brackets {
@@ -170,10 +174,6 @@ impl BufferBuilder {
         self.text = Some(text.to_string());
         self
     }
-}
-
-impl Buffer {
-    pub const NONE: Option<&'static Buffer> = None;
 }
 
 pub trait BufferExt: 'static {

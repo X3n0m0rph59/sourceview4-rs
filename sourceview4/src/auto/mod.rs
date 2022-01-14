@@ -5,22 +5,18 @@
 
 mod buffer;
 pub use self::buffer::Buffer;
-pub use self::buffer::BufferBuilder;
 
 mod completion;
 pub use self::completion::Completion;
-pub use self::completion::CompletionBuilder;
 
 mod completion_context;
 pub use self::completion_context::CompletionContext;
-pub use self::completion_context::CompletionContextBuilder;
 
 mod completion_info;
 pub use self::completion_info::CompletionInfo;
 
 mod completion_item;
 pub use self::completion_item::CompletionItem;
-pub use self::completion_item::CompletionItemBuilder;
 
 mod completion_proposal;
 pub use self::completion_proposal::CompletionProposal;
@@ -30,81 +26,63 @@ pub use self::completion_provider::CompletionProvider;
 
 mod completion_words;
 pub use self::completion_words::CompletionWords;
-pub use self::completion_words::CompletionWordsBuilder;
 
 mod file;
 pub use self::file::File;
-pub use self::file::FileBuilder;
 
 mod file_loader;
 pub use self::file_loader::FileLoader;
-pub use self::file_loader::FileLoaderBuilder;
 
 mod file_saver;
 pub use self::file_saver::FileSaver;
-pub use self::file_saver::FileSaverBuilder;
 
 mod gutter;
 pub use self::gutter::Gutter;
-pub use self::gutter::GutterBuilder;
 
 mod gutter_renderer;
 pub use self::gutter_renderer::GutterRenderer;
 
 mod gutter_renderer_pixbuf;
 pub use self::gutter_renderer_pixbuf::GutterRendererPixbuf;
-pub use self::gutter_renderer_pixbuf::GutterRendererPixbufBuilder;
 
 mod gutter_renderer_text;
 pub use self::gutter_renderer_text::GutterRendererText;
-pub use self::gutter_renderer_text::GutterRendererTextBuilder;
 
 mod language;
 pub use self::language::Language;
 
 mod language_manager;
 pub use self::language_manager::LanguageManager;
-pub use self::language_manager::LanguageManagerBuilder;
 
 mod map;
 pub use self::map::Map;
-pub use self::map::MapBuilder;
 
 mod mark;
 pub use self::mark::Mark;
-pub use self::mark::MarkBuilder;
 
 mod mark_attributes;
 pub use self::mark_attributes::MarkAttributes;
-pub use self::mark_attributes::MarkAttributesBuilder;
 
 mod print_compositor;
 pub use self::print_compositor::PrintCompositor;
-pub use self::print_compositor::PrintCompositorBuilder;
 
 mod region;
 pub use self::region::Region;
-pub use self::region::RegionBuilder;
 
 mod search_context;
 pub use self::search_context::SearchContext;
-pub use self::search_context::SearchContextBuilder;
 
 mod search_settings;
 pub use self::search_settings::SearchSettings;
-pub use self::search_settings::SearchSettingsBuilder;
 
 mod space_drawer;
 pub use self::space_drawer::SpaceDrawer;
-pub use self::space_drawer::SpaceDrawerBuilder;
 
 mod style;
 pub use self::style::Style;
-pub use self::style::StyleBuilder;
 
 mod style_scheme;
 pub use self::style_scheme::StyleScheme;
-pub use self::style_scheme::StyleSchemeBuilder;
 
 mod style_scheme_chooser;
 pub use self::style_scheme_chooser::StyleSchemeChooser;
@@ -117,18 +95,15 @@ pub use self::style_scheme_chooser_widget::StyleSchemeChooserWidget;
 
 mod style_scheme_manager;
 pub use self::style_scheme_manager::StyleSchemeManager;
-pub use self::style_scheme_manager::StyleSchemeManagerBuilder;
 
 mod tag;
 pub use self::tag::Tag;
-pub use self::tag::TagBuilder;
 
 mod undo_manager;
 pub use self::undo_manager::UndoManager;
 
 mod view;
 pub use self::view::View;
-pub use self::view::ViewBuilder;
 
 mod encoding;
 pub use self::encoding::Encoding;
@@ -186,4 +161,32 @@ pub mod traits {
     pub use super::tag::TagExt;
     pub use super::undo_manager::UndoManagerExt;
     pub use super::view::ViewExt;
+}
+#[doc(hidden)]
+pub mod builders {
+    pub use super::buffer::BufferBuilder;
+    pub use super::completion::CompletionBuilder;
+    pub use super::completion_context::CompletionContextBuilder;
+    pub use super::completion_item::CompletionItemBuilder;
+    pub use super::completion_words::CompletionWordsBuilder;
+    pub use super::file::FileBuilder;
+    pub use super::file_loader::FileLoaderBuilder;
+    pub use super::file_saver::FileSaverBuilder;
+    pub use super::gutter::GutterBuilder;
+    pub use super::gutter_renderer_pixbuf::GutterRendererPixbufBuilder;
+    pub use super::gutter_renderer_text::GutterRendererTextBuilder;
+    pub use super::language_manager::LanguageManagerBuilder;
+    pub use super::map::MapBuilder;
+    pub use super::mark::MarkBuilder;
+    pub use super::mark_attributes::MarkAttributesBuilder;
+    pub use super::print_compositor::PrintCompositorBuilder;
+    pub use super::region::RegionBuilder;
+    pub use super::search_context::SearchContextBuilder;
+    pub use super::search_settings::SearchSettingsBuilder;
+    pub use super::space_drawer::SpaceDrawerBuilder;
+    pub use super::style::StyleBuilder;
+    pub use super::style_scheme::StyleSchemeBuilder;
+    pub use super::style_scheme_manager::StyleSchemeManagerBuilder;
+    pub use super::tag::TagBuilder;
+    pub use super::view::ViewBuilder;
 }

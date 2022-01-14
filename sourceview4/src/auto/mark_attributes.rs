@@ -25,6 +25,8 @@ glib::wrapper! {
 }
 
 impl MarkAttributes {
+    pub const NONE: Option<&'static MarkAttributes> = None;
+
     #[doc(alias = "gtk_source_mark_attributes_new")]
     pub fn new() -> MarkAttributes {
         assert_initialized_main_thread!();
@@ -34,7 +36,7 @@ impl MarkAttributes {
     // rustdoc-stripper-ignore-next
     /// Creates a new builder-pattern struct instance to construct [`MarkAttributes`] objects.
     ///
-    /// This method returns an instance of [`MarkAttributesBuilder`] which can be used to create [`MarkAttributes`] objects.
+    /// This method returns an instance of [`MarkAttributesBuilder`](crate::builders::MarkAttributesBuilder) which can be used to create [`MarkAttributes`] objects.
     pub fn builder() -> MarkAttributesBuilder {
         MarkAttributesBuilder::default()
     }
@@ -51,6 +53,7 @@ impl Default for MarkAttributes {
 /// A [builder-pattern] type to construct [`MarkAttributes`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+#[must_use = "The builder must be built to be used"]
 pub struct MarkAttributesBuilder {
     background: Option<gdk::RGBA>,
     gicon: Option<gio::Icon>,
@@ -67,6 +70,7 @@ impl MarkAttributesBuilder {
 
     // rustdoc-stripper-ignore-next
     /// Build the [`MarkAttributes`].
+    #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> MarkAttributes {
         let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
         if let Some(ref background) = self.background {
@@ -104,10 +108,6 @@ impl MarkAttributesBuilder {
         self.pixbuf = Some(pixbuf.clone());
         self
     }
-}
-
-impl MarkAttributes {
-    pub const NONE: Option<&'static MarkAttributes> = None;
 }
 
 pub trait MarkAttributesExt: 'static {

@@ -18,6 +18,8 @@ glib::wrapper! {
 }
 
 impl StyleSchemeChooserWidget {
+    pub const NONE: Option<&'static StyleSchemeChooserWidget> = None;
+
     #[doc(alias = "gtk_source_style_scheme_chooser_widget_new")]
     pub fn new() -> StyleSchemeChooserWidget {
         assert_initialized_main_thread!();
@@ -32,10 +34,6 @@ impl Default for StyleSchemeChooserWidget {
     fn default() -> Self {
         Self::new()
     }
-}
-
-impl StyleSchemeChooserWidget {
-    pub const NONE: Option<&'static StyleSchemeChooserWidget> = None;
 }
 
 impl fmt::Display for StyleSchemeChooserWidget {

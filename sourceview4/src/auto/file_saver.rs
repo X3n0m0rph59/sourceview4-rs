@@ -30,6 +30,8 @@ glib::wrapper! {
 }
 
 impl FileSaver {
+    pub const NONE: Option<&'static FileSaver> = None;
+
     #[doc(alias = "gtk_source_file_saver_new")]
     pub fn new(buffer: &impl IsA<Buffer>, file: &impl IsA<File>) -> FileSaver {
         skip_assert_initialized!();
@@ -61,7 +63,7 @@ impl FileSaver {
     // rustdoc-stripper-ignore-next
     /// Creates a new builder-pattern struct instance to construct [`FileSaver`] objects.
     ///
-    /// This method returns an instance of [`FileSaverBuilder`] which can be used to create [`FileSaver`] objects.
+    /// This method returns an instance of [`FileSaverBuilder`](crate::builders::FileSaverBuilder) which can be used to create [`FileSaver`] objects.
     pub fn builder() -> FileSaverBuilder {
         FileSaverBuilder::default()
     }
@@ -79,6 +81,7 @@ impl Default for FileSaver {
 /// A [builder-pattern] type to construct [`FileSaver`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+#[must_use = "The builder must be built to be used"]
 pub struct FileSaverBuilder {
     buffer: Option<Buffer>,
     compression_type: Option<CompressionType>,
@@ -98,6 +101,7 @@ impl FileSaverBuilder {
 
     // rustdoc-stripper-ignore-next
     /// Build the [`FileSaver`].
+    #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> FileSaver {
         let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
         if let Some(ref buffer) = self.buffer {
@@ -161,10 +165,6 @@ impl FileSaverBuilder {
     }
 }
 
-impl FileSaver {
-    pub const NONE: Option<&'static FileSaver> = None;
-}
-
 pub trait FileSaverExt: 'static {
     #[doc(alias = "gtk_source_file_saver_get_buffer")]
     #[doc(alias = "get_buffer")]
@@ -198,7 +198,7 @@ pub trait FileSaverExt: 'static {
     //fn save_async<P: FnOnce(Result<(), glib::Error>) + Send + 'static, Q: FnOnce(Result<(), glib::Error>) + Send + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&impl IsA<gio::Cancellable>>, progress_callback: P, progress_callback_notify: Fn() + 'static, callback: Q);
 
     //
-    //fn save_async_future<P: FnOnce(Result<(), glib::Error>) + Send + 'static>(&self, io_priority: glib::Priority, progress_callback: P, progress_callback_notify: Fn() + 'static) -> Pin<Box_<dyn std::future::Future<Output = Result<(), glib::Error>> + 'static>>;
+    //fn save_future<P: FnOnce(Result<(), glib::Error>) + Send + 'static>(&self, io_priority: glib::Priority, progress_callback: P, progress_callback_notify: Fn() + 'static) -> Pin<Box_<dyn std::future::Future<Output = Result<(), glib::Error>> + 'static>>;
 
     #[doc(alias = "gtk_source_file_saver_set_compression_type")]
     fn set_compression_type(&self, compression_type: CompressionType);
@@ -287,7 +287,7 @@ impl<O: IsA<FileSaver>> FileSaverExt for O {
     //}
 
     //
-    //fn save_async_future<P: FnOnce(Result<(), glib::Error>) + Send + 'static>(&self, io_priority: glib::Priority, progress_callback: P, progress_callback_notify: Fn() + 'static) -> Pin<Box_<dyn std::future::Future<Output = Result<(), glib::Error>> + 'static>> {
+    //fn save_future<P: FnOnce(Result<(), glib::Error>) + Send + 'static>(&self, io_priority: glib::Priority, progress_callback: P, progress_callback_notify: Fn() + 'static) -> Pin<Box_<dyn std::future::Future<Output = Result<(), glib::Error>> + 'static>> {
 
     //let progress_callback = progress_callback.map(ToOwned::to_owned);
     //let progress_callback_notify = progress_callback_notify.map(ToOwned::to_owned);

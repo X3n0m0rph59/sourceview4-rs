@@ -24,6 +24,8 @@ glib::wrapper! {
 }
 
 impl Tag {
+    pub const NONE: Option<&'static Tag> = None;
+
     #[doc(alias = "gtk_source_tag_new")]
     pub fn new(name: Option<&str>) -> Tag {
         assert_initialized_main_thread!();
@@ -36,7 +38,7 @@ impl Tag {
     // rustdoc-stripper-ignore-next
     /// Creates a new builder-pattern struct instance to construct [`Tag`] objects.
     ///
-    /// This method returns an instance of [`TagBuilder`] which can be used to create [`Tag`] objects.
+    /// This method returns an instance of [`TagBuilder`](crate::builders::TagBuilder) which can be used to create [`Tag`] objects.
     pub fn builder() -> TagBuilder {
         TagBuilder::default()
     }
@@ -54,6 +56,7 @@ impl Default for Tag {
 /// A [builder-pattern] type to construct [`Tag`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+#[must_use = "The builder must be built to be used"]
 pub struct TagBuilder {
     draw_spaces: Option<bool>,
     draw_spaces_set: Option<bool>,
@@ -139,6 +142,7 @@ impl TagBuilder {
 
     // rustdoc-stripper-ignore-next
     /// Build the [`Tag`].
+    #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> Tag {
         let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
         if let Some(ref draw_spaces) = self.draw_spaces {
@@ -727,10 +731,6 @@ impl TagBuilder {
         self.wrap_mode_set = Some(wrap_mode_set);
         self
     }
-}
-
-impl Tag {
-    pub const NONE: Option<&'static Tag> = None;
 }
 
 pub trait TagExt: 'static {

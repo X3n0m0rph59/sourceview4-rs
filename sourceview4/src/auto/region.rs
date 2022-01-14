@@ -20,6 +20,8 @@ glib::wrapper! {
 }
 
 impl Region {
+    pub const NONE: Option<&'static Region> = None;
+
     #[doc(alias = "gtk_source_region_new")]
     pub fn new(buffer: &impl IsA<gtk::TextBuffer>) -> Region {
         assert_initialized_main_thread!();
@@ -29,7 +31,7 @@ impl Region {
     // rustdoc-stripper-ignore-next
     /// Creates a new builder-pattern struct instance to construct [`Region`] objects.
     ///
-    /// This method returns an instance of [`RegionBuilder`] which can be used to create [`Region`] objects.
+    /// This method returns an instance of [`RegionBuilder`](crate::builders::RegionBuilder) which can be used to create [`Region`] objects.
     pub fn builder() -> RegionBuilder {
         RegionBuilder::default()
     }
@@ -54,6 +56,7 @@ impl fmt::Display for Region {
 /// A [builder-pattern] type to construct [`Region`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
+#[must_use = "The builder must be built to be used"]
 pub struct RegionBuilder {
     buffer: Option<gtk::TextBuffer>,
 }
@@ -67,6 +70,7 @@ impl RegionBuilder {
 
     // rustdoc-stripper-ignore-next
     /// Build the [`Region`].
+    #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> Region {
         let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
         if let Some(ref buffer) = self.buffer {
@@ -79,10 +83,6 @@ impl RegionBuilder {
         self.buffer = Some(buffer.clone().upcast());
         self
     }
-}
-
-impl Region {
-    pub const NONE: Option<&'static Region> = None;
 }
 
 pub trait RegionExt: 'static {
@@ -105,9 +105,11 @@ pub trait RegionExt: 'static {
     //fn start_region_iter(&self, iter: /*Ignored*/RegionIter);
 
     #[doc(alias = "gtk_source_region_intersect_region")]
+    #[must_use]
     fn intersect_region(&self, region2: Option<&impl IsA<Region>>) -> Option<Region>;
 
     #[doc(alias = "gtk_source_region_intersect_subregion")]
+    #[must_use]
     fn intersect_subregion(&self, _start: &gtk::TextIter, _end: &gtk::TextIter) -> Option<Region>;
 
     #[doc(alias = "gtk_source_region_is_empty")]

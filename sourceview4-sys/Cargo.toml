@@ -43,7 +43,7 @@ git = "https://github.com/gtk-rs/gtk-rs-core"
 
 [build-dependencies]
 pkg-config = "0.3"
-system-deps = "5"
+system-deps = "6"
 
 [dev-dependencies]
 shell-words = "1.0.0"
