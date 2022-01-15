@@ -1,6 +1,6 @@
 [package]
 name = "sourceview4-sys"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Christopher Davis <brainblasted@disroot.org>"]
 description = "FFI bindings for GtkSourceView 4"
 license = "LGPL-2.1-or-later"
