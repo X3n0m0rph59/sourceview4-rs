@@ -1,4 +1,12 @@
 image: "registry.fedoraproject.org/fedora:35"
+variables:
+  # format is <branch>=<name>
+  # the name is used in the URL
+  # latest release must be at the top
+  # (only relevant on main branch)
+  RELEASES: |
+    v0.3=0.3
+
 
 before_script:
   - dnf update -y --nogpgcheck
