@@ -6,7 +6,7 @@ description = "API bindings for GtkSourceView 4"
 license = "LGPL-2.1-or-later"
 keywords = ["gtksourceview", "sourceview", "gtk-rs", "gnome"]
 repository = "https://gitlab.gnome.org/World/Rust/sourceview4-rs"
-documentation = "https://world.pages.gitlab.gnome.org/Rust/sourceview4-rs/sourceview4/"
+documentation = "https://world.pages.gitlab.gnome.org/Rust/sourceview4-rs/stable/latest/docs/sourceview4"
 exclude = ["gir-files/*", "gir/"]
 edition = "2021"
 

@@ -5,7 +5,7 @@ authors = ["Christopher Davis <brainblasted@disroot.org>"]
 description = "FFI bindings for GtkSourceView 4"
 license = "LGPL-2.1-or-later"
 edition = "2021"
-documentation = "https://world.pages.gitlab.gnome.org/Rust/sourceview4-rs/sourceview4_sys/"
+documentation = "https://world.pages.gitlab.gnome.org/Rust/sourceview4-rs/stable/latest/docs/sourceview4_sys"
 build = "build.rs"
 exclude = ["gir-files/*", "gir/"]
 [package.metadata.docs.rs]
