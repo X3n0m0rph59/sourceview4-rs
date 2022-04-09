@@ -17,7 +17,7 @@ cairo-rs = {git = "https://github.com/gtk-rs/gtk-rs-core"}
 glib = {git = "https://github.com/gtk-rs/gtk-rs-core"}
 gio = {git = "https://github.com/gtk-rs/gtk-rs-core"}
 gdk = {git = "https://github.com/gtk-rs/gtk3-rs"}
-gtk = {git = "https://github.com/gtk-rs/gtk3-rs", features = ["v3_20"]}
+gtk = {git = "https://github.com/gtk-rs/gtk3-rs"}
 gdk-pixbuf = {git = "https://github.com/gtk-rs/gtk-rs-core"}
 pango = {git = "https://github.com/gtk-rs/gtk-rs-core"}
 
