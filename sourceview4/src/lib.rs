@@ -20,6 +20,7 @@ macro_rules! skip_assert_initialized {
 }
 
 pub mod prelude;
+pub use auto::builders;
 
 #[allow(unused_imports)]
 mod auto;
