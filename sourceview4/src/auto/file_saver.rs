@@ -195,10 +195,10 @@ pub trait FileSaverExt: 'static {
     fn newline_type(&self) -> NewlineType;
 
     //#[doc(alias = "gtk_source_file_saver_save_async")]
-    //fn save_async<P: FnOnce(Result<(), glib::Error>) + Send + 'static, Q: FnOnce(Result<(), glib::Error>) + Send + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&impl IsA<gio::Cancellable>>, progress_callback: P, progress_callback_notify: Fn() + 'static, callback: Q);
+    //fn save_async<P: FnOnce(Result<(), glib::Error>) + 'static, Q: FnOnce(Result<(), glib::Error>) + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&impl IsA<gio::Cancellable>>, progress_callback: P, progress_callback_notify: Fn() + 'static, callback: Q);
 
     //
-    //fn save_future<P: FnOnce(Result<(), glib::Error>) + Send + 'static>(&self, io_priority: glib::Priority, progress_callback: P, progress_callback_notify: Fn() + 'static) -> Pin<Box_<dyn std::future::Future<Output = Result<(), glib::Error>> + 'static>>;
+    //fn save_future<P: FnOnce(Result<(), glib::Error>) + 'static>(&self, io_priority: glib::Priority, progress_callback: P, progress_callback_notify: Fn() + 'static) -> Pin<Box_<dyn std::future::Future<Output = Result<(), glib::Error>> + 'static>>;
 
     #[doc(alias = "gtk_source_file_saver_set_compression_type")]
     fn set_compression_type(&self, compression_type: CompressionType);
@@ -282,12 +282,12 @@ impl<O: IsA<FileSaver>> FileSaverExt for O {
         }
     }
 
-    //fn save_async<P: FnOnce(Result<(), glib::Error>) + Send + 'static, Q: FnOnce(Result<(), glib::Error>) + Send + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&impl IsA<gio::Cancellable>>, progress_callback: P, progress_callback_notify: Fn() + 'static, callback: Q) {
+    //fn save_async<P: FnOnce(Result<(), glib::Error>) + 'static, Q: FnOnce(Result<(), glib::Error>) + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&impl IsA<gio::Cancellable>>, progress_callback: P, progress_callback_notify: Fn() + 'static, callback: Q) {
     //    unsafe { TODO: call ffi:gtk_source_file_saver_save_async() }
     //}
 
     //
-    //fn save_future<P: FnOnce(Result<(), glib::Error>) + Send + 'static>(&self, io_priority: glib::Priority, progress_callback: P, progress_callback_notify: Fn() + 'static) -> Pin<Box_<dyn std::future::Future<Output = Result<(), glib::Error>> + 'static>> {
+    //fn save_future<P: FnOnce(Result<(), glib::Error>) + 'static>(&self, io_priority: glib::Priority, progress_callback: P, progress_callback_notify: Fn() + 'static) -> Pin<Box_<dyn std::future::Future<Output = Result<(), glib::Error>> + 'static>> {
 
     //let progress_callback = progress_callback.map(ToOwned::to_owned);
     //let progress_callback_notify = progress_callback_notify.map(ToOwned::to_owned);
