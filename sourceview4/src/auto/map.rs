@@ -375,7 +375,7 @@ impl MapBuilder {
         if let Some(ref vscroll_policy) = self.vscroll_policy {
             properties.push(("vscroll-policy", vscroll_policy));
         }
-        glib::Object::new::<Map>(&properties).expect("Failed to create an instance of Map")
+        glib::Object::new::<Map>(&properties)
     }
 
     pub fn font_desc(mut self, font_desc: &pango::FontDescription) -> Self {

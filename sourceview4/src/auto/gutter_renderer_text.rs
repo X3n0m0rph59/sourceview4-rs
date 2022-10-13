@@ -118,7 +118,6 @@ impl GutterRendererTextBuilder {
             properties.push(("ypad", ypad));
         }
         glib::Object::new::<GutterRendererText>(&properties)
-            .expect("Failed to create an instance of GutterRendererText")
     }
 
     pub fn markup(mut self, markup: &str) -> Self {
@@ -212,9 +211,7 @@ impl<O: IsA<GutterRendererText>> GutterRendererTextExt for O {
                 width.as_mut_ptr(),
                 height.as_mut_ptr(),
             );
-            let width = width.assume_init();
-            let height = height.assume_init();
-            (width, height)
+            (width.assume_init(), height.assume_init())
         }
     }
 
@@ -228,9 +225,7 @@ impl<O: IsA<GutterRendererText>> GutterRendererTextExt for O {
                 width.as_mut_ptr(),
                 height.as_mut_ptr(),
             );
-            let width = width.assume_init();
-            let height = height.assume_init();
-            (width, height)
+            (width.assume_init(), height.assume_init())
         }
     }
 

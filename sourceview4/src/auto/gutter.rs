@@ -62,7 +62,7 @@ impl GutterBuilder {
         if let Some(ref window_type) = self.window_type {
             properties.push(("window-type", window_type));
         }
-        glib::Object::new::<Gutter>(&properties).expect("Failed to create an instance of Gutter")
+        glib::Object::new::<Gutter>(&properties)
     }
 
     pub fn view(mut self, view: &impl IsA<View>) -> Self {

@@ -81,7 +81,6 @@ impl LanguageManagerBuilder {
             properties.push(("search-path", search_path));
         }
         glib::Object::new::<LanguageManager>(&properties)
-            .expect("Failed to create an instance of LanguageManager")
     }
 
     pub fn search_path(mut self, search_path: Vec<String>) -> Self {

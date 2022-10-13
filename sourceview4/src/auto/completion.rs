@@ -99,7 +99,6 @@ impl CompletionBuilder {
             properties.push(("view", view));
         }
         glib::Object::new::<Completion>(&properties)
-            .expect("Failed to create an instance of Completion")
     }
 
     pub fn accelerators(mut self, accelerators: u32) -> Self {

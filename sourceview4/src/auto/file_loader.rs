@@ -67,7 +67,6 @@ impl FileLoader {
 impl Default for FileLoader {
     fn default() -> Self {
         glib::object::Object::new::<Self>(&[])
-            .expect("Can't construct FileLoader object with default parameters")
     }
 }
 
@@ -109,7 +108,6 @@ impl FileLoaderBuilder {
             properties.push(("location", location));
         }
         glib::Object::new::<FileLoader>(&properties)
-            .expect("Failed to create an instance of FileLoader")
     }
 
     pub fn buffer(mut self, buffer: &impl IsA<Buffer>) -> Self {

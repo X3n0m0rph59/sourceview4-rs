@@ -51,7 +51,6 @@ impl CompletionWords {
 impl Default for CompletionWords {
     fn default() -> Self {
         glib::object::Object::new::<Self>(&[])
-            .expect("Can't construct CompletionWords object with default parameters")
     }
 }
 
@@ -109,7 +108,6 @@ impl CompletionWordsBuilder {
             properties.push(("scan-batch-size", scan_batch_size));
         }
         glib::Object::new::<CompletionWords>(&properties)
-            .expect("Failed to create an instance of CompletionWords")
     }
 
     pub fn activation(mut self, activation: CompletionActivation) -> Self {

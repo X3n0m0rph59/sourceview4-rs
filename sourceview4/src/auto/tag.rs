@@ -47,7 +47,6 @@ impl Tag {
 impl Default for Tag {
     fn default() -> Self {
         glib::object::Object::new::<Self>(&[])
-            .expect("Can't construct Tag object with default parameters")
     }
 }
 
@@ -364,7 +363,7 @@ impl TagBuilder {
         if let Some(ref wrap_mode_set) = self.wrap_mode_set {
             properties.push(("wrap-mode-set", wrap_mode_set));
         }
-        glib::Object::new::<Tag>(&properties).expect("Failed to create an instance of Tag")
+        glib::Object::new::<Tag>(&properties)
     }
 
     pub fn draw_spaces(mut self, draw_spaces: bool) -> Self {

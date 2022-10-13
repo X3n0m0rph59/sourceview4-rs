@@ -66,7 +66,6 @@ impl Buffer {
 impl Default for Buffer {
     fn default() -> Self {
         glib::object::Object::new::<Self>(&[])
-            .expect("Can't construct Buffer object with default parameters")
     }
 }
 
@@ -127,7 +126,7 @@ impl BufferBuilder {
         if let Some(ref text) = self.text {
             properties.push(("text", text));
         }
-        glib::Object::new::<Buffer>(&properties).expect("Failed to create an instance of Buffer")
+        glib::Object::new::<Buffer>(&properties)
     }
 
     pub fn highlight_matching_brackets(mut self, highlight_matching_brackets: bool) -> Self {
@@ -206,7 +205,7 @@ pub trait BufferExt: 'static {
     ) -> Option<Mark>;
 
     //#[doc(alias = "gtk_source_buffer_create_source_tag")]
-    //fn create_source_tag(&self, tag_name: Option<&str>, first_property_name: Option<&str>, : /*Unknown conversion*//*Unimplemented*/Fundamental: VarArgs) -> Option<gtk::TextTag>;
+    //fn create_source_tag(&self, tag_name: Option<&str>, first_property_name: Option<&str>, : /*Unknown conversion*//*Unimplemented*/Basic: VarArgs) -> Option<gtk::TextTag>;
 
     #[doc(alias = "gtk_source_buffer_end_not_undoable_action")]
     fn end_not_undoable_action(&self);
@@ -430,7 +429,7 @@ impl<O: IsA<Buffer>> BufferExt for O {
         }
     }
 
-    //fn create_source_tag(&self, tag_name: Option<&str>, first_property_name: Option<&str>, : /*Unknown conversion*//*Unimplemented*/Fundamental: VarArgs) -> Option<gtk::TextTag> {
+    //fn create_source_tag(&self, tag_name: Option<&str>, first_property_name: Option<&str>, : /*Unknown conversion*//*Unimplemented*/Basic: VarArgs) -> Option<gtk::TextTag> {
     //    unsafe { TODO: call ffi:gtk_source_buffer_create_source_tag() }
     //}
 

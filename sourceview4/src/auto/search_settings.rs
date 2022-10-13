@@ -89,7 +89,6 @@ impl SearchSettingsBuilder {
             properties.push(("wrap-around", wrap_around));
         }
         glib::Object::new::<SearchSettings>(&properties)
-            .expect("Failed to create an instance of SearchSettings")
     }
 
     pub fn at_word_boundaries(mut self, at_word_boundaries: bool) -> Self {

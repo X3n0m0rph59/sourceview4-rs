@@ -74,7 +74,6 @@ impl CompletionContextBuilder {
             properties.push(("iter", iter));
         }
         glib::Object::new::<CompletionContext>(&properties)
-            .expect("Failed to create an instance of CompletionContext")
     }
 
     pub fn activation(mut self, activation: CompletionActivation) -> Self {

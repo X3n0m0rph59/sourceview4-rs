@@ -86,7 +86,6 @@ impl MarkAttributesBuilder {
             properties.push(("pixbuf", pixbuf));
         }
         glib::Object::new::<MarkAttributes>(&properties)
-            .expect("Failed to create an instance of MarkAttributes")
     }
 
     pub fn background(mut self, background: &gdk::RGBA) -> Self {

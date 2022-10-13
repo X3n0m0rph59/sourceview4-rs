@@ -72,7 +72,6 @@ impl FileSaver {
 impl Default for FileSaver {
     fn default() -> Self {
         glib::object::Object::new::<Self>(&[])
-            .expect("Can't construct FileSaver object with default parameters")
     }
 }
 
@@ -126,7 +125,6 @@ impl FileSaverBuilder {
             properties.push(("newline-type", newline_type));
         }
         glib::Object::new::<FileSaver>(&properties)
-            .expect("Failed to create an instance of FileSaver")
     }
 
     pub fn buffer(mut self, buffer: &impl IsA<Buffer>) -> Self {

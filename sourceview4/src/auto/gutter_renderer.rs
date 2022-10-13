@@ -243,9 +243,7 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
                 xalign.as_mut_ptr(),
                 yalign.as_mut_ptr(),
             );
-            let xalign = xalign.assume_init();
-            let yalign = yalign.assume_init();
-            (xalign, yalign)
+            (xalign.assume_init(), yalign.assume_init())
         }
     }
 
@@ -281,9 +279,7 @@ impl<O: IsA<GutterRenderer>> GutterRendererExt for O {
                 xpad.as_mut_ptr(),
                 ypad.as_mut_ptr(),
             );
-            let xpad = xpad.assume_init();
-            let ypad = ypad.assume_init();
-            (xpad, ypad)
+            (xpad.assume_init(), ypad.assume_init())
         }
     }
 

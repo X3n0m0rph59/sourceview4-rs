@@ -61,7 +61,6 @@ impl PrintCompositor {
 impl Default for PrintCompositor {
     fn default() -> Self {
         glib::object::Object::new::<Self>(&[])
-            .expect("Can't construct PrintCompositor object with default parameters")
     }
 }
 
@@ -131,7 +130,6 @@ impl PrintCompositorBuilder {
             properties.push(("wrap-mode", wrap_mode));
         }
         glib::Object::new::<PrintCompositor>(&properties)
-            .expect("Failed to create an instance of PrintCompositor")
     }
 
     pub fn body_font_name(mut self, body_font_name: &str) -> Self {

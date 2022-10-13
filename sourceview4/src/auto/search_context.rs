@@ -58,7 +58,6 @@ impl SearchContext {
 impl Default for SearchContext {
     fn default() -> Self {
         glib::object::Object::new::<Self>(&[])
-            .expect("Can't construct SearchContext object with default parameters")
     }
 }
 
@@ -100,7 +99,6 @@ impl SearchContextBuilder {
             properties.push(("settings", settings));
         }
         glib::Object::new::<SearchContext>(&properties)
-            .expect("Failed to create an instance of SearchContext")
     }
 
     pub fn buffer(mut self, buffer: &impl IsA<Buffer>) -> Self {
@@ -241,9 +239,12 @@ impl<O: IsA<SearchContext>> SearchContextExt for O {
                 match_end.to_glib_none_mut().0,
                 has_wrapped_around.as_mut_ptr(),
             ));
-            let has_wrapped_around = has_wrapped_around.assume_init();
             if ret {
-                Some((match_start, match_end, from_glib(has_wrapped_around)))
+                Some((
+                    match_start,
+                    match_end,
+                    from_glib(has_wrapped_around.assume_init()),
+                ))
             } else {
                 None
             }
@@ -289,9 +290,12 @@ impl<O: IsA<SearchContext>> SearchContextExt for O {
                 has_wrapped_around.as_mut_ptr(),
                 &mut error,
             );
-            let has_wrapped_around = has_wrapped_around.assume_init();
             let result = if error.is_null() {
-                Ok((match_start, match_end, from_glib(has_wrapped_around)))
+                Ok((
+                    match_start,
+                    match_end,
+                    from_glib(has_wrapped_around.assume_init()),
+                ))
             } else {
                 Err(from_glib_full(error))
             };
@@ -342,9 +346,12 @@ impl<O: IsA<SearchContext>> SearchContextExt for O {
                 match_end.to_glib_none_mut().0,
                 has_wrapped_around.as_mut_ptr(),
             ));
-            let has_wrapped_around = has_wrapped_around.assume_init();
             if ret {
-                Some((match_start, match_end, from_glib(has_wrapped_around)))
+                Some((
+                    match_start,
+                    match_end,
+                    from_glib(has_wrapped_around.assume_init()),
+                ))
             } else {
                 None
             }
@@ -390,9 +397,12 @@ impl<O: IsA<SearchContext>> SearchContextExt for O {
                 has_wrapped_around.as_mut_ptr(),
                 &mut error,
             );
-            let has_wrapped_around = has_wrapped_around.assume_init();
             let result = if error.is_null() {
-                Ok((match_start, match_end, from_glib(has_wrapped_around)))
+                Ok((
+                    match_start,
+                    match_end,
+                    from_glib(has_wrapped_around.assume_init()),
+                ))
             } else {
                 Err(from_glib_full(error))
             };

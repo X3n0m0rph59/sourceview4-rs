@@ -62,7 +62,6 @@ impl StyleSchemeBuilder {
             properties.push(("id", id));
         }
         glib::Object::new::<StyleScheme>(&properties)
-            .expect("Failed to create an instance of StyleScheme")
     }
 
     pub fn id(mut self, id: &str) -> Self {

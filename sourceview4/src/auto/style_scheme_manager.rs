@@ -81,7 +81,6 @@ impl StyleSchemeManagerBuilder {
             properties.push(("search-path", search_path));
         }
         glib::Object::new::<StyleSchemeManager>(&properties)
-            .expect("Failed to create an instance of StyleSchemeManager")
     }
 
     pub fn search_path(mut self, search_path: Vec<String>) -> Self {

@@ -220,7 +220,7 @@ impl StyleBuilder {
         if let Some(ref underline_set) = self.underline_set {
             properties.push(("underline-set", underline_set));
         }
-        glib::Object::new::<Style>(&properties).expect("Failed to create an instance of Style")
+        glib::Object::new::<Style>(&properties)
     }
 
     pub fn background(mut self, background: &str) -> Self {

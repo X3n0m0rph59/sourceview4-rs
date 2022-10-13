@@ -75,7 +75,7 @@ impl FileBuilder {
         if let Some(ref location) = self.location {
             properties.push(("location", location));
         }
-        glib::Object::new::<File>(&properties).expect("Failed to create an instance of File")
+        glib::Object::new::<File>(&properties)
     }
 
     pub fn location(mut self, location: &impl IsA<gio::File>) -> Self {
@@ -120,7 +120,7 @@ pub trait FileExt: 'static {
     fn set_location(&self, location: Option<&impl IsA<gio::File>>);
 
     //#[doc(alias = "gtk_source_file_set_mount_operation_factory")]
-    //fn set_mount_operation_factory(&self, callback: /*Unimplemented*/Fn(&File, /*Unimplemented*/Option<Fundamental: Pointer>) -> gio::MountOperation, user_data: /*Unimplemented*/Option<Fundamental: Pointer>);
+    //fn set_mount_operation_factory(&self, callback: /*Unimplemented*/Fn(&File, /*Unimplemented*/Option<Basic: Pointer>) -> gio::MountOperation, user_data: /*Unimplemented*/Option<Basic: Pointer>);
 
     #[doc(alias = "read-only")]
     fn is_read_only(&self) -> bool;
@@ -221,7 +221,7 @@ impl<O: IsA<File>> FileExt for O {
         }
     }
 
-    //fn set_mount_operation_factory(&self, callback: /*Unimplemented*/Fn(&File, /*Unimplemented*/Option<Fundamental: Pointer>) -> gio::MountOperation, user_data: /*Unimplemented*/Option<Fundamental: Pointer>) {
+    //fn set_mount_operation_factory(&self, callback: /*Unimplemented*/Fn(&File, /*Unimplemented*/Option<Basic: Pointer>) -> gio::MountOperation, user_data: /*Unimplemented*/Option<Basic: Pointer>) {
     //    unsafe { TODO: call ffi:gtk_source_file_set_mount_operation_factory() }
     //}
 

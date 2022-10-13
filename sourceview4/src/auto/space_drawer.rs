@@ -79,7 +79,6 @@ impl SpaceDrawerBuilder {
             properties.push(("matrix", matrix));
         }
         glib::Object::new::<SpaceDrawer>(&properties)
-            .expect("Failed to create an instance of SpaceDrawer")
     }
 
     pub fn enable_matrix(mut self, enable_matrix: bool) -> Self {

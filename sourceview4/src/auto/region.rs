@@ -40,7 +40,6 @@ impl Region {
 impl Default for Region {
     fn default() -> Self {
         glib::object::Object::new::<Self>(&[])
-            .expect("Can't construct Region object with default parameters")
     }
 }
 
@@ -76,7 +75,7 @@ impl RegionBuilder {
         if let Some(ref buffer) = self.buffer {
             properties.push(("buffer", buffer));
         }
-        glib::Object::new::<Region>(&properties).expect("Failed to create an instance of Region")
+        glib::Object::new::<Region>(&properties)
     }
 
     pub fn buffer(mut self, buffer: &impl IsA<gtk::TextBuffer>) -> Self {

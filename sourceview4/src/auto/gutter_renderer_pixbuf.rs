@@ -122,7 +122,6 @@ impl GutterRendererPixbufBuilder {
             properties.push(("ypad", ypad));
         }
         glib::Object::new::<GutterRendererPixbuf>(&properties)
-            .expect("Failed to create an instance of GutterRendererPixbuf")
     }
 
     pub fn gicon(mut self, gicon: &impl IsA<gio::Icon>) -> Self {

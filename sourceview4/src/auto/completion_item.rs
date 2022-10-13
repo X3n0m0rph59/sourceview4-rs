@@ -98,7 +98,6 @@ impl CompletionItemBuilder {
             properties.push(("text", text));
         }
         glib::Object::new::<CompletionItem>(&properties)
-            .expect("Failed to create an instance of CompletionItem")
     }
 
     pub fn gicon(mut self, gicon: &impl IsA<gio::Icon>) -> Self {

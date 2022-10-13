@@ -385,7 +385,7 @@ impl ViewBuilder {
         if let Some(ref vscroll_policy) = self.vscroll_policy {
             properties.push(("vscroll-policy", vscroll_policy));
         }
-        glib::Object::new::<View>(&properties).expect("Failed to create an instance of View")
+        glib::Object::new::<View>(&properties)
     }
 
     pub fn auto_indent(mut self, auto_indent: bool) -> Self {

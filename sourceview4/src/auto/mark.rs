@@ -45,7 +45,6 @@ impl Mark {
 impl Default for Mark {
     fn default() -> Self {
         glib::object::Object::new::<Self>(&[])
-            .expect("Can't construct Mark object with default parameters")
     }
 }
 
@@ -82,7 +81,7 @@ impl MarkBuilder {
         if let Some(ref name) = self.name {
             properties.push(("name", name));
         }
-        glib::Object::new::<Mark>(&properties).expect("Failed to create an instance of Mark")
+        glib::Object::new::<Mark>(&properties)
     }
 
     pub fn category(mut self, category: &str) -> Self {
