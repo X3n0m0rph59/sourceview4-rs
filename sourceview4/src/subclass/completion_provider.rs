@@ -106,7 +106,7 @@ impl<T: CompletionProviderImpl> CompletionProviderImplExt for T {
                 .expect("no parent \"activate_proposal\" implementation");
 
             from_glib(func(
-                self.instance()
+                self.obj()
                     .unsafe_cast_ref::<CompletionProvider>()
                     .to_glib_none()
                     .0,
@@ -125,7 +125,7 @@ impl<T: CompletionProviderImpl> CompletionProviderImplExt for T {
                 .expect("no parent \"activation\" implementation");
 
             from_glib(func(
-                self.instance()
+                self.obj()
                     .unsafe_cast_ref::<CompletionProvider>()
                     .to_glib_none()
                     .0,
@@ -142,7 +142,7 @@ impl<T: CompletionProviderImpl> CompletionProviderImplExt for T {
                 .expect("no parent \"gicon\" implementation");
 
             from_glib_none(func(
-                self.instance()
+                self.obj()
                     .unsafe_cast_ref::<CompletionProvider>()
                     .to_glib_none()
                     .0,
@@ -159,7 +159,7 @@ impl<T: CompletionProviderImpl> CompletionProviderImplExt for T {
                 .expect("no parent \"icon\" implementation");
 
             from_glib_none(func(
-                self.instance()
+                self.obj()
                     .unsafe_cast_ref::<CompletionProvider>()
                     .to_glib_none()
                     .0,
@@ -176,7 +176,7 @@ impl<T: CompletionProviderImpl> CompletionProviderImplExt for T {
                 .expect("no parent \"icon_name\" implementation");
 
             from_glib_none(func(
-                self.instance()
+                self.obj()
                     .unsafe_cast_ref::<CompletionProvider>()
                     .to_glib_none()
                     .0,
@@ -193,7 +193,7 @@ impl<T: CompletionProviderImpl> CompletionProviderImplExt for T {
                 .expect("no parent \"info_widget\" implementation");
 
             from_glib_none(func(
-                self.instance()
+                self.obj()
                     .unsafe_cast_ref::<CompletionProvider>()
                     .to_glib_none()
                     .0,
@@ -211,7 +211,7 @@ impl<T: CompletionProviderImpl> CompletionProviderImplExt for T {
                 .expect("no parent \"interactive_delay\" implementation");
 
             func(
-                self.instance()
+                self.obj()
                     .unsafe_cast_ref::<CompletionProvider>()
                     .to_glib_none()
                     .0,
@@ -228,7 +228,7 @@ impl<T: CompletionProviderImpl> CompletionProviderImplExt for T {
                 .expect("no parent \"name\" implementation");
 
             from_glib_full(func(
-                self.instance()
+                self.obj()
                     .unsafe_cast_ref::<CompletionProvider>()
                     .to_glib_none()
                     .0,
@@ -245,7 +245,7 @@ impl<T: CompletionProviderImpl> CompletionProviderImplExt for T {
                 .expect("no parent \"priority\" implementation");
 
             func(
-                self.instance()
+                self.obj()
                     .unsafe_cast_ref::<CompletionProvider>()
                     .to_glib_none()
                     .0,
@@ -267,7 +267,7 @@ impl<T: CompletionProviderImpl> CompletionProviderImplExt for T {
 
             let mut iter = gtk::TextIter::uninitialized();
             let res = from_glib(func(
-                self.instance()
+                self.obj()
                     .unsafe_cast_ref::<CompletionProvider>()
                     .to_glib_none()
                     .0,
@@ -292,7 +292,7 @@ impl<T: CompletionProviderImpl> CompletionProviderImplExt for T {
                 .expect("no parent \"match_\" implementation");
 
             from_glib(func(
-                self.instance()
+                self.obj()
                     .unsafe_cast_ref::<CompletionProvider>()
                     .to_glib_none()
                     .0,
@@ -310,7 +310,7 @@ impl<T: CompletionProviderImpl> CompletionProviderImplExt for T {
                 .expect("no parent \"populate\" implementation");
 
             func(
-                self.instance()
+                self.obj()
                     .unsafe_cast_ref::<CompletionProvider>()
                     .to_glib_none()
                     .0,
@@ -328,7 +328,7 @@ impl<T: CompletionProviderImpl> CompletionProviderImplExt for T {
                 .expect("no parent \"update_info\" implementation");
 
             func(
-                self.instance()
+                self.obj()
                     .unsafe_cast_ref::<CompletionProvider>()
                     .to_glib_none()
                     .0,
@@ -398,7 +398,7 @@ unsafe extern "C" fn completion_provider_get_gicon<T: CompletionProviderImpl>(
     imp.gicon()
         .map(|icon| {
             let ret = icon.to_glib_full();
-            imp.instance().set_qdata(
+            imp.obj().set_qdata(
                 *GICON_KEY,
                 PtrHolder(ret, |ptr| glib::gobject_ffi::g_object_unref(ptr as *mut _)),
             );
@@ -417,7 +417,7 @@ unsafe extern "C" fn completion_provider_get_icon<T: CompletionProviderImpl>(
     imp.icon()
         .map(|icon| {
             let ret = icon.to_glib_full();
-            imp.instance().set_qdata(
+            imp.obj().set_qdata(
                 *ICON_KEY,
                 PtrHolder(ret, |ptr| glib::gobject_ffi::g_object_unref(ptr as *mut _)),
             );
@@ -437,7 +437,7 @@ unsafe extern "C" fn completion_provider_get_icon_name<T: CompletionProviderImpl
     imp.icon_name()
         .map(|name| {
             let ret = name.to_glib_full();
-            imp.instance().set_qdata(
+            imp.obj().set_qdata(
                 *ICON_NAME_KEY,
                 PtrHolder(ret, |ptr| glib::gobject_ffi::g_object_unref(ptr as *mut _)),
             );
@@ -458,7 +458,7 @@ unsafe extern "C" fn completion_provider_get_info_widget<T: CompletionProviderIm
     imp.info_widget(&from_glib_borrow(proposal))
         .map(|widget| {
             let ret = widget.to_glib_full();
-            imp.instance().set_qdata(
+            imp.obj().set_qdata(
                 *INFO_WIDGET_KEY,
                 PtrHolder(ret, |ptr| glib::gobject_ffi::g_object_unref(ptr as *mut _)),
             );
