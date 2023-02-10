@@ -3,18 +3,13 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use crate::Buffer;
-use crate::View;
-use glib::object::Cast;
-use glib::object::IsA;
-use glib::signal::connect_raw;
-use glib::signal::SignalHandlerId;
-use glib::translate::*;
-use glib::StaticType;
-use glib::ToValue;
-use std::boxed::Box as Box_;
-use std::fmt;
-use std::mem::transmute;
+use crate::{Buffer, View};
+use glib::{
+    prelude::*,
+    signal::{connect_raw, SignalHandlerId},
+    translate::*,
+};
+use std::{boxed::Box as Box_, fmt, mem::transmute};
 
 glib::wrapper! {
     #[doc(alias = "GtkSourcePrintCompositor")]
@@ -54,137 +49,113 @@ impl PrintCompositor {
     ///
     /// This method returns an instance of [`PrintCompositorBuilder`](crate::builders::PrintCompositorBuilder) which can be used to create [`PrintCompositor`] objects.
     pub fn builder() -> PrintCompositorBuilder {
-        PrintCompositorBuilder::default()
+        PrintCompositorBuilder::new()
     }
 }
 
 impl Default for PrintCompositor {
     fn default() -> Self {
-        glib::object::Object::new::<Self>(&[])
+        glib::object::Object::new::<Self>()
     }
 }
 
-#[derive(Clone, Default)]
 // rustdoc-stripper-ignore-next
 /// A [builder-pattern] type to construct [`PrintCompositor`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
 #[must_use = "The builder must be built to be used"]
 pub struct PrintCompositorBuilder {
-    body_font_name: Option<String>,
-    buffer: Option<Buffer>,
-    footer_font_name: Option<String>,
-    header_font_name: Option<String>,
-    highlight_syntax: Option<bool>,
-    line_numbers_font_name: Option<String>,
-    print_footer: Option<bool>,
-    print_header: Option<bool>,
-    print_line_numbers: Option<u32>,
-    tab_width: Option<u32>,
-    wrap_mode: Option<gtk::WrapMode>,
+    builder: glib::object::ObjectBuilder<'static, PrintCompositor>,
 }
 
 impl PrintCompositorBuilder {
-    // rustdoc-stripper-ignore-next
-    /// Create a new [`PrintCompositorBuilder`].
-    pub fn new() -> Self {
-        Self::default()
+    fn new() -> Self {
+        Self {
+            builder: glib::object::Object::builder(),
+        }
+    }
+
+    pub fn body_font_name(self, body_font_name: impl Into<glib::GString>) -> Self {
+        Self {
+            builder: self
+                .builder
+                .property("body-font-name", body_font_name.into()),
+        }
+    }
+
+    pub fn buffer(self, buffer: &impl IsA<Buffer>) -> Self {
+        Self {
+            builder: self.builder.property("buffer", buffer.clone().upcast()),
+        }
+    }
+
+    pub fn footer_font_name(self, footer_font_name: impl Into<glib::GString>) -> Self {
+        Self {
+            builder: self
+                .builder
+                .property("footer-font-name", footer_font_name.into()),
+        }
+    }
+
+    pub fn header_font_name(self, header_font_name: impl Into<glib::GString>) -> Self {
+        Self {
+            builder: self
+                .builder
+                .property("header-font-name", header_font_name.into()),
+        }
+    }
+
+    pub fn highlight_syntax(self, highlight_syntax: bool) -> Self {
+        Self {
+            builder: self.builder.property("highlight-syntax", highlight_syntax),
+        }
+    }
+
+    pub fn line_numbers_font_name(self, line_numbers_font_name: impl Into<glib::GString>) -> Self {
+        Self {
+            builder: self
+                .builder
+                .property("line-numbers-font-name", line_numbers_font_name.into()),
+        }
+    }
+
+    pub fn print_footer(self, print_footer: bool) -> Self {
+        Self {
+            builder: self.builder.property("print-footer", print_footer),
+        }
+    }
+
+    pub fn print_header(self, print_header: bool) -> Self {
+        Self {
+            builder: self.builder.property("print-header", print_header),
+        }
+    }
+
+    pub fn print_line_numbers(self, print_line_numbers: u32) -> Self {
+        Self {
+            builder: self
+                .builder
+                .property("print-line-numbers", print_line_numbers),
+        }
+    }
+
+    pub fn tab_width(self, tab_width: u32) -> Self {
+        Self {
+            builder: self.builder.property("tab-width", tab_width),
+        }
+    }
+
+    pub fn wrap_mode(self, wrap_mode: gtk::WrapMode) -> Self {
+        Self {
+            builder: self.builder.property("wrap-mode", wrap_mode),
+        }
     }
 
     // rustdoc-stripper-ignore-next
     /// Build the [`PrintCompositor`].
     #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> PrintCompositor {
-        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
-        if let Some(ref body_font_name) = self.body_font_name {
-            properties.push(("body-font-name", body_font_name));
-        }
-        if let Some(ref buffer) = self.buffer {
-            properties.push(("buffer", buffer));
-        }
-        if let Some(ref footer_font_name) = self.footer_font_name {
-            properties.push(("footer-font-name", footer_font_name));
-        }
-        if let Some(ref header_font_name) = self.header_font_name {
-            properties.push(("header-font-name", header_font_name));
-        }
-        if let Some(ref highlight_syntax) = self.highlight_syntax {
-            properties.push(("highlight-syntax", highlight_syntax));
-        }
-        if let Some(ref line_numbers_font_name) = self.line_numbers_font_name {
-            properties.push(("line-numbers-font-name", line_numbers_font_name));
-        }
-        if let Some(ref print_footer) = self.print_footer {
-            properties.push(("print-footer", print_footer));
-        }
-        if let Some(ref print_header) = self.print_header {
-            properties.push(("print-header", print_header));
-        }
-        if let Some(ref print_line_numbers) = self.print_line_numbers {
-            properties.push(("print-line-numbers", print_line_numbers));
-        }
-        if let Some(ref tab_width) = self.tab_width {
-            properties.push(("tab-width", tab_width));
-        }
-        if let Some(ref wrap_mode) = self.wrap_mode {
-            properties.push(("wrap-mode", wrap_mode));
-        }
-        glib::Object::new::<PrintCompositor>(&properties)
-    }
-
-    pub fn body_font_name(mut self, body_font_name: &str) -> Self {
-        self.body_font_name = Some(body_font_name.to_string());
-        self
-    }
-
-    pub fn buffer(mut self, buffer: &impl IsA<Buffer>) -> Self {
-        self.buffer = Some(buffer.clone().upcast());
-        self
-    }
-
-    pub fn footer_font_name(mut self, footer_font_name: &str) -> Self {
-        self.footer_font_name = Some(footer_font_name.to_string());
-        self
-    }
-
-    pub fn header_font_name(mut self, header_font_name: &str) -> Self {
-        self.header_font_name = Some(header_font_name.to_string());
-        self
-    }
-
-    pub fn highlight_syntax(mut self, highlight_syntax: bool) -> Self {
-        self.highlight_syntax = Some(highlight_syntax);
-        self
-    }
-
-    pub fn line_numbers_font_name(mut self, line_numbers_font_name: &str) -> Self {
-        self.line_numbers_font_name = Some(line_numbers_font_name.to_string());
-        self
-    }
-
-    pub fn print_footer(mut self, print_footer: bool) -> Self {
-        self.print_footer = Some(print_footer);
-        self
-    }
-
-    pub fn print_header(mut self, print_header: bool) -> Self {
-        self.print_header = Some(print_header);
-        self
-    }
-
-    pub fn print_line_numbers(mut self, print_line_numbers: u32) -> Self {
-        self.print_line_numbers = Some(print_line_numbers);
-        self
-    }
-
-    pub fn tab_width(mut self, tab_width: u32) -> Self {
-        self.tab_width = Some(tab_width);
-        self
-    }
-
-    pub fn wrap_mode(mut self, wrap_mode: gtk::WrapMode) -> Self {
-        self.wrap_mode = Some(wrap_mode);
-        self
+        self.builder.build()
     }
 }
 

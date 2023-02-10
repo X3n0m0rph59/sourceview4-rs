@@ -4,8 +4,7 @@
 // DO NOT EDIT
 
 use crate::StyleSchemeChooser;
-use glib::object::Cast;
-use glib::translate::*;
+use glib::{prelude::*, translate::*};
 use std::fmt;
 
 glib::wrapper! {

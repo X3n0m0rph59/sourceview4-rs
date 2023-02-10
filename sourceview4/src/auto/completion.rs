@@ -3,22 +3,13 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use crate::CompletionContext;
-use crate::CompletionInfo;
-use crate::CompletionProvider;
-use crate::View;
-use glib::object::Cast;
-use glib::object::IsA;
-use glib::object::ObjectExt;
-use glib::signal::connect_raw;
-use glib::signal::SignalHandlerId;
-use glib::translate::*;
-use glib::StaticType;
-use glib::ToValue;
-use std::boxed::Box as Box_;
-use std::fmt;
-use std::mem::transmute;
-use std::ptr;
+use crate::{CompletionContext, CompletionInfo, CompletionProvider, View};
+use glib::{
+    prelude::*,
+    signal::{connect_raw, SignalHandlerId},
+    translate::*,
+};
+use std::{boxed::Box as Box_, fmt, mem::transmute, ptr};
 
 glib::wrapper! {
     #[doc(alias = "GtkSourceCompletion")]
@@ -37,113 +28,93 @@ impl Completion {
     ///
     /// This method returns an instance of [`CompletionBuilder`](crate::builders::CompletionBuilder) which can be used to create [`Completion`] objects.
     pub fn builder() -> CompletionBuilder {
-        CompletionBuilder::default()
+        CompletionBuilder::new()
     }
 }
 
-#[derive(Clone, Default)]
 // rustdoc-stripper-ignore-next
 /// A [builder-pattern] type to construct [`Completion`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
 #[must_use = "The builder must be built to be used"]
 pub struct CompletionBuilder {
-    accelerators: Option<u32>,
-    auto_complete_delay: Option<u32>,
-    proposal_page_size: Option<u32>,
-    provider_page_size: Option<u32>,
-    remember_info_visibility: Option<bool>,
-    select_on_show: Option<bool>,
-    show_headers: Option<bool>,
-    show_icons: Option<bool>,
-    view: Option<View>,
+    builder: glib::object::ObjectBuilder<'static, Completion>,
 }
 
 impl CompletionBuilder {
-    // rustdoc-stripper-ignore-next
-    /// Create a new [`CompletionBuilder`].
-    pub fn new() -> Self {
-        Self::default()
+    fn new() -> Self {
+        Self {
+            builder: glib::object::Object::builder(),
+        }
+    }
+
+    pub fn accelerators(self, accelerators: u32) -> Self {
+        Self {
+            builder: self.builder.property("accelerators", accelerators),
+        }
+    }
+
+    pub fn auto_complete_delay(self, auto_complete_delay: u32) -> Self {
+        Self {
+            builder: self
+                .builder
+                .property("auto-complete-delay", auto_complete_delay),
+        }
+    }
+
+    pub fn proposal_page_size(self, proposal_page_size: u32) -> Self {
+        Self {
+            builder: self
+                .builder
+                .property("proposal-page-size", proposal_page_size),
+        }
+    }
+
+    pub fn provider_page_size(self, provider_page_size: u32) -> Self {
+        Self {
+            builder: self
+                .builder
+                .property("provider-page-size", provider_page_size),
+        }
+    }
+
+    pub fn remember_info_visibility(self, remember_info_visibility: bool) -> Self {
+        Self {
+            builder: self
+                .builder
+                .property("remember-info-visibility", remember_info_visibility),
+        }
+    }
+
+    pub fn select_on_show(self, select_on_show: bool) -> Self {
+        Self {
+            builder: self.builder.property("select-on-show", select_on_show),
+        }
+    }
+
+    pub fn show_headers(self, show_headers: bool) -> Self {
+        Self {
+            builder: self.builder.property("show-headers", show_headers),
+        }
+    }
+
+    pub fn show_icons(self, show_icons: bool) -> Self {
+        Self {
+            builder: self.builder.property("show-icons", show_icons),
+        }
+    }
+
+    pub fn view(self, view: &impl IsA<View>) -> Self {
+        Self {
+            builder: self.builder.property("view", view.clone().upcast()),
+        }
     }
 
     // rustdoc-stripper-ignore-next
     /// Build the [`Completion`].
     #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> Completion {
-        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
-        if let Some(ref accelerators) = self.accelerators {
-            properties.push(("accelerators", accelerators));
-        }
-        if let Some(ref auto_complete_delay) = self.auto_complete_delay {
-            properties.push(("auto-complete-delay", auto_complete_delay));
-        }
-        if let Some(ref proposal_page_size) = self.proposal_page_size {
-            properties.push(("proposal-page-size", proposal_page_size));
-        }
-        if let Some(ref provider_page_size) = self.provider_page_size {
-            properties.push(("provider-page-size", provider_page_size));
-        }
-        if let Some(ref remember_info_visibility) = self.remember_info_visibility {
-            properties.push(("remember-info-visibility", remember_info_visibility));
-        }
-        if let Some(ref select_on_show) = self.select_on_show {
-            properties.push(("select-on-show", select_on_show));
-        }
-        if let Some(ref show_headers) = self.show_headers {
-            properties.push(("show-headers", show_headers));
-        }
-        if let Some(ref show_icons) = self.show_icons {
-            properties.push(("show-icons", show_icons));
-        }
-        if let Some(ref view) = self.view {
-            properties.push(("view", view));
-        }
-        glib::Object::new::<Completion>(&properties)
-    }
-
-    pub fn accelerators(mut self, accelerators: u32) -> Self {
-        self.accelerators = Some(accelerators);
-        self
-    }
-
-    pub fn auto_complete_delay(mut self, auto_complete_delay: u32) -> Self {
-        self.auto_complete_delay = Some(auto_complete_delay);
-        self
-    }
-
-    pub fn proposal_page_size(mut self, proposal_page_size: u32) -> Self {
-        self.proposal_page_size = Some(proposal_page_size);
-        self
-    }
-
-    pub fn provider_page_size(mut self, provider_page_size: u32) -> Self {
-        self.provider_page_size = Some(provider_page_size);
-        self
-    }
-
-    pub fn remember_info_visibility(mut self, remember_info_visibility: bool) -> Self {
-        self.remember_info_visibility = Some(remember_info_visibility);
-        self
-    }
-
-    pub fn select_on_show(mut self, select_on_show: bool) -> Self {
-        self.select_on_show = Some(select_on_show);
-        self
-    }
-
-    pub fn show_headers(mut self, show_headers: bool) -> Self {
-        self.show_headers = Some(show_headers);
-        self
-    }
-
-    pub fn show_icons(mut self, show_icons: bool) -> Self {
-        self.show_icons = Some(show_icons);
-        self
-    }
-
-    pub fn view(mut self, view: &impl IsA<View>) -> Self {
-        self.view = Some(view.clone().upcast());
-        self
+        self.builder.build()
     }
 }
 
@@ -304,7 +275,7 @@ impl<O: IsA<Completion>> CompletionExt for O {
                 provider.as_ref().to_glib_none().0,
                 &mut error,
             );
-            assert_eq!(is_ok == glib::ffi::GFALSE, !error.is_null());
+            debug_assert_eq!(is_ok == glib::ffi::GFALSE, !error.is_null());
             if error.is_null() {
                 Ok(())
             } else {
@@ -357,7 +328,7 @@ impl<O: IsA<Completion>> CompletionExt for O {
                 provider.as_ref().to_glib_none().0,
                 &mut error,
             );
-            assert_eq!(is_ok == glib::ffi::GFALSE, !error.is_null());
+            debug_assert_eq!(is_ok == glib::ffi::GFALSE, !error.is_null());
             if error.is_null() {
                 Ok(())
             } else {

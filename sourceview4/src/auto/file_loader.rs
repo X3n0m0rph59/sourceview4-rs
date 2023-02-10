@@ -3,16 +3,8 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use crate::Buffer;
-use crate::CompressionType;
-use crate::Encoding;
-use crate::File;
-use crate::NewlineType;
-use glib::object::Cast;
-use glib::object::IsA;
-use glib::translate::*;
-use glib::StaticType;
-use glib::ToValue;
+use crate::{Buffer, CompressionType, Encoding, File, NewlineType};
+use glib::{prelude::*, translate::*};
 use std::fmt;
 
 glib::wrapper! {
@@ -60,74 +52,63 @@ impl FileLoader {
     ///
     /// This method returns an instance of [`FileLoaderBuilder`](crate::builders::FileLoaderBuilder) which can be used to create [`FileLoader`] objects.
     pub fn builder() -> FileLoaderBuilder {
-        FileLoaderBuilder::default()
+        FileLoaderBuilder::new()
     }
 }
 
 impl Default for FileLoader {
     fn default() -> Self {
-        glib::object::Object::new::<Self>(&[])
+        glib::object::Object::new::<Self>()
     }
 }
 
-#[derive(Clone, Default)]
 // rustdoc-stripper-ignore-next
 /// A [builder-pattern] type to construct [`FileLoader`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
 #[must_use = "The builder must be built to be used"]
 pub struct FileLoaderBuilder {
-    buffer: Option<Buffer>,
-    file: Option<File>,
-    input_stream: Option<gio::InputStream>,
-    location: Option<gio::File>,
+    builder: glib::object::ObjectBuilder<'static, FileLoader>,
 }
 
 impl FileLoaderBuilder {
-    // rustdoc-stripper-ignore-next
-    /// Create a new [`FileLoaderBuilder`].
-    pub fn new() -> Self {
-        Self::default()
+    fn new() -> Self {
+        Self {
+            builder: glib::object::Object::builder(),
+        }
+    }
+
+    pub fn buffer(self, buffer: &impl IsA<Buffer>) -> Self {
+        Self {
+            builder: self.builder.property("buffer", buffer.clone().upcast()),
+        }
+    }
+
+    pub fn file(self, file: &impl IsA<File>) -> Self {
+        Self {
+            builder: self.builder.property("file", file.clone().upcast()),
+        }
+    }
+
+    pub fn input_stream(self, input_stream: &impl IsA<gio::InputStream>) -> Self {
+        Self {
+            builder: self
+                .builder
+                .property("input-stream", input_stream.clone().upcast()),
+        }
+    }
+
+    pub fn location(self, location: &impl IsA<gio::File>) -> Self {
+        Self {
+            builder: self.builder.property("location", location.clone().upcast()),
+        }
     }
 
     // rustdoc-stripper-ignore-next
     /// Build the [`FileLoader`].
     #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> FileLoader {
-        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
-        if let Some(ref buffer) = self.buffer {
-            properties.push(("buffer", buffer));
-        }
-        if let Some(ref file) = self.file {
-            properties.push(("file", file));
-        }
-        if let Some(ref input_stream) = self.input_stream {
-            properties.push(("input-stream", input_stream));
-        }
-        if let Some(ref location) = self.location {
-            properties.push(("location", location));
-        }
-        glib::Object::new::<FileLoader>(&properties)
-    }
-
-    pub fn buffer(mut self, buffer: &impl IsA<Buffer>) -> Self {
-        self.buffer = Some(buffer.clone().upcast());
-        self
-    }
-
-    pub fn file(mut self, file: &impl IsA<File>) -> Self {
-        self.file = Some(file.clone().upcast());
-        self
-    }
-
-    pub fn input_stream(mut self, input_stream: &impl IsA<gio::InputStream>) -> Self {
-        self.input_stream = Some(input_stream.clone().upcast());
-        self
-    }
-
-    pub fn location(mut self, location: &impl IsA<gio::File>) -> Self {
-        self.location = Some(location.clone().upcast());
-        self
+        self.builder.build()
     }
 }
 
@@ -161,10 +142,10 @@ pub trait FileLoaderExt: 'static {
     fn newline_type(&self) -> NewlineType;
 
     //#[doc(alias = "gtk_source_file_loader_load_async")]
-    //fn load_async<P: FnOnce(Result<(), glib::Error>) + 'static, Q: FnOnce(Result<(), glib::Error>) + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&impl IsA<gio::Cancellable>>, progress_callback: P, progress_callback_notify: Fn() + 'static, callback: Q);
+    //fn load_async<P: FnOnce(Result<(), glib::Error>) + 'static, Q: FnOnce(Result<(), glib::Error>) + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&impl IsA<gio::Cancellable>>, progress_callback: P, callback: Q);
 
     //
-    //fn load_future<P: FnOnce(Result<(), glib::Error>) + 'static>(&self, io_priority: glib::Priority, progress_callback: P, progress_callback_notify: Fn() + 'static) -> Pin<Box_<dyn std::future::Future<Output = Result<(), glib::Error>> + 'static>>;
+    //fn load_future<P: FnOnce(Result<(), glib::Error>) + 'static>(&self, io_priority: glib::Priority, progress_callback: P) -> Pin<Box_<dyn std::future::Future<Output = Result<(), glib::Error>> + 'static>>;
 }
 
 impl<O: IsA<FileLoader>> FileLoaderExt for O {
@@ -224,21 +205,19 @@ impl<O: IsA<FileLoader>> FileLoaderExt for O {
         }
     }
 
-    //fn load_async<P: FnOnce(Result<(), glib::Error>) + 'static, Q: FnOnce(Result<(), glib::Error>) + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&impl IsA<gio::Cancellable>>, progress_callback: P, progress_callback_notify: Fn() + 'static, callback: Q) {
+    //fn load_async<P: FnOnce(Result<(), glib::Error>) + 'static, Q: FnOnce(Result<(), glib::Error>) + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&impl IsA<gio::Cancellable>>, progress_callback: P, callback: Q) {
     //    unsafe { TODO: call ffi:gtk_source_file_loader_load_async() }
     //}
 
     //
-    //fn load_future<P: FnOnce(Result<(), glib::Error>) + 'static>(&self, io_priority: glib::Priority, progress_callback: P, progress_callback_notify: Fn() + 'static) -> Pin<Box_<dyn std::future::Future<Output = Result<(), glib::Error>> + 'static>> {
+    //fn load_future<P: FnOnce(Result<(), glib::Error>) + 'static>(&self, io_priority: glib::Priority, progress_callback: P) -> Pin<Box_<dyn std::future::Future<Output = Result<(), glib::Error>> + 'static>> {
 
     //let progress_callback = progress_callback.map(ToOwned::to_owned);
-    //let progress_callback_notify = progress_callback_notify.map(ToOwned::to_owned);
     //Box_::pin(gio::GioFuture::new(self, move |obj, cancellable, send| {
     //    obj.load_async(
     //        io_priority,
     //        Some(cancellable),
     //        progress_callback.as_ref().map(::std::borrow::Borrow::borrow),
-    //        progress_callback_notify.as_ref().map(::std::borrow::Borrow::borrow),
     //        move |res| {
     //            send.resolve(res);
     //        },

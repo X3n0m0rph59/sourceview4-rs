@@ -3,11 +3,7 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use glib::object::Cast;
-use glib::object::IsA;
-use glib::translate::*;
-use glib::StaticType;
-use glib::ToValue;
+use glib::{prelude::*, translate::*};
 use std::fmt;
 
 glib::wrapper! {
@@ -33,13 +29,13 @@ impl Region {
     ///
     /// This method returns an instance of [`RegionBuilder`](crate::builders::RegionBuilder) which can be used to create [`Region`] objects.
     pub fn builder() -> RegionBuilder {
-        RegionBuilder::default()
+        RegionBuilder::new()
     }
 }
 
 impl Default for Region {
     fn default() -> Self {
-        glib::object::Object::new::<Self>(&[])
+        glib::object::Object::new::<Self>()
     }
 }
 
@@ -50,37 +46,33 @@ impl fmt::Display for Region {
     }
 }
 
-#[derive(Clone, Default)]
 // rustdoc-stripper-ignore-next
 /// A [builder-pattern] type to construct [`Region`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
 #[must_use = "The builder must be built to be used"]
 pub struct RegionBuilder {
-    buffer: Option<gtk::TextBuffer>,
+    builder: glib::object::ObjectBuilder<'static, Region>,
 }
 
 impl RegionBuilder {
-    // rustdoc-stripper-ignore-next
-    /// Create a new [`RegionBuilder`].
-    pub fn new() -> Self {
-        Self::default()
+    fn new() -> Self {
+        Self {
+            builder: glib::object::Object::builder(),
+        }
+    }
+
+    pub fn buffer(self, buffer: &impl IsA<gtk::TextBuffer>) -> Self {
+        Self {
+            builder: self.builder.property("buffer", buffer.clone().upcast()),
+        }
     }
 
     // rustdoc-stripper-ignore-next
     /// Build the [`Region`].
     #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> Region {
-        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
-        if let Some(ref buffer) = self.buffer {
-            properties.push(("buffer", buffer));
-        }
-        glib::Object::new::<Region>(&properties)
-    }
-
-    pub fn buffer(mut self, buffer: &impl IsA<gtk::TextBuffer>) -> Self {
-        self.buffer = Some(buffer.clone().upcast());
-        self
+        self.builder.build()
     }
 }
 

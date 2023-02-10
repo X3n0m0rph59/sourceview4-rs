@@ -4,16 +4,12 @@
 // DO NOT EDIT
 
 use crate::Mark;
-use glib::object::Cast;
-use glib::object::IsA;
-use glib::signal::connect_raw;
-use glib::signal::SignalHandlerId;
-use glib::translate::*;
-use glib::StaticType;
-use glib::ToValue;
-use std::boxed::Box as Box_;
-use std::fmt;
-use std::mem::transmute;
+use glib::{
+    prelude::*,
+    signal::{connect_raw, SignalHandlerId},
+    translate::*,
+};
+use std::{boxed::Box as Box_, fmt, mem::transmute};
 
 glib::wrapper! {
     #[doc(alias = "GtkSourceMarkAttributes")]
@@ -38,7 +34,7 @@ impl MarkAttributes {
     ///
     /// This method returns an instance of [`MarkAttributesBuilder`](crate::builders::MarkAttributesBuilder) which can be used to create [`MarkAttributes`] objects.
     pub fn builder() -> MarkAttributesBuilder {
-        MarkAttributesBuilder::default()
+        MarkAttributesBuilder::new()
     }
 }
 
@@ -48,64 +44,51 @@ impl Default for MarkAttributes {
     }
 }
 
-#[derive(Clone, Default)]
 // rustdoc-stripper-ignore-next
 /// A [builder-pattern] type to construct [`MarkAttributes`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
 #[must_use = "The builder must be built to be used"]
 pub struct MarkAttributesBuilder {
-    background: Option<gdk::RGBA>,
-    gicon: Option<gio::Icon>,
-    icon_name: Option<String>,
-    pixbuf: Option<gdk_pixbuf::Pixbuf>,
+    builder: glib::object::ObjectBuilder<'static, MarkAttributes>,
 }
 
 impl MarkAttributesBuilder {
-    // rustdoc-stripper-ignore-next
-    /// Create a new [`MarkAttributesBuilder`].
-    pub fn new() -> Self {
-        Self::default()
+    fn new() -> Self {
+        Self {
+            builder: glib::object::Object::builder(),
+        }
+    }
+
+    pub fn background(self, background: &gdk::RGBA) -> Self {
+        Self {
+            builder: self.builder.property("background", background),
+        }
+    }
+
+    pub fn gicon(self, gicon: &impl IsA<gio::Icon>) -> Self {
+        Self {
+            builder: self.builder.property("gicon", gicon.clone().upcast()),
+        }
+    }
+
+    pub fn icon_name(self, icon_name: impl Into<glib::GString>) -> Self {
+        Self {
+            builder: self.builder.property("icon-name", icon_name.into()),
+        }
+    }
+
+    pub fn pixbuf(self, pixbuf: &gdk_pixbuf::Pixbuf) -> Self {
+        Self {
+            builder: self.builder.property("pixbuf", pixbuf.clone()),
+        }
     }
 
     // rustdoc-stripper-ignore-next
     /// Build the [`MarkAttributes`].
     #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> MarkAttributes {
-        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
-        if let Some(ref background) = self.background {
-            properties.push(("background", background));
-        }
-        if let Some(ref gicon) = self.gicon {
-            properties.push(("gicon", gicon));
-        }
-        if let Some(ref icon_name) = self.icon_name {
-            properties.push(("icon-name", icon_name));
-        }
-        if let Some(ref pixbuf) = self.pixbuf {
-            properties.push(("pixbuf", pixbuf));
-        }
-        glib::Object::new::<MarkAttributes>(&properties)
-    }
-
-    pub fn background(mut self, background: &gdk::RGBA) -> Self {
-        self.background = Some(background.clone());
-        self
-    }
-
-    pub fn gicon(mut self, gicon: &impl IsA<gio::Icon>) -> Self {
-        self.gicon = Some(gicon.clone().upcast());
-        self
-    }
-
-    pub fn icon_name(mut self, icon_name: &str) -> Self {
-        self.icon_name = Some(icon_name.to_string());
-        self
-    }
-
-    pub fn pixbuf(mut self, pixbuf: &gdk_pixbuf::Pixbuf) -> Self {
-        self.pixbuf = Some(pixbuf.clone());
-        self
+        self.builder.build()
     }
 }
 

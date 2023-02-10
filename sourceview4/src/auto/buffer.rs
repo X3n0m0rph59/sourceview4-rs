@@ -3,23 +3,15 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use crate::BracketMatchType;
-use crate::ChangeCaseType;
-use crate::Language;
-use crate::Mark;
-use crate::SortFlags;
-use crate::StyleScheme;
-use crate::UndoManager;
-use glib::object::Cast;
-use glib::object::IsA;
-use glib::signal::connect_raw;
-use glib::signal::SignalHandlerId;
-use glib::translate::*;
-use glib::StaticType;
-use glib::ToValue;
-use std::boxed::Box as Box_;
-use std::fmt;
-use std::mem::transmute;
+use crate::{
+    BracketMatchType, ChangeCaseType, Language, Mark, SortFlags, StyleScheme, UndoManager,
+};
+use glib::{
+    prelude::*,
+    signal::{connect_raw, SignalHandlerId},
+    translate::*,
+};
+use std::{boxed::Box as Box_, fmt, mem::transmute};
 
 glib::wrapper! {
     #[doc(alias = "GtkSourceBuffer")]
@@ -59,119 +51,101 @@ impl Buffer {
     ///
     /// This method returns an instance of [`BufferBuilder`](crate::builders::BufferBuilder) which can be used to create [`Buffer`] objects.
     pub fn builder() -> BufferBuilder {
-        BufferBuilder::default()
+        BufferBuilder::new()
     }
 }
 
 impl Default for Buffer {
     fn default() -> Self {
-        glib::object::Object::new::<Self>(&[])
+        glib::object::Object::new::<Self>()
     }
 }
 
-#[derive(Clone, Default)]
 // rustdoc-stripper-ignore-next
 /// A [builder-pattern] type to construct [`Buffer`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
 #[must_use = "The builder must be built to be used"]
 pub struct BufferBuilder {
-    highlight_matching_brackets: Option<bool>,
-    highlight_syntax: Option<bool>,
-    implicit_trailing_newline: Option<bool>,
-    language: Option<Language>,
-    max_undo_levels: Option<i32>,
-    style_scheme: Option<StyleScheme>,
-    undo_manager: Option<UndoManager>,
-    tag_table: Option<gtk::TextTagTable>,
-    text: Option<String>,
+    builder: glib::object::ObjectBuilder<'static, Buffer>,
 }
 
 impl BufferBuilder {
-    // rustdoc-stripper-ignore-next
-    /// Create a new [`BufferBuilder`].
-    pub fn new() -> Self {
-        Self::default()
+    fn new() -> Self {
+        Self {
+            builder: glib::object::Object::builder(),
+        }
+    }
+
+    pub fn highlight_matching_brackets(self, highlight_matching_brackets: bool) -> Self {
+        Self {
+            builder: self
+                .builder
+                .property("highlight-matching-brackets", highlight_matching_brackets),
+        }
+    }
+
+    pub fn highlight_syntax(self, highlight_syntax: bool) -> Self {
+        Self {
+            builder: self.builder.property("highlight-syntax", highlight_syntax),
+        }
+    }
+
+    pub fn implicit_trailing_newline(self, implicit_trailing_newline: bool) -> Self {
+        Self {
+            builder: self
+                .builder
+                .property("implicit-trailing-newline", implicit_trailing_newline),
+        }
+    }
+
+    pub fn language(self, language: &impl IsA<Language>) -> Self {
+        Self {
+            builder: self.builder.property("language", language.clone().upcast()),
+        }
+    }
+
+    pub fn max_undo_levels(self, max_undo_levels: i32) -> Self {
+        Self {
+            builder: self.builder.property("max-undo-levels", max_undo_levels),
+        }
+    }
+
+    pub fn style_scheme(self, style_scheme: &impl IsA<StyleScheme>) -> Self {
+        Self {
+            builder: self
+                .builder
+                .property("style-scheme", style_scheme.clone().upcast()),
+        }
+    }
+
+    pub fn undo_manager(self, undo_manager: &impl IsA<UndoManager>) -> Self {
+        Self {
+            builder: self
+                .builder
+                .property("undo-manager", undo_manager.clone().upcast()),
+        }
+    }
+
+    pub fn tag_table(self, tag_table: &impl IsA<gtk::TextTagTable>) -> Self {
+        Self {
+            builder: self
+                .builder
+                .property("tag-table", tag_table.clone().upcast()),
+        }
+    }
+
+    pub fn text(self, text: impl Into<glib::GString>) -> Self {
+        Self {
+            builder: self.builder.property("text", text.into()),
+        }
     }
 
     // rustdoc-stripper-ignore-next
     /// Build the [`Buffer`].
     #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> Buffer {
-        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
-        if let Some(ref highlight_matching_brackets) = self.highlight_matching_brackets {
-            properties.push(("highlight-matching-brackets", highlight_matching_brackets));
-        }
-        if let Some(ref highlight_syntax) = self.highlight_syntax {
-            properties.push(("highlight-syntax", highlight_syntax));
-        }
-        if let Some(ref implicit_trailing_newline) = self.implicit_trailing_newline {
-            properties.push(("implicit-trailing-newline", implicit_trailing_newline));
-        }
-        if let Some(ref language) = self.language {
-            properties.push(("language", language));
-        }
-        if let Some(ref max_undo_levels) = self.max_undo_levels {
-            properties.push(("max-undo-levels", max_undo_levels));
-        }
-        if let Some(ref style_scheme) = self.style_scheme {
-            properties.push(("style-scheme", style_scheme));
-        }
-        if let Some(ref undo_manager) = self.undo_manager {
-            properties.push(("undo-manager", undo_manager));
-        }
-        if let Some(ref tag_table) = self.tag_table {
-            properties.push(("tag-table", tag_table));
-        }
-        if let Some(ref text) = self.text {
-            properties.push(("text", text));
-        }
-        glib::Object::new::<Buffer>(&properties)
-    }
-
-    pub fn highlight_matching_brackets(mut self, highlight_matching_brackets: bool) -> Self {
-        self.highlight_matching_brackets = Some(highlight_matching_brackets);
-        self
-    }
-
-    pub fn highlight_syntax(mut self, highlight_syntax: bool) -> Self {
-        self.highlight_syntax = Some(highlight_syntax);
-        self
-    }
-
-    pub fn implicit_trailing_newline(mut self, implicit_trailing_newline: bool) -> Self {
-        self.implicit_trailing_newline = Some(implicit_trailing_newline);
-        self
-    }
-
-    pub fn language(mut self, language: &impl IsA<Language>) -> Self {
-        self.language = Some(language.clone().upcast());
-        self
-    }
-
-    pub fn max_undo_levels(mut self, max_undo_levels: i32) -> Self {
-        self.max_undo_levels = Some(max_undo_levels);
-        self
-    }
-
-    pub fn style_scheme(mut self, style_scheme: &impl IsA<StyleScheme>) -> Self {
-        self.style_scheme = Some(style_scheme.clone().upcast());
-        self
-    }
-
-    pub fn undo_manager(mut self, undo_manager: &impl IsA<UndoManager>) -> Self {
-        self.undo_manager = Some(undo_manager.clone().upcast());
-        self
-    }
-
-    pub fn tag_table(mut self, tag_table: &impl IsA<gtk::TextTagTable>) -> Self {
-        self.tag_table = Some(tag_table.clone().upcast());
-        self
-    }
-
-    pub fn text(mut self, text: &str) -> Self {
-        self.text = Some(text.to_string());
-        self
+        self.builder.build()
     }
 }
 

@@ -3,22 +3,13 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use crate::Buffer;
-use crate::SearchSettings;
-use crate::Style;
-use glib::object::Cast;
-use glib::object::IsA;
-use glib::signal::connect_raw;
-use glib::signal::SignalHandlerId;
-use glib::translate::*;
-use glib::StaticType;
-use glib::ToValue;
-use std::boxed::Box as Box_;
-use std::fmt;
-use std::mem;
-use std::mem::transmute;
-use std::pin::Pin;
-use std::ptr;
+use crate::{Buffer, SearchSettings, Style};
+use glib::{
+    prelude::*,
+    signal::{connect_raw, SignalHandlerId},
+    translate::*,
+};
+use std::{boxed::Box as Box_, fmt, mem, mem::transmute, pin::Pin, ptr};
 
 glib::wrapper! {
     #[doc(alias = "GtkSourceSearchContext")]
@@ -51,74 +42,61 @@ impl SearchContext {
     ///
     /// This method returns an instance of [`SearchContextBuilder`](crate::builders::SearchContextBuilder) which can be used to create [`SearchContext`] objects.
     pub fn builder() -> SearchContextBuilder {
-        SearchContextBuilder::default()
+        SearchContextBuilder::new()
     }
 }
 
 impl Default for SearchContext {
     fn default() -> Self {
-        glib::object::Object::new::<Self>(&[])
+        glib::object::Object::new::<Self>()
     }
 }
 
-#[derive(Clone, Default)]
 // rustdoc-stripper-ignore-next
 /// A [builder-pattern] type to construct [`SearchContext`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
 #[must_use = "The builder must be built to be used"]
 pub struct SearchContextBuilder {
-    buffer: Option<Buffer>,
-    highlight: Option<bool>,
-    match_style: Option<Style>,
-    settings: Option<SearchSettings>,
+    builder: glib::object::ObjectBuilder<'static, SearchContext>,
 }
 
 impl SearchContextBuilder {
-    // rustdoc-stripper-ignore-next
-    /// Create a new [`SearchContextBuilder`].
-    pub fn new() -> Self {
-        Self::default()
+    fn new() -> Self {
+        Self {
+            builder: glib::object::Object::builder(),
+        }
+    }
+
+    pub fn buffer(self, buffer: &impl IsA<Buffer>) -> Self {
+        Self {
+            builder: self.builder.property("buffer", buffer.clone().upcast()),
+        }
+    }
+
+    pub fn highlight(self, highlight: bool) -> Self {
+        Self {
+            builder: self.builder.property("highlight", highlight),
+        }
+    }
+
+    pub fn match_style(self, match_style: &Style) -> Self {
+        Self {
+            builder: self.builder.property("match-style", match_style.clone()),
+        }
+    }
+
+    pub fn settings(self, settings: &impl IsA<SearchSettings>) -> Self {
+        Self {
+            builder: self.builder.property("settings", settings.clone().upcast()),
+        }
     }
 
     // rustdoc-stripper-ignore-next
     /// Build the [`SearchContext`].
     #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> SearchContext {
-        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
-        if let Some(ref buffer) = self.buffer {
-            properties.push(("buffer", buffer));
-        }
-        if let Some(ref highlight) = self.highlight {
-            properties.push(("highlight", highlight));
-        }
-        if let Some(ref match_style) = self.match_style {
-            properties.push(("match-style", match_style));
-        }
-        if let Some(ref settings) = self.settings {
-            properties.push(("settings", settings));
-        }
-        glib::Object::new::<SearchContext>(&properties)
-    }
-
-    pub fn buffer(mut self, buffer: &impl IsA<Buffer>) -> Self {
-        self.buffer = Some(buffer.clone().upcast());
-        self
-    }
-
-    pub fn highlight(mut self, highlight: bool) -> Self {
-        self.highlight = Some(highlight);
-        self
-    }
-
-    pub fn match_style(mut self, match_style: &Style) -> Self {
-        self.match_style = Some(match_style.clone());
-        self
-    }
-
-    pub fn settings(mut self, settings: &impl IsA<SearchSettings>) -> Self {
-        self.settings = Some(settings.clone().upcast());
-        self
+        self.builder.build()
     }
 }
 
@@ -503,7 +481,7 @@ impl<O: IsA<SearchContext>> SearchContextExt for O {
         match_end: &mut gtk::TextIter,
         replace: &str,
     ) -> Result<(), glib::Error> {
-        let replace_length = replace.len() as i32;
+        let replace_length = replace.len() as _;
         unsafe {
             let mut error = ptr::null_mut();
             let is_ok = ffi::gtk_source_search_context_replace(
@@ -514,7 +492,7 @@ impl<O: IsA<SearchContext>> SearchContextExt for O {
                 replace_length,
                 &mut error,
             );
-            assert_eq!(is_ok == glib::ffi::GFALSE, !error.is_null());
+            debug_assert_eq!(is_ok == glib::ffi::GFALSE, !error.is_null());
             if error.is_null() {
                 Ok(())
             } else {

@@ -8,8 +8,10 @@ edition = "2021"
 documentation = "https://world.pages.gitlab.gnome.org/Rust/sourceview4-rs/stable/latest/docs/sourceview4_sys"
 build = "build.rs"
 exclude = ["gir-files/*", "gir/"]
+
 [package.metadata.docs.rs]
 features = ["dox"]
+
 [package.metadata.system-deps.gtksourceview_4]
 name = "gtksourceview-4"
 version = "4"
@@ -41,7 +43,7 @@ package = "gdk-sys"
 git = "https://github.com/gtk-rs/gtk3-rs"
 package = "gtk-sys"
 
-[dependencies.gdk-pixbuf]
+[dependencies.gdk_pixbuf]
 git = "https://github.com/gtk-rs/gtk-rs-core"
 package = "gdk-pixbuf-sys"
 
@@ -58,4 +60,4 @@ shell-words = "1.0.0"
 tempfile = "3"
 
 [features]
-dox = []
+dox = ["cairo/dox", "glib/dox", "gobject/dox", "gio/dox", "gtk/dox", "gdk/dox", "gdk_pixbuf/dox"]

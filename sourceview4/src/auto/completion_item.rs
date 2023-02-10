@@ -4,16 +4,12 @@
 // DO NOT EDIT
 
 use crate::CompletionProposal;
-use glib::object::Cast;
-use glib::object::IsA;
-use glib::signal::connect_raw;
-use glib::signal::SignalHandlerId;
-use glib::translate::*;
-use glib::StaticType;
-use glib::ToValue;
-use std::boxed::Box as Box_;
-use std::fmt;
-use std::mem::transmute;
+use glib::{
+    prelude::*,
+    signal::{connect_raw, SignalHandlerId},
+    translate::*,
+};
+use std::{boxed::Box as Box_, fmt, mem::transmute};
 
 glib::wrapper! {
     #[doc(alias = "GtkSourceCompletionItem")]
@@ -38,7 +34,7 @@ impl CompletionItem {
     ///
     /// This method returns an instance of [`CompletionItemBuilder`](crate::builders::CompletionItemBuilder) which can be used to create [`CompletionItem`] objects.
     pub fn builder() -> CompletionItemBuilder {
-        CompletionItemBuilder::default()
+        CompletionItemBuilder::new()
     }
 }
 
@@ -48,91 +44,69 @@ impl Default for CompletionItem {
     }
 }
 
-#[derive(Clone, Default)]
 // rustdoc-stripper-ignore-next
 /// A [builder-pattern] type to construct [`CompletionItem`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
 #[must_use = "The builder must be built to be used"]
 pub struct CompletionItemBuilder {
-    gicon: Option<gio::Icon>,
-    icon: Option<gdk_pixbuf::Pixbuf>,
-    icon_name: Option<String>,
-    info: Option<String>,
-    label: Option<String>,
-    markup: Option<String>,
-    text: Option<String>,
+    builder: glib::object::ObjectBuilder<'static, CompletionItem>,
 }
 
 impl CompletionItemBuilder {
-    // rustdoc-stripper-ignore-next
-    /// Create a new [`CompletionItemBuilder`].
-    pub fn new() -> Self {
-        Self::default()
+    fn new() -> Self {
+        Self {
+            builder: glib::object::Object::builder(),
+        }
+    }
+
+    pub fn gicon(self, gicon: &impl IsA<gio::Icon>) -> Self {
+        Self {
+            builder: self.builder.property("gicon", gicon.clone().upcast()),
+        }
+    }
+
+    pub fn icon(self, icon: &gdk_pixbuf::Pixbuf) -> Self {
+        Self {
+            builder: self.builder.property("icon", icon.clone()),
+        }
+    }
+
+    pub fn icon_name(self, icon_name: impl Into<glib::GString>) -> Self {
+        Self {
+            builder: self.builder.property("icon-name", icon_name.into()),
+        }
+    }
+
+    pub fn info(self, info: impl Into<glib::GString>) -> Self {
+        Self {
+            builder: self.builder.property("info", info.into()),
+        }
+    }
+
+    pub fn label(self, label: impl Into<glib::GString>) -> Self {
+        Self {
+            builder: self.builder.property("label", label.into()),
+        }
+    }
+
+    pub fn markup(self, markup: impl Into<glib::GString>) -> Self {
+        Self {
+            builder: self.builder.property("markup", markup.into()),
+        }
+    }
+
+    pub fn text(self, text: impl Into<glib::GString>) -> Self {
+        Self {
+            builder: self.builder.property("text", text.into()),
+        }
     }
 
     // rustdoc-stripper-ignore-next
     /// Build the [`CompletionItem`].
     #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> CompletionItem {
-        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
-        if let Some(ref gicon) = self.gicon {
-            properties.push(("gicon", gicon));
-        }
-        if let Some(ref icon) = self.icon {
-            properties.push(("icon", icon));
-        }
-        if let Some(ref icon_name) = self.icon_name {
-            properties.push(("icon-name", icon_name));
-        }
-        if let Some(ref info) = self.info {
-            properties.push(("info", info));
-        }
-        if let Some(ref label) = self.label {
-            properties.push(("label", label));
-        }
-        if let Some(ref markup) = self.markup {
-            properties.push(("markup", markup));
-        }
-        if let Some(ref text) = self.text {
-            properties.push(("text", text));
-        }
-        glib::Object::new::<CompletionItem>(&properties)
-    }
-
-    pub fn gicon(mut self, gicon: &impl IsA<gio::Icon>) -> Self {
-        self.gicon = Some(gicon.clone().upcast());
-        self
-    }
-
-    pub fn icon(mut self, icon: &gdk_pixbuf::Pixbuf) -> Self {
-        self.icon = Some(icon.clone());
-        self
-    }
-
-    pub fn icon_name(mut self, icon_name: &str) -> Self {
-        self.icon_name = Some(icon_name.to_string());
-        self
-    }
-
-    pub fn info(mut self, info: &str) -> Self {
-        self.info = Some(info.to_string());
-        self
-    }
-
-    pub fn label(mut self, label: &str) -> Self {
-        self.label = Some(label.to_string());
-        self
-    }
-
-    pub fn markup(mut self, markup: &str) -> Self {
-        self.markup = Some(markup.to_string());
-        self
-    }
-
-    pub fn text(mut self, text: &str) -> Self {
-        self.text = Some(text.to_string());
-        self
+        self.builder.build()
     }
 }
 

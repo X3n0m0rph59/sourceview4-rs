@@ -3,19 +3,13 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use crate::GutterRenderer;
-use crate::GutterRendererAlignmentMode;
-use glib::object::Cast;
-use glib::object::IsA;
-use glib::signal::connect_raw;
-use glib::signal::SignalHandlerId;
-use glib::translate::*;
-use glib::StaticType;
-use glib::ToValue;
-use std::boxed::Box as Box_;
-use std::fmt;
-use std::mem;
-use std::mem::transmute;
+use crate::{GutterRenderer, GutterRendererAlignmentMode};
+use glib::{
+    prelude::*,
+    signal::{connect_raw, SignalHandlerId},
+    translate::*,
+};
+use std::{boxed::Box as Box_, fmt, mem, mem::transmute};
 
 glib::wrapper! {
     #[doc(alias = "GtkSourceGutterRendererText")]
@@ -42,7 +36,7 @@ impl GutterRendererText {
     ///
     /// This method returns an instance of [`GutterRendererTextBuilder`](crate::builders::GutterRendererTextBuilder) which can be used to create [`GutterRendererText`] objects.
     pub fn builder() -> GutterRendererTextBuilder {
-        GutterRendererTextBuilder::default()
+        GutterRendererTextBuilder::new()
     }
 }
 
@@ -52,127 +46,93 @@ impl Default for GutterRendererText {
     }
 }
 
-#[derive(Clone, Default)]
 // rustdoc-stripper-ignore-next
 /// A [builder-pattern] type to construct [`GutterRendererText`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
 #[must_use = "The builder must be built to be used"]
 pub struct GutterRendererTextBuilder {
-    markup: Option<String>,
-    text: Option<String>,
-    alignment_mode: Option<GutterRendererAlignmentMode>,
-    background_rgba: Option<gdk::RGBA>,
-    background_set: Option<bool>,
-    size: Option<i32>,
-    visible: Option<bool>,
-    xalign: Option<f32>,
-    xpad: Option<i32>,
-    yalign: Option<f32>,
-    ypad: Option<i32>,
+    builder: glib::object::ObjectBuilder<'static, GutterRendererText>,
 }
 
 impl GutterRendererTextBuilder {
-    // rustdoc-stripper-ignore-next
-    /// Create a new [`GutterRendererTextBuilder`].
-    pub fn new() -> Self {
-        Self::default()
+    fn new() -> Self {
+        Self {
+            builder: glib::object::Object::builder(),
+        }
+    }
+
+    pub fn markup(self, markup: impl Into<glib::GString>) -> Self {
+        Self {
+            builder: self.builder.property("markup", markup.into()),
+        }
+    }
+
+    pub fn text(self, text: impl Into<glib::GString>) -> Self {
+        Self {
+            builder: self.builder.property("text", text.into()),
+        }
+    }
+
+    pub fn alignment_mode(self, alignment_mode: GutterRendererAlignmentMode) -> Self {
+        Self {
+            builder: self.builder.property("alignment-mode", alignment_mode),
+        }
+    }
+
+    pub fn background_rgba(self, background_rgba: &gdk::RGBA) -> Self {
+        Self {
+            builder: self.builder.property("background-rgba", background_rgba),
+        }
+    }
+
+    pub fn background_set(self, background_set: bool) -> Self {
+        Self {
+            builder: self.builder.property("background-set", background_set),
+        }
+    }
+
+    pub fn size(self, size: i32) -> Self {
+        Self {
+            builder: self.builder.property("size", size),
+        }
+    }
+
+    pub fn visible(self, visible: bool) -> Self {
+        Self {
+            builder: self.builder.property("visible", visible),
+        }
+    }
+
+    pub fn xalign(self, xalign: f32) -> Self {
+        Self {
+            builder: self.builder.property("xalign", xalign),
+        }
+    }
+
+    pub fn xpad(self, xpad: i32) -> Self {
+        Self {
+            builder: self.builder.property("xpad", xpad),
+        }
+    }
+
+    pub fn yalign(self, yalign: f32) -> Self {
+        Self {
+            builder: self.builder.property("yalign", yalign),
+        }
+    }
+
+    pub fn ypad(self, ypad: i32) -> Self {
+        Self {
+            builder: self.builder.property("ypad", ypad),
+        }
     }
 
     // rustdoc-stripper-ignore-next
     /// Build the [`GutterRendererText`].
     #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> GutterRendererText {
-        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
-        if let Some(ref markup) = self.markup {
-            properties.push(("markup", markup));
-        }
-        if let Some(ref text) = self.text {
-            properties.push(("text", text));
-        }
-        if let Some(ref alignment_mode) = self.alignment_mode {
-            properties.push(("alignment-mode", alignment_mode));
-        }
-        if let Some(ref background_rgba) = self.background_rgba {
-            properties.push(("background-rgba", background_rgba));
-        }
-        if let Some(ref background_set) = self.background_set {
-            properties.push(("background-set", background_set));
-        }
-        if let Some(ref size) = self.size {
-            properties.push(("size", size));
-        }
-        if let Some(ref visible) = self.visible {
-            properties.push(("visible", visible));
-        }
-        if let Some(ref xalign) = self.xalign {
-            properties.push(("xalign", xalign));
-        }
-        if let Some(ref xpad) = self.xpad {
-            properties.push(("xpad", xpad));
-        }
-        if let Some(ref yalign) = self.yalign {
-            properties.push(("yalign", yalign));
-        }
-        if let Some(ref ypad) = self.ypad {
-            properties.push(("ypad", ypad));
-        }
-        glib::Object::new::<GutterRendererText>(&properties)
-    }
-
-    pub fn markup(mut self, markup: &str) -> Self {
-        self.markup = Some(markup.to_string());
-        self
-    }
-
-    pub fn text(mut self, text: &str) -> Self {
-        self.text = Some(text.to_string());
-        self
-    }
-
-    pub fn alignment_mode(mut self, alignment_mode: GutterRendererAlignmentMode) -> Self {
-        self.alignment_mode = Some(alignment_mode);
-        self
-    }
-
-    pub fn background_rgba(mut self, background_rgba: &gdk::RGBA) -> Self {
-        self.background_rgba = Some(background_rgba.clone());
-        self
-    }
-
-    pub fn background_set(mut self, background_set: bool) -> Self {
-        self.background_set = Some(background_set);
-        self
-    }
-
-    pub fn size(mut self, size: i32) -> Self {
-        self.size = Some(size);
-        self
-    }
-
-    pub fn visible(mut self, visible: bool) -> Self {
-        self.visible = Some(visible);
-        self
-    }
-
-    pub fn xalign(mut self, xalign: f32) -> Self {
-        self.xalign = Some(xalign);
-        self
-    }
-
-    pub fn xpad(mut self, xpad: i32) -> Self {
-        self.xpad = Some(xpad);
-        self
-    }
-
-    pub fn yalign(mut self, yalign: f32) -> Self {
-        self.yalign = Some(yalign);
-        self
-    }
-
-    pub fn ypad(mut self, ypad: i32) -> Self {
-        self.ypad = Some(ypad);
-        self
+        self.builder.build()
     }
 }
 
@@ -230,7 +190,7 @@ impl<O: IsA<GutterRendererText>> GutterRendererTextExt for O {
     }
 
     fn set_markup(&self, markup: &str) {
-        let length = markup.len() as i32;
+        let length = markup.len() as _;
         unsafe {
             ffi::gtk_source_gutter_renderer_text_set_markup(
                 self.as_ref().to_glib_none().0,
@@ -241,7 +201,7 @@ impl<O: IsA<GutterRendererText>> GutterRendererTextExt for O {
     }
 
     fn set_text(&self, text: &str) {
-        let length = text.len() as i32;
+        let length = text.len() as _;
         unsafe {
             ffi::gtk_source_gutter_renderer_text_set_text(
                 self.as_ref().to_glib_none().0,

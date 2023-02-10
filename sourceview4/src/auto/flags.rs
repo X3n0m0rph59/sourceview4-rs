@@ -4,22 +4,18 @@
 // DO NOT EDIT
 
 use bitflags::bitflags;
-use glib::translate::*;
-use glib::value::FromValue;
-use glib::value::ToValue;
-use glib::StaticType;
-use glib::Type;
+use glib::{translate::*, value::FromValue, value::ToValue, StaticType, Type};
 use std::fmt;
 
 bitflags! {
     #[doc(alias = "GtkSourceCompletionActivation")]
     pub struct CompletionActivation: u32 {
         #[doc(alias = "GTK_SOURCE_COMPLETION_ACTIVATION_NONE")]
-        const NONE = ffi::GTK_SOURCE_COMPLETION_ACTIVATION_NONE as u32;
+        const NONE = ffi::GTK_SOURCE_COMPLETION_ACTIVATION_NONE as _;
         #[doc(alias = "GTK_SOURCE_COMPLETION_ACTIVATION_INTERACTIVE")]
-        const INTERACTIVE = ffi::GTK_SOURCE_COMPLETION_ACTIVATION_INTERACTIVE as u32;
+        const INTERACTIVE = ffi::GTK_SOURCE_COMPLETION_ACTIVATION_INTERACTIVE as _;
         #[doc(alias = "GTK_SOURCE_COMPLETION_ACTIVATION_USER_REQUESTED")]
-        const USER_REQUESTED = ffi::GTK_SOURCE_COMPLETION_ACTIVATION_USER_REQUESTED as u32;
+        const USER_REQUESTED = ffi::GTK_SOURCE_COMPLETION_ACTIVATION_USER_REQUESTED as _;
     }
 }
 
@@ -33,6 +29,7 @@ impl fmt::Display for CompletionActivation {
 impl IntoGlib for CompletionActivation {
     type GlibType = ffi::GtkSourceCompletionActivation;
 
+    #[inline]
     fn into_glib(self) -> ffi::GtkSourceCompletionActivation {
         self.bits()
     }
@@ -40,6 +37,7 @@ impl IntoGlib for CompletionActivation {
 
 #[doc(hidden)]
 impl FromGlib<ffi::GtkSourceCompletionActivation> for CompletionActivation {
+    #[inline]
     unsafe fn from_glib(value: ffi::GtkSourceCompletionActivation) -> Self {
         skip_assert_initialized!();
         Self::from_bits_truncate(value)
@@ -47,8 +45,19 @@ impl FromGlib<ffi::GtkSourceCompletionActivation> for CompletionActivation {
 }
 
 impl StaticType for CompletionActivation {
+    #[inline]
     fn static_type() -> Type {
         unsafe { from_glib(ffi::gtk_source_completion_activation_get_type()) }
+    }
+}
+
+impl glib::HasParamSpec for CompletionActivation {
+    type ParamSpec = glib::ParamSpecFlags;
+    type SetValue = Self;
+    type BuilderFn = fn(&str) -> glib::ParamSpecFlagsBuilder<Self>;
+
+    fn param_spec_builder() -> Self::BuilderFn {
+        |name| Self::ParamSpec::builder(name)
     }
 }
 
@@ -59,6 +68,7 @@ impl glib::value::ValueType for CompletionActivation {
 unsafe impl<'a> FromValue<'a> for CompletionActivation {
     type Checker = glib::value::GenericValueTypeChecker<Self>;
 
+    #[inline]
     unsafe fn from_value(value: &'a glib::Value) -> Self {
         skip_assert_initialized!();
         from_glib(glib::gobject_ffi::g_value_get_flags(value.to_glib_none().0))
@@ -66,6 +76,7 @@ unsafe impl<'a> FromValue<'a> for CompletionActivation {
 }
 
 impl ToValue for CompletionActivation {
+    #[inline]
     fn to_value(&self) -> glib::Value {
         let mut value = glib::Value::for_value_type::<Self>();
         unsafe {
@@ -74,8 +85,17 @@ impl ToValue for CompletionActivation {
         value
     }
 
+    #[inline]
     fn value_type(&self) -> glib::Type {
         Self::static_type()
+    }
+}
+
+impl From<CompletionActivation> for glib::Value {
+    #[inline]
+    fn from(v: CompletionActivation) -> Self {
+        skip_assert_initialized!();
+        ToValue::to_value(&v)
     }
 }
 
@@ -83,13 +103,13 @@ bitflags! {
     #[doc(alias = "GtkSourceFileSaverFlags")]
     pub struct FileSaverFlags: u32 {
         #[doc(alias = "GTK_SOURCE_FILE_SAVER_FLAGS_NONE")]
-        const NONE = ffi::GTK_SOURCE_FILE_SAVER_FLAGS_NONE as u32;
+        const NONE = ffi::GTK_SOURCE_FILE_SAVER_FLAGS_NONE as _;
         #[doc(alias = "GTK_SOURCE_FILE_SAVER_FLAGS_IGNORE_INVALID_CHARS")]
-        const IGNORE_INVALID_CHARS = ffi::GTK_SOURCE_FILE_SAVER_FLAGS_IGNORE_INVALID_CHARS as u32;
+        const IGNORE_INVALID_CHARS = ffi::GTK_SOURCE_FILE_SAVER_FLAGS_IGNORE_INVALID_CHARS as _;
         #[doc(alias = "GTK_SOURCE_FILE_SAVER_FLAGS_IGNORE_MODIFICATION_TIME")]
-        const IGNORE_MODIFICATION_TIME = ffi::GTK_SOURCE_FILE_SAVER_FLAGS_IGNORE_MODIFICATION_TIME as u32;
+        const IGNORE_MODIFICATION_TIME = ffi::GTK_SOURCE_FILE_SAVER_FLAGS_IGNORE_MODIFICATION_TIME as _;
         #[doc(alias = "GTK_SOURCE_FILE_SAVER_FLAGS_CREATE_BACKUP")]
-        const CREATE_BACKUP = ffi::GTK_SOURCE_FILE_SAVER_FLAGS_CREATE_BACKUP as u32;
+        const CREATE_BACKUP = ffi::GTK_SOURCE_FILE_SAVER_FLAGS_CREATE_BACKUP as _;
     }
 }
 
@@ -103,6 +123,7 @@ impl fmt::Display for FileSaverFlags {
 impl IntoGlib for FileSaverFlags {
     type GlibType = ffi::GtkSourceFileSaverFlags;
 
+    #[inline]
     fn into_glib(self) -> ffi::GtkSourceFileSaverFlags {
         self.bits()
     }
@@ -110,6 +131,7 @@ impl IntoGlib for FileSaverFlags {
 
 #[doc(hidden)]
 impl FromGlib<ffi::GtkSourceFileSaverFlags> for FileSaverFlags {
+    #[inline]
     unsafe fn from_glib(value: ffi::GtkSourceFileSaverFlags) -> Self {
         skip_assert_initialized!();
         Self::from_bits_truncate(value)
@@ -117,8 +139,19 @@ impl FromGlib<ffi::GtkSourceFileSaverFlags> for FileSaverFlags {
 }
 
 impl StaticType for FileSaverFlags {
+    #[inline]
     fn static_type() -> Type {
         unsafe { from_glib(ffi::gtk_source_file_saver_flags_get_type()) }
+    }
+}
+
+impl glib::HasParamSpec for FileSaverFlags {
+    type ParamSpec = glib::ParamSpecFlags;
+    type SetValue = Self;
+    type BuilderFn = fn(&str) -> glib::ParamSpecFlagsBuilder<Self>;
+
+    fn param_spec_builder() -> Self::BuilderFn {
+        |name| Self::ParamSpec::builder(name)
     }
 }
 
@@ -129,6 +162,7 @@ impl glib::value::ValueType for FileSaverFlags {
 unsafe impl<'a> FromValue<'a> for FileSaverFlags {
     type Checker = glib::value::GenericValueTypeChecker<Self>;
 
+    #[inline]
     unsafe fn from_value(value: &'a glib::Value) -> Self {
         skip_assert_initialized!();
         from_glib(glib::gobject_ffi::g_value_get_flags(value.to_glib_none().0))
@@ -136,6 +170,7 @@ unsafe impl<'a> FromValue<'a> for FileSaverFlags {
 }
 
 impl ToValue for FileSaverFlags {
+    #[inline]
     fn to_value(&self) -> glib::Value {
         let mut value = glib::Value::for_value_type::<Self>();
         unsafe {
@@ -144,8 +179,17 @@ impl ToValue for FileSaverFlags {
         value
     }
 
+    #[inline]
     fn value_type(&self) -> glib::Type {
         Self::static_type()
+    }
+}
+
+impl From<FileSaverFlags> for glib::Value {
+    #[inline]
+    fn from(v: FileSaverFlags) -> Self {
+        skip_assert_initialized!();
+        ToValue::to_value(&v)
     }
 }
 
@@ -153,13 +197,13 @@ bitflags! {
     #[doc(alias = "GtkSourceGutterRendererState")]
     pub struct GutterRendererState: u32 {
         #[doc(alias = "GTK_SOURCE_GUTTER_RENDERER_STATE_NORMAL")]
-        const NORMAL = ffi::GTK_SOURCE_GUTTER_RENDERER_STATE_NORMAL as u32;
+        const NORMAL = ffi::GTK_SOURCE_GUTTER_RENDERER_STATE_NORMAL as _;
         #[doc(alias = "GTK_SOURCE_GUTTER_RENDERER_STATE_CURSOR")]
-        const CURSOR = ffi::GTK_SOURCE_GUTTER_RENDERER_STATE_CURSOR as u32;
+        const CURSOR = ffi::GTK_SOURCE_GUTTER_RENDERER_STATE_CURSOR as _;
         #[doc(alias = "GTK_SOURCE_GUTTER_RENDERER_STATE_PRELIT")]
-        const PRELIT = ffi::GTK_SOURCE_GUTTER_RENDERER_STATE_PRELIT as u32;
+        const PRELIT = ffi::GTK_SOURCE_GUTTER_RENDERER_STATE_PRELIT as _;
         #[doc(alias = "GTK_SOURCE_GUTTER_RENDERER_STATE_SELECTED")]
-        const SELECTED = ffi::GTK_SOURCE_GUTTER_RENDERER_STATE_SELECTED as u32;
+        const SELECTED = ffi::GTK_SOURCE_GUTTER_RENDERER_STATE_SELECTED as _;
     }
 }
 
@@ -173,6 +217,7 @@ impl fmt::Display for GutterRendererState {
 impl IntoGlib for GutterRendererState {
     type GlibType = ffi::GtkSourceGutterRendererState;
 
+    #[inline]
     fn into_glib(self) -> ffi::GtkSourceGutterRendererState {
         self.bits()
     }
@@ -180,6 +225,7 @@ impl IntoGlib for GutterRendererState {
 
 #[doc(hidden)]
 impl FromGlib<ffi::GtkSourceGutterRendererState> for GutterRendererState {
+    #[inline]
     unsafe fn from_glib(value: ffi::GtkSourceGutterRendererState) -> Self {
         skip_assert_initialized!();
         Self::from_bits_truncate(value)
@@ -187,8 +233,19 @@ impl FromGlib<ffi::GtkSourceGutterRendererState> for GutterRendererState {
 }
 
 impl StaticType for GutterRendererState {
+    #[inline]
     fn static_type() -> Type {
         unsafe { from_glib(ffi::gtk_source_gutter_renderer_state_get_type()) }
+    }
+}
+
+impl glib::HasParamSpec for GutterRendererState {
+    type ParamSpec = glib::ParamSpecFlags;
+    type SetValue = Self;
+    type BuilderFn = fn(&str) -> glib::ParamSpecFlagsBuilder<Self>;
+
+    fn param_spec_builder() -> Self::BuilderFn {
+        |name| Self::ParamSpec::builder(name)
     }
 }
 
@@ -199,6 +256,7 @@ impl glib::value::ValueType for GutterRendererState {
 unsafe impl<'a> FromValue<'a> for GutterRendererState {
     type Checker = glib::value::GenericValueTypeChecker<Self>;
 
+    #[inline]
     unsafe fn from_value(value: &'a glib::Value) -> Self {
         skip_assert_initialized!();
         from_glib(glib::gobject_ffi::g_value_get_flags(value.to_glib_none().0))
@@ -206,6 +264,7 @@ unsafe impl<'a> FromValue<'a> for GutterRendererState {
 }
 
 impl ToValue for GutterRendererState {
+    #[inline]
     fn to_value(&self) -> glib::Value {
         let mut value = glib::Value::for_value_type::<Self>();
         unsafe {
@@ -214,8 +273,17 @@ impl ToValue for GutterRendererState {
         value
     }
 
+    #[inline]
     fn value_type(&self) -> glib::Type {
         Self::static_type()
+    }
+}
+
+impl From<GutterRendererState> for glib::Value {
+    #[inline]
+    fn from(v: GutterRendererState) -> Self {
+        skip_assert_initialized!();
+        ToValue::to_value(&v)
     }
 }
 
@@ -223,13 +291,13 @@ bitflags! {
     #[doc(alias = "GtkSourceSortFlags")]
     pub struct SortFlags: u32 {
         #[doc(alias = "GTK_SOURCE_SORT_FLAGS_NONE")]
-        const NONE = ffi::GTK_SOURCE_SORT_FLAGS_NONE as u32;
+        const NONE = ffi::GTK_SOURCE_SORT_FLAGS_NONE as _;
         #[doc(alias = "GTK_SOURCE_SORT_FLAGS_CASE_SENSITIVE")]
-        const CASE_SENSITIVE = ffi::GTK_SOURCE_SORT_FLAGS_CASE_SENSITIVE as u32;
+        const CASE_SENSITIVE = ffi::GTK_SOURCE_SORT_FLAGS_CASE_SENSITIVE as _;
         #[doc(alias = "GTK_SOURCE_SORT_FLAGS_REVERSE_ORDER")]
-        const REVERSE_ORDER = ffi::GTK_SOURCE_SORT_FLAGS_REVERSE_ORDER as u32;
+        const REVERSE_ORDER = ffi::GTK_SOURCE_SORT_FLAGS_REVERSE_ORDER as _;
         #[doc(alias = "GTK_SOURCE_SORT_FLAGS_REMOVE_DUPLICATES")]
-        const REMOVE_DUPLICATES = ffi::GTK_SOURCE_SORT_FLAGS_REMOVE_DUPLICATES as u32;
+        const REMOVE_DUPLICATES = ffi::GTK_SOURCE_SORT_FLAGS_REMOVE_DUPLICATES as _;
     }
 }
 
@@ -243,6 +311,7 @@ impl fmt::Display for SortFlags {
 impl IntoGlib for SortFlags {
     type GlibType = ffi::GtkSourceSortFlags;
 
+    #[inline]
     fn into_glib(self) -> ffi::GtkSourceSortFlags {
         self.bits()
     }
@@ -250,6 +319,7 @@ impl IntoGlib for SortFlags {
 
 #[doc(hidden)]
 impl FromGlib<ffi::GtkSourceSortFlags> for SortFlags {
+    #[inline]
     unsafe fn from_glib(value: ffi::GtkSourceSortFlags) -> Self {
         skip_assert_initialized!();
         Self::from_bits_truncate(value)
@@ -257,8 +327,19 @@ impl FromGlib<ffi::GtkSourceSortFlags> for SortFlags {
 }
 
 impl StaticType for SortFlags {
+    #[inline]
     fn static_type() -> Type {
         unsafe { from_glib(ffi::gtk_source_sort_flags_get_type()) }
+    }
+}
+
+impl glib::HasParamSpec for SortFlags {
+    type ParamSpec = glib::ParamSpecFlags;
+    type SetValue = Self;
+    type BuilderFn = fn(&str) -> glib::ParamSpecFlagsBuilder<Self>;
+
+    fn param_spec_builder() -> Self::BuilderFn {
+        |name| Self::ParamSpec::builder(name)
     }
 }
 
@@ -269,6 +350,7 @@ impl glib::value::ValueType for SortFlags {
 unsafe impl<'a> FromValue<'a> for SortFlags {
     type Checker = glib::value::GenericValueTypeChecker<Self>;
 
+    #[inline]
     unsafe fn from_value(value: &'a glib::Value) -> Self {
         skip_assert_initialized!();
         from_glib(glib::gobject_ffi::g_value_get_flags(value.to_glib_none().0))
@@ -276,6 +358,7 @@ unsafe impl<'a> FromValue<'a> for SortFlags {
 }
 
 impl ToValue for SortFlags {
+    #[inline]
     fn to_value(&self) -> glib::Value {
         let mut value = glib::Value::for_value_type::<Self>();
         unsafe {
@@ -284,8 +367,17 @@ impl ToValue for SortFlags {
         value
     }
 
+    #[inline]
     fn value_type(&self) -> glib::Type {
         Self::static_type()
+    }
+}
+
+impl From<SortFlags> for glib::Value {
+    #[inline]
+    fn from(v: SortFlags) -> Self {
+        skip_assert_initialized!();
+        ToValue::to_value(&v)
     }
 }
 
@@ -293,15 +385,15 @@ bitflags! {
     #[doc(alias = "GtkSourceSpaceLocationFlags")]
     pub struct SpaceLocationFlags: u32 {
         #[doc(alias = "GTK_SOURCE_SPACE_LOCATION_NONE")]
-        const NONE = ffi::GTK_SOURCE_SPACE_LOCATION_NONE as u32;
+        const NONE = ffi::GTK_SOURCE_SPACE_LOCATION_NONE as _;
         #[doc(alias = "GTK_SOURCE_SPACE_LOCATION_LEADING")]
-        const LEADING = ffi::GTK_SOURCE_SPACE_LOCATION_LEADING as u32;
+        const LEADING = ffi::GTK_SOURCE_SPACE_LOCATION_LEADING as _;
         #[doc(alias = "GTK_SOURCE_SPACE_LOCATION_INSIDE_TEXT")]
-        const INSIDE_TEXT = ffi::GTK_SOURCE_SPACE_LOCATION_INSIDE_TEXT as u32;
+        const INSIDE_TEXT = ffi::GTK_SOURCE_SPACE_LOCATION_INSIDE_TEXT as _;
         #[doc(alias = "GTK_SOURCE_SPACE_LOCATION_TRAILING")]
-        const TRAILING = ffi::GTK_SOURCE_SPACE_LOCATION_TRAILING as u32;
+        const TRAILING = ffi::GTK_SOURCE_SPACE_LOCATION_TRAILING as _;
         #[doc(alias = "GTK_SOURCE_SPACE_LOCATION_ALL")]
-        const ALL = ffi::GTK_SOURCE_SPACE_LOCATION_ALL as u32;
+        const ALL = ffi::GTK_SOURCE_SPACE_LOCATION_ALL as _;
     }
 }
 
@@ -315,6 +407,7 @@ impl fmt::Display for SpaceLocationFlags {
 impl IntoGlib for SpaceLocationFlags {
     type GlibType = ffi::GtkSourceSpaceLocationFlags;
 
+    #[inline]
     fn into_glib(self) -> ffi::GtkSourceSpaceLocationFlags {
         self.bits()
     }
@@ -322,6 +415,7 @@ impl IntoGlib for SpaceLocationFlags {
 
 #[doc(hidden)]
 impl FromGlib<ffi::GtkSourceSpaceLocationFlags> for SpaceLocationFlags {
+    #[inline]
     unsafe fn from_glib(value: ffi::GtkSourceSpaceLocationFlags) -> Self {
         skip_assert_initialized!();
         Self::from_bits_truncate(value)
@@ -329,8 +423,19 @@ impl FromGlib<ffi::GtkSourceSpaceLocationFlags> for SpaceLocationFlags {
 }
 
 impl StaticType for SpaceLocationFlags {
+    #[inline]
     fn static_type() -> Type {
         unsafe { from_glib(ffi::gtk_source_space_location_flags_get_type()) }
+    }
+}
+
+impl glib::HasParamSpec for SpaceLocationFlags {
+    type ParamSpec = glib::ParamSpecFlags;
+    type SetValue = Self;
+    type BuilderFn = fn(&str) -> glib::ParamSpecFlagsBuilder<Self>;
+
+    fn param_spec_builder() -> Self::BuilderFn {
+        |name| Self::ParamSpec::builder(name)
     }
 }
 
@@ -341,6 +446,7 @@ impl glib::value::ValueType for SpaceLocationFlags {
 unsafe impl<'a> FromValue<'a> for SpaceLocationFlags {
     type Checker = glib::value::GenericValueTypeChecker<Self>;
 
+    #[inline]
     unsafe fn from_value(value: &'a glib::Value) -> Self {
         skip_assert_initialized!();
         from_glib(glib::gobject_ffi::g_value_get_flags(value.to_glib_none().0))
@@ -348,6 +454,7 @@ unsafe impl<'a> FromValue<'a> for SpaceLocationFlags {
 }
 
 impl ToValue for SpaceLocationFlags {
+    #[inline]
     fn to_value(&self) -> glib::Value {
         let mut value = glib::Value::for_value_type::<Self>();
         unsafe {
@@ -356,8 +463,17 @@ impl ToValue for SpaceLocationFlags {
         value
     }
 
+    #[inline]
     fn value_type(&self) -> glib::Type {
         Self::static_type()
+    }
+}
+
+impl From<SpaceLocationFlags> for glib::Value {
+    #[inline]
+    fn from(v: SpaceLocationFlags) -> Self {
+        skip_assert_initialized!();
+        ToValue::to_value(&v)
     }
 }
 
@@ -365,17 +481,17 @@ bitflags! {
     #[doc(alias = "GtkSourceSpaceTypeFlags")]
     pub struct SpaceTypeFlags: u32 {
         #[doc(alias = "GTK_SOURCE_SPACE_TYPE_NONE")]
-        const NONE = ffi::GTK_SOURCE_SPACE_TYPE_NONE as u32;
+        const NONE = ffi::GTK_SOURCE_SPACE_TYPE_NONE as _;
         #[doc(alias = "GTK_SOURCE_SPACE_TYPE_SPACE")]
-        const SPACE = ffi::GTK_SOURCE_SPACE_TYPE_SPACE as u32;
+        const SPACE = ffi::GTK_SOURCE_SPACE_TYPE_SPACE as _;
         #[doc(alias = "GTK_SOURCE_SPACE_TYPE_TAB")]
-        const TAB = ffi::GTK_SOURCE_SPACE_TYPE_TAB as u32;
+        const TAB = ffi::GTK_SOURCE_SPACE_TYPE_TAB as _;
         #[doc(alias = "GTK_SOURCE_SPACE_TYPE_NEWLINE")]
-        const NEWLINE = ffi::GTK_SOURCE_SPACE_TYPE_NEWLINE as u32;
+        const NEWLINE = ffi::GTK_SOURCE_SPACE_TYPE_NEWLINE as _;
         #[doc(alias = "GTK_SOURCE_SPACE_TYPE_NBSP")]
-        const NBSP = ffi::GTK_SOURCE_SPACE_TYPE_NBSP as u32;
+        const NBSP = ffi::GTK_SOURCE_SPACE_TYPE_NBSP as _;
         #[doc(alias = "GTK_SOURCE_SPACE_TYPE_ALL")]
-        const ALL = ffi::GTK_SOURCE_SPACE_TYPE_ALL as u32;
+        const ALL = ffi::GTK_SOURCE_SPACE_TYPE_ALL as _;
     }
 }
 
@@ -389,6 +505,7 @@ impl fmt::Display for SpaceTypeFlags {
 impl IntoGlib for SpaceTypeFlags {
     type GlibType = ffi::GtkSourceSpaceTypeFlags;
 
+    #[inline]
     fn into_glib(self) -> ffi::GtkSourceSpaceTypeFlags {
         self.bits()
     }
@@ -396,6 +513,7 @@ impl IntoGlib for SpaceTypeFlags {
 
 #[doc(hidden)]
 impl FromGlib<ffi::GtkSourceSpaceTypeFlags> for SpaceTypeFlags {
+    #[inline]
     unsafe fn from_glib(value: ffi::GtkSourceSpaceTypeFlags) -> Self {
         skip_assert_initialized!();
         Self::from_bits_truncate(value)
@@ -403,8 +521,19 @@ impl FromGlib<ffi::GtkSourceSpaceTypeFlags> for SpaceTypeFlags {
 }
 
 impl StaticType for SpaceTypeFlags {
+    #[inline]
     fn static_type() -> Type {
         unsafe { from_glib(ffi::gtk_source_space_type_flags_get_type()) }
+    }
+}
+
+impl glib::HasParamSpec for SpaceTypeFlags {
+    type ParamSpec = glib::ParamSpecFlags;
+    type SetValue = Self;
+    type BuilderFn = fn(&str) -> glib::ParamSpecFlagsBuilder<Self>;
+
+    fn param_spec_builder() -> Self::BuilderFn {
+        |name| Self::ParamSpec::builder(name)
     }
 }
 
@@ -415,6 +544,7 @@ impl glib::value::ValueType for SpaceTypeFlags {
 unsafe impl<'a> FromValue<'a> for SpaceTypeFlags {
     type Checker = glib::value::GenericValueTypeChecker<Self>;
 
+    #[inline]
     unsafe fn from_value(value: &'a glib::Value) -> Self {
         skip_assert_initialized!();
         from_glib(glib::gobject_ffi::g_value_get_flags(value.to_glib_none().0))
@@ -422,6 +552,7 @@ unsafe impl<'a> FromValue<'a> for SpaceTypeFlags {
 }
 
 impl ToValue for SpaceTypeFlags {
+    #[inline]
     fn to_value(&self) -> glib::Value {
         let mut value = glib::Value::for_value_type::<Self>();
         unsafe {
@@ -430,7 +561,16 @@ impl ToValue for SpaceTypeFlags {
         value
     }
 
+    #[inline]
     fn value_type(&self) -> glib::Type {
         Self::static_type()
+    }
+}
+
+impl From<SpaceTypeFlags> for glib::Value {
+    #[inline]
+    fn from(v: SpaceTypeFlags) -> Self {
+        skip_assert_initialized!();
+        ToValue::to_value(&v)
     }
 }

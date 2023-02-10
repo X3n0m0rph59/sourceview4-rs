@@ -4,16 +4,12 @@
 // DO NOT EDIT
 
 use crate::Language;
-use glib::object::Cast;
-use glib::object::IsA;
-use glib::signal::connect_raw;
-use glib::signal::SignalHandlerId;
-use glib::translate::*;
-use glib::StaticType;
-use glib::ToValue;
-use std::boxed::Box as Box_;
-use std::fmt;
-use std::mem::transmute;
+use glib::{
+    prelude::*,
+    signal::{connect_raw, SignalHandlerId},
+    translate::*,
+};
+use std::{boxed::Box as Box_, fmt, mem::transmute};
 
 glib::wrapper! {
     #[doc(alias = "GtkSourceLanguageManager")]
@@ -38,11 +34,12 @@ impl LanguageManager {
     ///
     /// This method returns an instance of [`LanguageManagerBuilder`](crate::builders::LanguageManagerBuilder) which can be used to create [`LanguageManager`] objects.
     pub fn builder() -> LanguageManagerBuilder {
-        LanguageManagerBuilder::default()
+        LanguageManagerBuilder::new()
     }
 
     #[doc(alias = "gtk_source_language_manager_get_default")]
     #[doc(alias = "get_default")]
+    #[allow(clippy::should_implement_trait)]
     pub fn default() -> Option<LanguageManager> {
         assert_initialized_main_thread!();
         unsafe { from_glib_none(ffi::gtk_source_language_manager_get_default()) }
@@ -55,37 +52,33 @@ impl Default for LanguageManager {
     }
 }
 
-#[derive(Clone, Default)]
 // rustdoc-stripper-ignore-next
 /// A [builder-pattern] type to construct [`LanguageManager`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
 #[must_use = "The builder must be built to be used"]
 pub struct LanguageManagerBuilder {
-    search_path: Option<Vec<String>>,
+    builder: glib::object::ObjectBuilder<'static, LanguageManager>,
 }
 
 impl LanguageManagerBuilder {
-    // rustdoc-stripper-ignore-next
-    /// Create a new [`LanguageManagerBuilder`].
-    pub fn new() -> Self {
-        Self::default()
+    fn new() -> Self {
+        Self {
+            builder: glib::object::Object::builder(),
+        }
+    }
+
+    pub fn search_path(self, search_path: impl Into<glib::StrV>) -> Self {
+        Self {
+            builder: self.builder.property("search-path", search_path.into()),
+        }
     }
 
     // rustdoc-stripper-ignore-next
     /// Build the [`LanguageManager`].
     #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> LanguageManager {
-        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
-        if let Some(ref search_path) = self.search_path {
-            properties.push(("search-path", search_path));
-        }
-        glib::Object::new::<LanguageManager>(&properties)
-    }
-
-    pub fn search_path(mut self, search_path: Vec<String>) -> Self {
-        self.search_path = Some(search_path);
-        self
+        self.builder.build()
     }
 }
 

@@ -3,16 +3,12 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use glib::object::Cast;
-use glib::object::IsA;
-use glib::signal::connect_raw;
-use glib::signal::SignalHandlerId;
-use glib::translate::*;
-use glib::StaticType;
-use glib::ToValue;
-use std::boxed::Box as Box_;
-use std::fmt;
-use std::mem::transmute;
+use glib::{
+    prelude::*,
+    signal::{connect_raw, SignalHandlerId},
+    translate::*,
+};
+use std::{boxed::Box as Box_, fmt, mem::transmute};
 
 glib::wrapper! {
     #[doc(alias = "GtkSourceSearchSettings")]
@@ -37,7 +33,7 @@ impl SearchSettings {
     ///
     /// This method returns an instance of [`SearchSettingsBuilder`](crate::builders::SearchSettingsBuilder) which can be used to create [`SearchSettings`] objects.
     pub fn builder() -> SearchSettingsBuilder {
-        SearchSettingsBuilder::default()
+        SearchSettingsBuilder::new()
     }
 }
 
@@ -47,73 +43,59 @@ impl Default for SearchSettings {
     }
 }
 
-#[derive(Clone, Default)]
 // rustdoc-stripper-ignore-next
 /// A [builder-pattern] type to construct [`SearchSettings`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
 #[must_use = "The builder must be built to be used"]
 pub struct SearchSettingsBuilder {
-    at_word_boundaries: Option<bool>,
-    case_sensitive: Option<bool>,
-    regex_enabled: Option<bool>,
-    search_text: Option<String>,
-    wrap_around: Option<bool>,
+    builder: glib::object::ObjectBuilder<'static, SearchSettings>,
 }
 
 impl SearchSettingsBuilder {
-    // rustdoc-stripper-ignore-next
-    /// Create a new [`SearchSettingsBuilder`].
-    pub fn new() -> Self {
-        Self::default()
+    fn new() -> Self {
+        Self {
+            builder: glib::object::Object::builder(),
+        }
+    }
+
+    pub fn at_word_boundaries(self, at_word_boundaries: bool) -> Self {
+        Self {
+            builder: self
+                .builder
+                .property("at-word-boundaries", at_word_boundaries),
+        }
+    }
+
+    pub fn case_sensitive(self, case_sensitive: bool) -> Self {
+        Self {
+            builder: self.builder.property("case-sensitive", case_sensitive),
+        }
+    }
+
+    pub fn regex_enabled(self, regex_enabled: bool) -> Self {
+        Self {
+            builder: self.builder.property("regex-enabled", regex_enabled),
+        }
+    }
+
+    pub fn search_text(self, search_text: impl Into<glib::GString>) -> Self {
+        Self {
+            builder: self.builder.property("search-text", search_text.into()),
+        }
+    }
+
+    pub fn wrap_around(self, wrap_around: bool) -> Self {
+        Self {
+            builder: self.builder.property("wrap-around", wrap_around),
+        }
     }
 
     // rustdoc-stripper-ignore-next
     /// Build the [`SearchSettings`].
     #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> SearchSettings {
-        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
-        if let Some(ref at_word_boundaries) = self.at_word_boundaries {
-            properties.push(("at-word-boundaries", at_word_boundaries));
-        }
-        if let Some(ref case_sensitive) = self.case_sensitive {
-            properties.push(("case-sensitive", case_sensitive));
-        }
-        if let Some(ref regex_enabled) = self.regex_enabled {
-            properties.push(("regex-enabled", regex_enabled));
-        }
-        if let Some(ref search_text) = self.search_text {
-            properties.push(("search-text", search_text));
-        }
-        if let Some(ref wrap_around) = self.wrap_around {
-            properties.push(("wrap-around", wrap_around));
-        }
-        glib::Object::new::<SearchSettings>(&properties)
-    }
-
-    pub fn at_word_boundaries(mut self, at_word_boundaries: bool) -> Self {
-        self.at_word_boundaries = Some(at_word_boundaries);
-        self
-    }
-
-    pub fn case_sensitive(mut self, case_sensitive: bool) -> Self {
-        self.case_sensitive = Some(case_sensitive);
-        self
-    }
-
-    pub fn regex_enabled(mut self, regex_enabled: bool) -> Self {
-        self.regex_enabled = Some(regex_enabled);
-        self
-    }
-
-    pub fn search_text(mut self, search_text: &str) -> Self {
-        self.search_text = Some(search_text.to_string());
-        self
-    }
-
-    pub fn wrap_around(mut self, wrap_around: bool) -> Self {
-        self.wrap_around = Some(wrap_around);
-        self
+        self.builder.build()
     }
 }
 

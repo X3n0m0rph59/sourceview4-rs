@@ -3,12 +3,8 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use crate::CompletionActivation;
-use crate::CompletionContext;
-use crate::CompletionInfo;
-use crate::CompletionProposal;
-use glib::object::IsA;
-use glib::translate::*;
+use crate::{CompletionActivation, CompletionContext, CompletionInfo, CompletionProposal};
+use glib::{prelude::*, translate::*};
 use std::fmt;
 
 glib::wrapper! {

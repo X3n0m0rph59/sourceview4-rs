@@ -3,18 +3,13 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use crate::CompletionActivation;
-use crate::CompletionProvider;
-use glib::object::Cast;
-use glib::object::IsA;
-use glib::signal::connect_raw;
-use glib::signal::SignalHandlerId;
-use glib::translate::*;
-use glib::StaticType;
-use glib::ToValue;
-use std::boxed::Box as Box_;
-use std::fmt;
-use std::mem::transmute;
+use crate::{CompletionActivation, CompletionProvider};
+use glib::{
+    prelude::*,
+    signal::{connect_raw, SignalHandlerId},
+    translate::*,
+};
+use std::{boxed::Box as Box_, fmt, mem::transmute};
 
 glib::wrapper! {
     #[doc(alias = "GtkSourceCompletionWords")]
@@ -44,110 +39,91 @@ impl CompletionWords {
     ///
     /// This method returns an instance of [`CompletionWordsBuilder`](crate::builders::CompletionWordsBuilder) which can be used to create [`CompletionWords`] objects.
     pub fn builder() -> CompletionWordsBuilder {
-        CompletionWordsBuilder::default()
+        CompletionWordsBuilder::new()
     }
 }
 
 impl Default for CompletionWords {
     fn default() -> Self {
-        glib::object::Object::new::<Self>(&[])
+        glib::object::Object::new::<Self>()
     }
 }
 
-#[derive(Clone, Default)]
 // rustdoc-stripper-ignore-next
 /// A [builder-pattern] type to construct [`CompletionWords`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
 #[must_use = "The builder must be built to be used"]
 pub struct CompletionWordsBuilder {
-    activation: Option<CompletionActivation>,
-    icon: Option<gdk_pixbuf::Pixbuf>,
-    interactive_delay: Option<i32>,
-    minimum_word_size: Option<u32>,
-    name: Option<String>,
-    priority: Option<i32>,
-    proposals_batch_size: Option<u32>,
-    scan_batch_size: Option<u32>,
+    builder: glib::object::ObjectBuilder<'static, CompletionWords>,
 }
 
 impl CompletionWordsBuilder {
-    // rustdoc-stripper-ignore-next
-    /// Create a new [`CompletionWordsBuilder`].
-    pub fn new() -> Self {
-        Self::default()
+    fn new() -> Self {
+        Self {
+            builder: glib::object::Object::builder(),
+        }
+    }
+
+    pub fn activation(self, activation: CompletionActivation) -> Self {
+        Self {
+            builder: self.builder.property("activation", activation),
+        }
+    }
+
+    pub fn icon(self, icon: &gdk_pixbuf::Pixbuf) -> Self {
+        Self {
+            builder: self.builder.property("icon", icon.clone()),
+        }
+    }
+
+    pub fn interactive_delay(self, interactive_delay: i32) -> Self {
+        Self {
+            builder: self
+                .builder
+                .property("interactive-delay", interactive_delay),
+        }
+    }
+
+    pub fn minimum_word_size(self, minimum_word_size: u32) -> Self {
+        Self {
+            builder: self
+                .builder
+                .property("minimum-word-size", minimum_word_size),
+        }
+    }
+
+    pub fn name(self, name: impl Into<glib::GString>) -> Self {
+        Self {
+            builder: self.builder.property("name", name.into()),
+        }
+    }
+
+    pub fn priority(self, priority: i32) -> Self {
+        Self {
+            builder: self.builder.property("priority", priority),
+        }
+    }
+
+    pub fn proposals_batch_size(self, proposals_batch_size: u32) -> Self {
+        Self {
+            builder: self
+                .builder
+                .property("proposals-batch-size", proposals_batch_size),
+        }
+    }
+
+    pub fn scan_batch_size(self, scan_batch_size: u32) -> Self {
+        Self {
+            builder: self.builder.property("scan-batch-size", scan_batch_size),
+        }
     }
 
     // rustdoc-stripper-ignore-next
     /// Build the [`CompletionWords`].
     #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> CompletionWords {
-        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
-        if let Some(ref activation) = self.activation {
-            properties.push(("activation", activation));
-        }
-        if let Some(ref icon) = self.icon {
-            properties.push(("icon", icon));
-        }
-        if let Some(ref interactive_delay) = self.interactive_delay {
-            properties.push(("interactive-delay", interactive_delay));
-        }
-        if let Some(ref minimum_word_size) = self.minimum_word_size {
-            properties.push(("minimum-word-size", minimum_word_size));
-        }
-        if let Some(ref name) = self.name {
-            properties.push(("name", name));
-        }
-        if let Some(ref priority) = self.priority {
-            properties.push(("priority", priority));
-        }
-        if let Some(ref proposals_batch_size) = self.proposals_batch_size {
-            properties.push(("proposals-batch-size", proposals_batch_size));
-        }
-        if let Some(ref scan_batch_size) = self.scan_batch_size {
-            properties.push(("scan-batch-size", scan_batch_size));
-        }
-        glib::Object::new::<CompletionWords>(&properties)
-    }
-
-    pub fn activation(mut self, activation: CompletionActivation) -> Self {
-        self.activation = Some(activation);
-        self
-    }
-
-    pub fn icon(mut self, icon: &gdk_pixbuf::Pixbuf) -> Self {
-        self.icon = Some(icon.clone());
-        self
-    }
-
-    pub fn interactive_delay(mut self, interactive_delay: i32) -> Self {
-        self.interactive_delay = Some(interactive_delay);
-        self
-    }
-
-    pub fn minimum_word_size(mut self, minimum_word_size: u32) -> Self {
-        self.minimum_word_size = Some(minimum_word_size);
-        self
-    }
-
-    pub fn name(mut self, name: &str) -> Self {
-        self.name = Some(name.to_string());
-        self
-    }
-
-    pub fn priority(mut self, priority: i32) -> Self {
-        self.priority = Some(priority);
-        self
-    }
-
-    pub fn proposals_batch_size(mut self, proposals_batch_size: u32) -> Self {
-        self.proposals_batch_size = Some(proposals_batch_size);
-        self
-    }
-
-    pub fn scan_batch_size(mut self, scan_batch_size: u32) -> Self {
-        self.scan_batch_size = Some(scan_batch_size);
-        self
+        self.builder.build()
     }
 }
 

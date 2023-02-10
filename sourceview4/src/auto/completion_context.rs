@@ -3,21 +3,13 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use crate::Completion;
-use crate::CompletionActivation;
-use crate::CompletionProposal;
-use crate::CompletionProvider;
-use glib::object::Cast;
-use glib::object::IsA;
-use glib::object::ObjectExt;
-use glib::signal::connect_raw;
-use glib::signal::SignalHandlerId;
-use glib::translate::*;
-use glib::StaticType;
-use glib::ToValue;
-use std::boxed::Box as Box_;
-use std::fmt;
-use std::mem::transmute;
+use crate::{Completion, CompletionActivation, CompletionProposal, CompletionProvider};
+use glib::{
+    prelude::*,
+    signal::{connect_raw, SignalHandlerId},
+    translate::*,
+};
+use std::{boxed::Box as Box_, fmt, mem::transmute};
 
 glib::wrapper! {
     #[doc(alias = "GtkSourceCompletionContext")]
@@ -36,59 +28,51 @@ impl CompletionContext {
     ///
     /// This method returns an instance of [`CompletionContextBuilder`](crate::builders::CompletionContextBuilder) which can be used to create [`CompletionContext`] objects.
     pub fn builder() -> CompletionContextBuilder {
-        CompletionContextBuilder::default()
+        CompletionContextBuilder::new()
     }
 }
 
-#[derive(Clone, Default)]
 // rustdoc-stripper-ignore-next
 /// A [builder-pattern] type to construct [`CompletionContext`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
 #[must_use = "The builder must be built to be used"]
 pub struct CompletionContextBuilder {
-    activation: Option<CompletionActivation>,
-    completion: Option<Completion>,
-    iter: Option<gtk::TextIter>,
+    builder: glib::object::ObjectBuilder<'static, CompletionContext>,
 }
 
 impl CompletionContextBuilder {
-    // rustdoc-stripper-ignore-next
-    /// Create a new [`CompletionContextBuilder`].
-    pub fn new() -> Self {
-        Self::default()
+    fn new() -> Self {
+        Self {
+            builder: glib::object::Object::builder(),
+        }
+    }
+
+    pub fn activation(self, activation: CompletionActivation) -> Self {
+        Self {
+            builder: self.builder.property("activation", activation),
+        }
+    }
+
+    pub fn completion(self, completion: &impl IsA<Completion>) -> Self {
+        Self {
+            builder: self
+                .builder
+                .property("completion", completion.clone().upcast()),
+        }
+    }
+
+    pub fn iter(self, iter: &gtk::TextIter) -> Self {
+        Self {
+            builder: self.builder.property("iter", iter),
+        }
     }
 
     // rustdoc-stripper-ignore-next
     /// Build the [`CompletionContext`].
     #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> CompletionContext {
-        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
-        if let Some(ref activation) = self.activation {
-            properties.push(("activation", activation));
-        }
-        if let Some(ref completion) = self.completion {
-            properties.push(("completion", completion));
-        }
-        if let Some(ref iter) = self.iter {
-            properties.push(("iter", iter));
-        }
-        glib::Object::new::<CompletionContext>(&properties)
-    }
-
-    pub fn activation(mut self, activation: CompletionActivation) -> Self {
-        self.activation = Some(activation);
-        self
-    }
-
-    pub fn completion(mut self, completion: &impl IsA<Completion>) -> Self {
-        self.completion = Some(completion.clone().upcast());
-        self
-    }
-
-    pub fn iter(mut self, iter: &gtk::TextIter) -> Self {
-        self.iter = Some(iter.clone());
-        self
+        self.builder.build()
     }
 }
 

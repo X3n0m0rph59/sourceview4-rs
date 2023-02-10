@@ -3,22 +3,13 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use crate::Buffer;
-use crate::CompressionType;
-use crate::Encoding;
-use crate::File;
-use crate::FileSaverFlags;
-use crate::NewlineType;
-use glib::object::Cast;
-use glib::object::IsA;
-use glib::signal::connect_raw;
-use glib::signal::SignalHandlerId;
-use glib::translate::*;
-use glib::StaticType;
-use glib::ToValue;
-use std::boxed::Box as Box_;
-use std::fmt;
-use std::mem::transmute;
+use crate::{Buffer, CompressionType, Encoding, File, FileSaverFlags, NewlineType};
+use glib::{
+    prelude::*,
+    signal::{connect_raw, SignalHandlerId},
+    translate::*,
+};
+use std::{boxed::Box as Box_, fmt, mem::transmute};
 
 glib::wrapper! {
     #[doc(alias = "GtkSourceFileSaver")]
@@ -65,101 +56,79 @@ impl FileSaver {
     ///
     /// This method returns an instance of [`FileSaverBuilder`](crate::builders::FileSaverBuilder) which can be used to create [`FileSaver`] objects.
     pub fn builder() -> FileSaverBuilder {
-        FileSaverBuilder::default()
+        FileSaverBuilder::new()
     }
 }
 
 impl Default for FileSaver {
     fn default() -> Self {
-        glib::object::Object::new::<Self>(&[])
+        glib::object::Object::new::<Self>()
     }
 }
 
-#[derive(Clone, Default)]
 // rustdoc-stripper-ignore-next
 /// A [builder-pattern] type to construct [`FileSaver`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
 #[must_use = "The builder must be built to be used"]
 pub struct FileSaverBuilder {
-    buffer: Option<Buffer>,
-    compression_type: Option<CompressionType>,
-    encoding: Option<Encoding>,
-    file: Option<File>,
-    flags: Option<FileSaverFlags>,
-    location: Option<gio::File>,
-    newline_type: Option<NewlineType>,
+    builder: glib::object::ObjectBuilder<'static, FileSaver>,
 }
 
 impl FileSaverBuilder {
-    // rustdoc-stripper-ignore-next
-    /// Create a new [`FileSaverBuilder`].
-    pub fn new() -> Self {
-        Self::default()
+    fn new() -> Self {
+        Self {
+            builder: glib::object::Object::builder(),
+        }
+    }
+
+    pub fn buffer(self, buffer: &impl IsA<Buffer>) -> Self {
+        Self {
+            builder: self.builder.property("buffer", buffer.clone().upcast()),
+        }
+    }
+
+    pub fn compression_type(self, compression_type: CompressionType) -> Self {
+        Self {
+            builder: self.builder.property("compression-type", compression_type),
+        }
+    }
+
+    pub fn encoding(self, encoding: &Encoding) -> Self {
+        Self {
+            builder: self.builder.property("encoding", encoding),
+        }
+    }
+
+    pub fn file(self, file: &impl IsA<File>) -> Self {
+        Self {
+            builder: self.builder.property("file", file.clone().upcast()),
+        }
+    }
+
+    pub fn flags(self, flags: FileSaverFlags) -> Self {
+        Self {
+            builder: self.builder.property("flags", flags),
+        }
+    }
+
+    pub fn location(self, location: &impl IsA<gio::File>) -> Self {
+        Self {
+            builder: self.builder.property("location", location.clone().upcast()),
+        }
+    }
+
+    pub fn newline_type(self, newline_type: NewlineType) -> Self {
+        Self {
+            builder: self.builder.property("newline-type", newline_type),
+        }
     }
 
     // rustdoc-stripper-ignore-next
     /// Build the [`FileSaver`].
     #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> FileSaver {
-        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
-        if let Some(ref buffer) = self.buffer {
-            properties.push(("buffer", buffer));
-        }
-        if let Some(ref compression_type) = self.compression_type {
-            properties.push(("compression-type", compression_type));
-        }
-        if let Some(ref encoding) = self.encoding {
-            properties.push(("encoding", encoding));
-        }
-        if let Some(ref file) = self.file {
-            properties.push(("file", file));
-        }
-        if let Some(ref flags) = self.flags {
-            properties.push(("flags", flags));
-        }
-        if let Some(ref location) = self.location {
-            properties.push(("location", location));
-        }
-        if let Some(ref newline_type) = self.newline_type {
-            properties.push(("newline-type", newline_type));
-        }
-        glib::Object::new::<FileSaver>(&properties)
-    }
-
-    pub fn buffer(mut self, buffer: &impl IsA<Buffer>) -> Self {
-        self.buffer = Some(buffer.clone().upcast());
-        self
-    }
-
-    pub fn compression_type(mut self, compression_type: CompressionType) -> Self {
-        self.compression_type = Some(compression_type);
-        self
-    }
-
-    pub fn encoding(mut self, encoding: &Encoding) -> Self {
-        self.encoding = Some(encoding.clone());
-        self
-    }
-
-    pub fn file(mut self, file: &impl IsA<File>) -> Self {
-        self.file = Some(file.clone().upcast());
-        self
-    }
-
-    pub fn flags(mut self, flags: FileSaverFlags) -> Self {
-        self.flags = Some(flags);
-        self
-    }
-
-    pub fn location(mut self, location: &impl IsA<gio::File>) -> Self {
-        self.location = Some(location.clone().upcast());
-        self
-    }
-
-    pub fn newline_type(mut self, newline_type: NewlineType) -> Self {
-        self.newline_type = Some(newline_type);
-        self
+        self.builder.build()
     }
 }
 
@@ -193,10 +162,10 @@ pub trait FileSaverExt: 'static {
     fn newline_type(&self) -> NewlineType;
 
     //#[doc(alias = "gtk_source_file_saver_save_async")]
-    //fn save_async<P: FnOnce(Result<(), glib::Error>) + 'static, Q: FnOnce(Result<(), glib::Error>) + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&impl IsA<gio::Cancellable>>, progress_callback: P, progress_callback_notify: Fn() + 'static, callback: Q);
+    //fn save_async<P: FnOnce(Result<(), glib::Error>) + 'static, Q: FnOnce(Result<(), glib::Error>) + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&impl IsA<gio::Cancellable>>, progress_callback: P, callback: Q);
 
     //
-    //fn save_future<P: FnOnce(Result<(), glib::Error>) + 'static>(&self, io_priority: glib::Priority, progress_callback: P, progress_callback_notify: Fn() + 'static) -> Pin<Box_<dyn std::future::Future<Output = Result<(), glib::Error>> + 'static>>;
+    //fn save_future<P: FnOnce(Result<(), glib::Error>) + 'static>(&self, io_priority: glib::Priority, progress_callback: P) -> Pin<Box_<dyn std::future::Future<Output = Result<(), glib::Error>> + 'static>>;
 
     #[doc(alias = "gtk_source_file_saver_set_compression_type")]
     fn set_compression_type(&self, compression_type: CompressionType);
@@ -280,21 +249,19 @@ impl<O: IsA<FileSaver>> FileSaverExt for O {
         }
     }
 
-    //fn save_async<P: FnOnce(Result<(), glib::Error>) + 'static, Q: FnOnce(Result<(), glib::Error>) + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&impl IsA<gio::Cancellable>>, progress_callback: P, progress_callback_notify: Fn() + 'static, callback: Q) {
+    //fn save_async<P: FnOnce(Result<(), glib::Error>) + 'static, Q: FnOnce(Result<(), glib::Error>) + 'static>(&self, io_priority: glib::Priority, cancellable: Option<&impl IsA<gio::Cancellable>>, progress_callback: P, callback: Q) {
     //    unsafe { TODO: call ffi:gtk_source_file_saver_save_async() }
     //}
 
     //
-    //fn save_future<P: FnOnce(Result<(), glib::Error>) + 'static>(&self, io_priority: glib::Priority, progress_callback: P, progress_callback_notify: Fn() + 'static) -> Pin<Box_<dyn std::future::Future<Output = Result<(), glib::Error>> + 'static>> {
+    //fn save_future<P: FnOnce(Result<(), glib::Error>) + 'static>(&self, io_priority: glib::Priority, progress_callback: P) -> Pin<Box_<dyn std::future::Future<Output = Result<(), glib::Error>> + 'static>> {
 
     //let progress_callback = progress_callback.map(ToOwned::to_owned);
-    //let progress_callback_notify = progress_callback_notify.map(ToOwned::to_owned);
     //Box_::pin(gio::GioFuture::new(self, move |obj, cancellable, send| {
     //    obj.save_async(
     //        io_priority,
     //        Some(cancellable),
     //        progress_callback.as_ref().map(::std::borrow::Borrow::borrow),
-    //        progress_callback_notify.as_ref().map(::std::borrow::Borrow::borrow),
     //        move |res| {
     //            send.resolve(res);
     //        },

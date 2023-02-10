@@ -3,13 +3,8 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use crate::GutterRenderer;
-use crate::View;
-use glib::object::Cast;
-use glib::object::IsA;
-use glib::translate::*;
-use glib::StaticType;
-use glib::ToValue;
+use crate::{GutterRenderer, View};
+use glib::{prelude::*, translate::*};
 use std::fmt;
 
 glib::wrapper! {
@@ -29,50 +24,43 @@ impl Gutter {
     ///
     /// This method returns an instance of [`GutterBuilder`](crate::builders::GutterBuilder) which can be used to create [`Gutter`] objects.
     pub fn builder() -> GutterBuilder {
-        GutterBuilder::default()
+        GutterBuilder::new()
     }
 }
 
-#[derive(Clone, Default)]
 // rustdoc-stripper-ignore-next
 /// A [builder-pattern] type to construct [`Gutter`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
 #[must_use = "The builder must be built to be used"]
 pub struct GutterBuilder {
-    view: Option<View>,
-    window_type: Option<gtk::TextWindowType>,
+    builder: glib::object::ObjectBuilder<'static, Gutter>,
 }
 
 impl GutterBuilder {
-    // rustdoc-stripper-ignore-next
-    /// Create a new [`GutterBuilder`].
-    pub fn new() -> Self {
-        Self::default()
+    fn new() -> Self {
+        Self {
+            builder: glib::object::Object::builder(),
+        }
+    }
+
+    pub fn view(self, view: &impl IsA<View>) -> Self {
+        Self {
+            builder: self.builder.property("view", view.clone().upcast()),
+        }
+    }
+
+    pub fn window_type(self, window_type: gtk::TextWindowType) -> Self {
+        Self {
+            builder: self.builder.property("window-type", window_type),
+        }
     }
 
     // rustdoc-stripper-ignore-next
     /// Build the [`Gutter`].
     #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> Gutter {
-        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
-        if let Some(ref view) = self.view {
-            properties.push(("view", view));
-        }
-        if let Some(ref window_type) = self.window_type {
-            properties.push(("window-type", window_type));
-        }
-        glib::Object::new::<Gutter>(&properties)
-    }
-
-    pub fn view(mut self, view: &impl IsA<View>) -> Self {
-        self.view = Some(view.clone().upcast());
-        self
-    }
-
-    pub fn window_type(mut self, window_type: gtk::TextWindowType) -> Self {
-        self.window_type = Some(window_type);
-        self
+        self.builder.build()
     }
 }
 

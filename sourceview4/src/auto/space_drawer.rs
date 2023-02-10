@@ -3,18 +3,13 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use crate::SpaceLocationFlags;
-use crate::SpaceTypeFlags;
-use glib::object::Cast;
-use glib::object::IsA;
-use glib::signal::connect_raw;
-use glib::signal::SignalHandlerId;
-use glib::translate::*;
-use glib::StaticType;
-use glib::ToValue;
-use std::boxed::Box as Box_;
-use std::fmt;
-use std::mem::transmute;
+use crate::{SpaceLocationFlags, SpaceTypeFlags};
+use glib::{
+    prelude::*,
+    signal::{connect_raw, SignalHandlerId},
+    translate::*,
+};
+use std::{boxed::Box as Box_, fmt, mem::transmute};
 
 glib::wrapper! {
     #[doc(alias = "GtkSourceSpaceDrawer")]
@@ -39,7 +34,7 @@ impl SpaceDrawer {
     ///
     /// This method returns an instance of [`SpaceDrawerBuilder`](crate::builders::SpaceDrawerBuilder) which can be used to create [`SpaceDrawer`] objects.
     pub fn builder() -> SpaceDrawerBuilder {
-        SpaceDrawerBuilder::default()
+        SpaceDrawerBuilder::new()
     }
 }
 
@@ -49,46 +44,39 @@ impl Default for SpaceDrawer {
     }
 }
 
-#[derive(Clone, Default)]
 // rustdoc-stripper-ignore-next
 /// A [builder-pattern] type to construct [`SpaceDrawer`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
 #[must_use = "The builder must be built to be used"]
 pub struct SpaceDrawerBuilder {
-    enable_matrix: Option<bool>,
-    matrix: Option<glib::Variant>,
+    builder: glib::object::ObjectBuilder<'static, SpaceDrawer>,
 }
 
 impl SpaceDrawerBuilder {
-    // rustdoc-stripper-ignore-next
-    /// Create a new [`SpaceDrawerBuilder`].
-    pub fn new() -> Self {
-        Self::default()
+    fn new() -> Self {
+        Self {
+            builder: glib::object::Object::builder(),
+        }
+    }
+
+    pub fn enable_matrix(self, enable_matrix: bool) -> Self {
+        Self {
+            builder: self.builder.property("enable-matrix", enable_matrix),
+        }
+    }
+
+    pub fn matrix(self, matrix: &glib::Variant) -> Self {
+        Self {
+            builder: self.builder.property("matrix", matrix.clone()),
+        }
     }
 
     // rustdoc-stripper-ignore-next
     /// Build the [`SpaceDrawer`].
     #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> SpaceDrawer {
-        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
-        if let Some(ref enable_matrix) = self.enable_matrix {
-            properties.push(("enable-matrix", enable_matrix));
-        }
-        if let Some(ref matrix) = self.matrix {
-            properties.push(("matrix", matrix));
-        }
-        glib::Object::new::<SpaceDrawer>(&properties)
-    }
-
-    pub fn enable_matrix(mut self, enable_matrix: bool) -> Self {
-        self.enable_matrix = Some(enable_matrix);
-        self
-    }
-
-    pub fn matrix(mut self, matrix: &glib::Variant) -> Self {
-        self.matrix = Some(matrix.clone());
-        self
+        self.builder.build()
     }
 }
 

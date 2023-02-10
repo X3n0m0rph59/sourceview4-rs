@@ -3,19 +3,13 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-use crate::CompressionType;
-use crate::Encoding;
-use crate::NewlineType;
-use glib::object::Cast;
-use glib::object::IsA;
-use glib::signal::connect_raw;
-use glib::signal::SignalHandlerId;
-use glib::translate::*;
-use glib::StaticType;
-use glib::ToValue;
-use std::boxed::Box as Box_;
-use std::fmt;
-use std::mem::transmute;
+use crate::{CompressionType, Encoding, NewlineType};
+use glib::{
+    prelude::*,
+    signal::{connect_raw, SignalHandlerId},
+    translate::*,
+};
+use std::{boxed::Box as Box_, fmt, mem::transmute};
 
 glib::wrapper! {
     #[doc(alias = "GtkSourceFile")]
@@ -40,7 +34,7 @@ impl File {
     ///
     /// This method returns an instance of [`FileBuilder`](crate::builders::FileBuilder) which can be used to create [`File`] objects.
     pub fn builder() -> FileBuilder {
-        FileBuilder::default()
+        FileBuilder::new()
     }
 }
 
@@ -50,37 +44,33 @@ impl Default for File {
     }
 }
 
-#[derive(Clone, Default)]
 // rustdoc-stripper-ignore-next
 /// A [builder-pattern] type to construct [`File`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
 #[must_use = "The builder must be built to be used"]
 pub struct FileBuilder {
-    location: Option<gio::File>,
+    builder: glib::object::ObjectBuilder<'static, File>,
 }
 
 impl FileBuilder {
-    // rustdoc-stripper-ignore-next
-    /// Create a new [`FileBuilder`].
-    pub fn new() -> Self {
-        Self::default()
+    fn new() -> Self {
+        Self {
+            builder: glib::object::Object::builder(),
+        }
+    }
+
+    pub fn location(self, location: &impl IsA<gio::File>) -> Self {
+        Self {
+            builder: self.builder.property("location", location.clone().upcast()),
+        }
     }
 
     // rustdoc-stripper-ignore-next
     /// Build the [`File`].
     #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> File {
-        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
-        if let Some(ref location) = self.location {
-            properties.push(("location", location));
-        }
-        glib::Object::new::<File>(&properties)
-    }
-
-    pub fn location(mut self, location: &impl IsA<gio::File>) -> Self {
-        self.location = Some(location.clone().upcast());
-        self
+        self.builder.build()
     }
 }
 
@@ -119,8 +109,11 @@ pub trait FileExt: 'static {
     #[doc(alias = "gtk_source_file_set_location")]
     fn set_location(&self, location: Option<&impl IsA<gio::File>>);
 
-    //#[doc(alias = "gtk_source_file_set_mount_operation_factory")]
-    //fn set_mount_operation_factory(&self, callback: /*Unimplemented*/Fn(&File, /*Unimplemented*/Option<Basic: Pointer>) -> gio::MountOperation, user_data: /*Unimplemented*/Option<Basic: Pointer>);
+    #[doc(alias = "gtk_source_file_set_mount_operation_factory")]
+    fn set_mount_operation_factory<P: Fn(&File) -> gio::MountOperation + 'static>(
+        &self,
+        callback: P,
+    );
 
     #[doc(alias = "read-only")]
     fn is_read_only(&self) -> bool;
@@ -221,9 +214,39 @@ impl<O: IsA<File>> FileExt for O {
         }
     }
 
-    //fn set_mount_operation_factory(&self, callback: /*Unimplemented*/Fn(&File, /*Unimplemented*/Option<Basic: Pointer>) -> gio::MountOperation, user_data: /*Unimplemented*/Option<Basic: Pointer>) {
-    //    unsafe { TODO: call ffi:gtk_source_file_set_mount_operation_factory() }
-    //}
+    fn set_mount_operation_factory<P: Fn(&File) -> gio::MountOperation + 'static>(
+        &self,
+        callback: P,
+    ) {
+        let callback_data: Box_<P> = Box_::new(callback);
+        unsafe extern "C" fn callback_func<P: Fn(&File) -> gio::MountOperation + 'static>(
+            file: *mut ffi::GtkSourceFile,
+            userdata: glib::ffi::gpointer,
+        ) -> *mut gio::ffi::GMountOperation {
+            let file = from_glib_borrow(file);
+            let callback: &P = &*(userdata as *mut _);
+            (*callback)(&file)
+                /*Not checked*/
+                .to_glib_none()
+                .0
+        }
+        let callback = Some(callback_func::<P> as _);
+        unsafe extern "C" fn notify_func<P: Fn(&File) -> gio::MountOperation + 'static>(
+            data: glib::ffi::gpointer,
+        ) {
+            let _callback: Box_<P> = Box_::from_raw(data as *mut _);
+        }
+        let destroy_call3 = Some(notify_func::<P> as _);
+        let super_callback0: Box_<P> = callback_data;
+        unsafe {
+            ffi::gtk_source_file_set_mount_operation_factory(
+                self.as_ref().to_glib_none().0,
+                callback,
+                Box_::into_raw(super_callback0) as *mut _,
+                destroy_call3,
+            );
+        }
+    }
 
     fn is_read_only(&self) -> bool {
         glib::ObjectExt::property(self.as_ref(), "read-only")

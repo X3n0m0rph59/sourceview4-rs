@@ -4,16 +4,12 @@
 // DO NOT EDIT
 
 use crate::Style;
-use glib::object::Cast;
-use glib::object::IsA;
-use glib::signal::connect_raw;
-use glib::signal::SignalHandlerId;
-use glib::translate::*;
-use glib::StaticType;
-use glib::ToValue;
-use std::boxed::Box as Box_;
-use std::fmt;
-use std::mem::transmute;
+use glib::{
+    prelude::*,
+    signal::{connect_raw, SignalHandlerId},
+    translate::*,
+};
+use std::{boxed::Box as Box_, fmt, mem::transmute};
 
 glib::wrapper! {
     #[doc(alias = "GtkSourceStyleScheme")]
@@ -32,41 +28,37 @@ impl StyleScheme {
     ///
     /// This method returns an instance of [`StyleSchemeBuilder`](crate::builders::StyleSchemeBuilder) which can be used to create [`StyleScheme`] objects.
     pub fn builder() -> StyleSchemeBuilder {
-        StyleSchemeBuilder::default()
+        StyleSchemeBuilder::new()
     }
 }
 
-#[derive(Clone, Default)]
 // rustdoc-stripper-ignore-next
 /// A [builder-pattern] type to construct [`StyleScheme`] objects.
 ///
 /// [builder-pattern]: https://doc.rust-lang.org/1.0.0/style/ownership/builders.html
 #[must_use = "The builder must be built to be used"]
 pub struct StyleSchemeBuilder {
-    id: Option<String>,
+    builder: glib::object::ObjectBuilder<'static, StyleScheme>,
 }
 
 impl StyleSchemeBuilder {
-    // rustdoc-stripper-ignore-next
-    /// Create a new [`StyleSchemeBuilder`].
-    pub fn new() -> Self {
-        Self::default()
+    fn new() -> Self {
+        Self {
+            builder: glib::object::Object::builder(),
+        }
+    }
+
+    pub fn id(self, id: impl Into<glib::GString>) -> Self {
+        Self {
+            builder: self.builder.property("id", id.into()),
+        }
     }
 
     // rustdoc-stripper-ignore-next
     /// Build the [`StyleScheme`].
     #[must_use = "Building the object from the builder is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> StyleScheme {
-        let mut properties: Vec<(&str, &dyn ToValue)> = vec![];
-        if let Some(ref id) = self.id {
-            properties.push(("id", id));
-        }
-        glib::Object::new::<StyleScheme>(&properties)
-    }
-
-    pub fn id(mut self, id: &str) -> Self {
-        self.id = Some(id.to_string());
-        self
+        self.builder.build()
     }
 }
 
