@@ -1,9 +1,4 @@
 [workspace]
-members = [
-    "sourceview4",
-    "sourceview4-sys",
-]
-exclude = [
-  "checker",
-  "gir"
-]
+resolver = "2"
+members = ["sourceview4", "sourceview4-sys"]
+exclude = ["checker", "gir"]
